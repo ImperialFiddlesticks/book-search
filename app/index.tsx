@@ -1,10 +1,12 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import Booksearchbar from "./components/Booksearchbar/Booksearchbar";
 
 export default function Home() {
   return (
-    <View style={styles.constainer}>
+    <View style={styles.container}>
       <Text style={styles.title}>Home Screen</Text>
+      <Booksearchbar />
       <Link href="/searchResults">
         <Text style={styles.link}>Search Results</Text>
       </Link>
@@ -16,7 +18,7 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  constainer: {
+  container: {
     flex: 1,
     padding: 16,
     justifyContent: "flex-start",
