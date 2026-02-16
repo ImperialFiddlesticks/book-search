@@ -5,6 +5,7 @@ export default function SearchResults() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Search Results</Text>
+      {/* Temporary BookCard placeholder */}
       <BookCard
         book={{
           key: "/works/OL82563W",
