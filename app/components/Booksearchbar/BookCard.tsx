@@ -1,5 +1,5 @@
 import { Book } from "@/app/types/bookProps";
-import { SavedProps } from "@/app/types/savedProps";
+import SavedProps from "@/app/types/savedProps";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
