@@ -13,6 +13,8 @@ export default function SearchResults() {
           first_publish_year: 1954,
           cover_i: 9255566,
         }}
+        isSaved={false}
+        onToggle={() => {}}
       />
     </View>
   );

@@ -1,12 +1,8 @@
+import { SavedProps } from "@/app/types/savedProps";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 
-interface SaveProps {
-  readonly isSaved: boolean;
-  readonly onToggle: () => void;
-}
-
-export default function Save({ isSaved, onToggle }: SaveProps) {
+export default function Save({ isSaved, onToggle }: SavedProps) {
   return (
     <Pressable hitSlop={10} onPress={onToggle}>
       <Ionicons

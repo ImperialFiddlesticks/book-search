@@ -1,4 +1,4 @@
-import { Book } from "@/app/hooks/useBookSearch";
+import { Book } from "@/app/types/bookProps";
 import {
   FlatList,
   StyleSheet,
@@ -11,9 +11,16 @@ import BookCover from "./BookCover";
 interface SavedBooksProps {
   readonly books: Book[];
   readonly onBookPress: (book: Book) => void;
+  readonly isSaved: (book: Book) => boolean;
+  readonly onToggle: (book: Book) => void;
 }
 
-export default function SavedBookBar({ books, onBookPress }: SavedBooksProps) {
+export default function SavedBookBar({
+  books,
+  onBookPress,
+  isSaved,
+  onToggle,
+}: SavedBooksProps) {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
@@ -25,7 +32,12 @@ export default function SavedBookBar({ books, onBookPress }: SavedBooksProps) {
         horizontal
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
-          <BookCover book={item} onPress={() => onBookPress(item)} />
+          <BookCover
+            book={item}
+            onPress={() => onBookPress(item)}
+            isSaved={isSaved(item)}
+            onToggle={() => onToggle(item)}
+          />
         )}
         keyExtractor={(item) => String(item.key)}
         contentContainerStyle={styles.contentContainer}
