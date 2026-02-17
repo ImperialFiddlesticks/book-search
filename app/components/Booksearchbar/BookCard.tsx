@@ -5,12 +5,14 @@ import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/app/store/useSelectedBookStore";
+import { useFavoritesStore } from "@/app/store/favoritesStore";
 
 interface BookCardProps extends SavedProps {
   readonly book: Book;
 }
 export default function BookCard({ book, isSaved, onToggle }: BookCardProps) {
   const router = useRouter();
+
   const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
