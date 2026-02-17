@@ -22,7 +22,9 @@ export default function BookCard({ book, isSaved, onToggle }: BookCardProps) {
           {coverUrl ? (
             <Image source={{ uri: coverUrl }} style={styles.cover} />
           ) : (
-            <View style={styles.placeholder} />
+            <View style={styles.placeholder}>
+              <Text>No cover available.</Text>
+            </View>
           )}
           <View style={styles.info}>
             <Card.Title

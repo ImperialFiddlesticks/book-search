@@ -108,7 +108,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home Screen</Text>
+      <Text style={styles.title}>FOLIO</Text>
       <Booksearchbar />
       <Link href="/searchResults">
         <Text style={styles.link}>Search Results</Text>
