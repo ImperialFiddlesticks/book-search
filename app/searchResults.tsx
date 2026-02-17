@@ -1,20 +1,40 @@
 import { StyleSheet, Text, View } from "react-native";
 import BookCard from "./components/Booksearchbar/BookCard";
+import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { FlatList, ActivityIndicator } from "react-native";
+import { useBookSearch } from "./hooks/openLibraryApi";
 
 export default function SearchResults() {
+  const { query } = useLocalSearchParams<{ query: string }>();
+  const [searchQuery, setSearchQuery] = useState(query ?? "lord of the rings");
+  const { data, isLoading, isError } = useBookSearch(searchQuery);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.container}>
+        <Text>Something went wrong. Please try again.</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Search Results</Text>
-      <BookCard
-        book={{
-          key: "/works/OL82563W",
-          title: "The Lord of the Rings",
-          author_name: ["J.R.R. Tolkien"],
-          first_publish_year: 1954,
-          cover_i: 9255566,
-        }}
-        isSaved={false}
-        onToggle={() => {}}
+      <FlatList
+        data={data?.docs ?? []}
+        keyExtractor={(item) => item.key}
+        renderItem={({ item }) => (
+          <BookCard book={item} isSaved={false} onToggle={() => {}} />
+        )}
+        ListEmptyComponent={<Text>No results found.</Text>}
       />
     </View>
   );

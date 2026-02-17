@@ -5,6 +5,7 @@ import Booksearchbar from "./components/Booksearchbar/Booksearchbar";
 import SavedBookBar from "./components/Booksearchbar/SavedBookBar";
 import { useFavoritesStore } from "./store/favoritesStore";
 import { Book } from "./types/bookProps";
+import { useSelectedBookStore } from "./store/useSelectedBookStore";
 
 //placeholder böcker för att kunna styla
 const PLACEHOLDER_BOOKS: Book[] = [
@@ -98,11 +99,12 @@ export default function Home() {
   const router = useRouter();
   const { favorites, isSaved, toggleFavorite, loadFavorites } =
     useFavoritesStore();
-
+  const { setSelectedBook } = useSelectedBookStore();
   useEffect(() => {
     loadFavorites();
   }, []);
   const handleBookPress = (book: Book) => {
+    setSelectedBook(book);
     router.push("/details");
   };
 

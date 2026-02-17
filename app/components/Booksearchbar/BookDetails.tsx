@@ -1,8 +1,9 @@
 import { Book } from "@/app/types/bookProps";
 import SavedProps from "@/app/types/savedProps";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
 import { Card, Text } from "react-native-paper";
 import Save from "./Save";
+import { useBookDescription } from "@/app/hooks/openLibraryApi";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
@@ -16,6 +17,7 @@ export default function BookDetails({
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
+  const { data, isLoading, isError } = useBookDescription(book.key);
 
   return (
     <Card style={styles.card}>
@@ -45,6 +47,14 @@ export default function BookDetails({
               <Text>Pages: {book.number_of_pages_median}</Text>
             )}
             {book.isbn && <Text>ISBN: {book.isbn}</Text>}
+            <View>
+              {isLoading && <ActivityIndicator />}
+              {isError && <Text>Description unavailable.</Text>}
+              {data && <Text>{data}</Text>}{" "}
+            </View>
+            {!isLoading && !isError && !data && (
+              <Text>No description available.</Text>
+            )}
           </Card.Content>
         </View>
       </View>
