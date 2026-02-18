@@ -1,8 +1,13 @@
-import { Audio } from "expo-av";
-import * as FileSystem from "expo-file-system";
+import {
+  AudioModule,
+  AudioQuality,
+  IOSOutputFormat,
+  useAudioRecorder,
+  useAudioRecorderState,
+} from "expo-audio";
 import * as React from "react";
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 
 const APYHUB_TOKEN =
@@ -10,31 +15,78 @@ const APYHUB_TOKEN =
 
 const Booksearchbar = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [recording, setRecording] = React.useState<Audio.Recording | null>(
-    null,
-  );
-  async function uploadAudio(uri: string) {
-    console.log("FUNKA FUCKIN SKITENN????");
+  const audioRecorder = useAudioRecorder({
+    extension: ".m4a",
+    sampleRate: 44100,
+    numberOfChannels: 1,
+    bitRate: 128000,
 
-    const fileInfo = await FileSystem.getInfoAsync(uri);
+    ios: {
+      extension: ".wav",
+      outputFormat: IOSOutputFormat.LINEARPCM,
+      audioQuality: AudioQuality.MAX,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+    android: {
+      extension: ".m4a",
+      outputFormat: "mpeg4",
+      audioEncoder: "aac",
+    },
+    web: {
+      mimeType: "audio/webm",
+      bitsPerSecond: 128000,
+    },
+  });
+
+  const recorderState = useAudioRecorderState(audioRecorder);
+
+  useEffect(() => {
+    const getPermissions = async () => {
+      const permission = await AudioModule.requestRecordingPermissionsAsync();
+
+      if (permission.status === "granted") {
+        console.log("Audio recording permission granted");
+      }
+    };
+
+    getPermissions();
+  }, []);
+
+  async function uploadAudio(uri: string) {
     console.log("Uploading audio to APYHub...", uri);
+
+    const audioUri =
+      Platform.OS === "android" && !uri.startsWith("file://")
+        ? `file://${uri}`
+        : uri;
+
+    const fileExtension = Platform.OS === "android" ? "m4a" : "wav";
+    const mimeType = Platform.OS === "android" ? "audio/mp4" : "audio/wav";
+
     try {
-      const audioFile = {
-        uri: uri,
-        name: "recording.m4a",
-        type: "audio/m4a",
-      };
       const formData = new FormData();
-      formData.append("file", audioFile as any);
+
+      const file: any = {
+        uri: audioUri,
+        name: `recording.${fileExtension}`,
+        type: mimeType,
+      };
+
+      formData.append("file", file as any);
       formData.append("language", "en-US");
+
+      console.log("Sending request to APYHub");
+
       const response = await fetch("https://api.apyhub.com/stt/file", {
         method: "POST",
         headers: {
           "apy-token": APYHUB_TOKEN,
-          Accept: "application/json",
         },
         body: formData,
       });
+
       const result = await response.json();
       console.log("Full API Response:", JSON.stringify(result, null, 2));
 
@@ -51,43 +103,32 @@ const Booksearchbar = () => {
     }
   }
 
-  useEffect(() => {
-    const getPermissions = async () => {
-      const permission = await Audio.requestPermissionsAsync();
-
-      if (permission.status === "granted") {
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: true,
-
-          playsInSilentModeIOS: true,
-        });
-      }
-    };
-
-    getPermissions();
-  }, []);
-
   async function startRecording() {
     try {
+      const perms = await AudioModule.getRecordingPermissionsAsync();
+      if (!perms.granted) {
+        await AudioModule.requestRecordingPermissionsAsync();
+      }
       console.log("Starting recording...");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY,
-      );
-      setRecording(recording);
-      console.log("Recording started");
+      await audioRecorder.prepareToRecordAsync();
     } catch (err) {
       console.error("Failed to start recording", err);
     }
   }
 
   async function stopRecording() {
-    console.log("Stopping recording...");
-    setRecording(null);
-    await recording?.stopAndUnloadAsync();
-    const uri = recording?.getURI();
-    console.log("Recording stopped and stored at", uri);
-    if (uri) {
-      uploadAudio(uri);
+    try {
+      console.log("Stopping recording...");
+      await audioRecorder.stop();
+
+      const uri = audioRecorder.uri;
+      console.log("Recording stopped and stored at", uri);
+
+      if (uri) {
+        uploadAudio(uri);
+      }
+    } catch (err) {
+      console.error("Failed to stop recording", err);
     }
   }
 
@@ -97,8 +138,10 @@ const Booksearchbar = () => {
         placeholder="Search book"
         onChangeText={setSearchQuery}
         value={searchQuery}
-        traileringIcon={recording ? "stop" : "microphone"}
-        onTraileringIconPress={recording ? stopRecording : startRecording}
+        traileringIcon={recorderState.isRecording ? "stop" : "microphone"}
+        onTraileringIconPress={
+          recorderState.isRecording ? stopRecording : startRecording
+        }
       />
     </View>
   );
