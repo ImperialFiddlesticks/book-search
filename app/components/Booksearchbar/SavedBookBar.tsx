@@ -41,7 +41,7 @@ export default function SavedBookBar({
         )}
         keyExtractor={(item) => String(item.key)}
         contentContainerStyle={styles.contentContainer}
-        style={{ height: isLandscape ? 200 : 150, width: "100%" }}
+        style={styles.list}
         ListEmptyComponent={<Text>No saved books yet...</Text>}
       />
     </View>
@@ -51,6 +51,7 @@ export default function SavedBookBar({
 const styles = StyleSheet.create({
   contentContainer: { paddingHorizontal: 16, gap: 8, alignItems: "center" },
 
-  listWrapper: { paddingVertical: 10 },
+  listWrapper: { paddingVertical: 10, height: 180 },
   listHeadline: { fontWeight: "600" },
+  list: { flexGrow: 0 },
 });

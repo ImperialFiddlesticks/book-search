@@ -3,17 +3,27 @@ import SavedProps from "@/app/types/savedProps";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
+import { useRouter } from "expo-router";
+import { useSelectedBookStore } from "@/app/store/useSelectedBookStore";
+import { useFavoritesStore } from "@/app/store/favoritesStore";
 
 interface BookCardProps extends SavedProps {
   readonly book: Book;
 }
 export default function BookCard({ book, isSaved, onToggle }: BookCardProps) {
+  const router = useRouter();
+
+  const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
 
+  const handlePress = () => {
+    setSelectedBook(book);
+    router.push("/details");
+  };
   return (
-    <Card style={styles.card}>
+    <Card style={styles.card} onPress={handlePress}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
           <Save isSaved={isSaved} onToggle={onToggle} />
@@ -22,7 +32,9 @@ export default function BookCard({ book, isSaved, onToggle }: BookCardProps) {
           {coverUrl ? (
             <Image source={{ uri: coverUrl }} style={styles.cover} />
           ) : (
-            <View style={styles.placeholder} />
+            <View style={styles.placeholder}>
+              <Text>No cover available.</Text>
+            </View>
           )}
           <View style={styles.info}>
             <Card.Title
