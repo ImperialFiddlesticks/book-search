@@ -9,12 +9,24 @@ import * as React from "react";
 import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
+import { useRouter } from "expo-router";
 
 const APYHUB_TOKEN =
   "APY0SBhWWI0kixOpkR0bkTaqthd3QpAaIzd4EwBzMO7OFRvAMqYM6cMXQ4e0Q29X";
 
 const Booksearchbar = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push({
+        pathname: "/searchResults",
+        params: { query: searchQuery },
+      });
+    }
+  };
+
   const audioRecorder = useAudioRecorder({
     extension: ".m4a",
     sampleRate: 44100,
@@ -138,6 +150,7 @@ const Booksearchbar = () => {
         placeholder="Search book"
         onChangeText={setSearchQuery}
         value={searchQuery}
+        onSubmitEditing={handleSearch}
         traileringIcon={recorderState.isRecording ? "stop" : "microphone"}
         onTraileringIconPress={
           recorderState.isRecording ? stopRecording : startRecording
