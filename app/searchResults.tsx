@@ -5,12 +5,11 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import BookCard from "./components/Booksearchbar/BookCard";
+import BookCard from "./components/BookCard";
 import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import { useBookSearch } from "./hooks/openLibraryApi";
 import { useFavoritesStore } from "./store/favoritesStore";
-import Booksearchbar from "./components/Booksearchbar/Booksearchbar";
 
 export default function SearchResults() {
   const { query } = useLocalSearchParams<{ query: string }>();
