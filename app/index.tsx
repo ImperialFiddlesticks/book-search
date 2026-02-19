@@ -1,8 +1,8 @@
 import { Link, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Booksearchbar from "./components/Booksearchbar/Booksearchbar";
-import SavedBookBar from "./components/Booksearchbar/SavedBookBar";
+import Booksearchbar from "./components/Booksearchbar";
+import SavedBookBar from "./components/SavedBookBar";
 import { useFavoritesStore } from "./store/favoritesStore";
 import { Book } from "./types/bookProps";
 import { useSelectedBookStore } from "./store/useSelectedBookStore";
