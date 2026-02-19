@@ -161,7 +161,7 @@ const Booksearchbar = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: { width: "100%", padding: 10 },
 });
 
 export default Booksearchbar;

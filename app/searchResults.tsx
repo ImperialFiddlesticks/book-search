@@ -10,6 +10,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import { useBookSearch } from "./hooks/openLibraryApi";
 import { useFavoritesStore } from "./store/favoritesStore";
+import Booksearchbar from "./components/Booksearchbar/Booksearchbar";
 
 export default function SearchResults() {
   const { query } = useLocalSearchParams<{ query: string }>();
@@ -38,6 +39,7 @@ export default function SearchResults() {
   }
   return (
     <View style={styles.container}>
+      <Booksearchbar />
       <Text style={styles.title}>Search Results</Text>
       <FlatList
         data={data?.docs ?? []}
