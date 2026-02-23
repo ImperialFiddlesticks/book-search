@@ -9,7 +9,10 @@ import { useFavoritesStore } from "@/app/store/favoritesStore";
 
 export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
-  const { favorites, isSaved, toggleFavorite } = useFavoritesStore();
+  const isSaved = useFavoritesStore((state) =>
+    state.favorites.some((f) => f.key === book.key),
+  );
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
   const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -23,7 +26,7 @@ export default function BookCard({ book }: { book: Book }) {
     <Card style={styles.card} onPress={handlePress}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
-          <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
+          <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
         </View>
         <View style={styles.row}>
           {coverUrl ? (

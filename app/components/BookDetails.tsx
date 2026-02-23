@@ -15,12 +15,15 @@ export default function BookDetails({ book }: { book: Book }) {
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
   const { data, isLoading, isError } = useBookDescription(book.key);
-  const { favorites, isSaved, toggleFavorite } = useFavoritesStore();
+  const isSaved = useFavoritesStore((state) =>
+    state.favorites.some((f) => f.key === book.key),
+  );
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
   return (
     <Card style={styles.card}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
-          <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
+          <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
         </View>
         <View style={styles.coverBox}>
           {coverUrl ? (

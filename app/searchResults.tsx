@@ -16,8 +16,7 @@ export default function SearchResults() {
   const { query } = useLocalSearchParams<{ query: string }>();
   const [searchQuery, setSearchQuery] = useState(query ?? "lord of the rings");
   const { data, isLoading, isError } = useBookSearch(searchQuery);
-  const { favorites, isSaved, toggleFavorite, loadFavorites } =
-    useFavoritesStore();
+  const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
 
   useEffect(() => {
     loadFavorites();
