@@ -13,7 +13,7 @@ export default function RootLayout() {
           icon: (props) => <MaterialCommunityIcons {...props} />,
         }}
       >
-        <Stack />
+        <Stack screenOptions={{ headerShown: false }} />
       </PaperProvider>
     </QueryClientProvider>
   );
