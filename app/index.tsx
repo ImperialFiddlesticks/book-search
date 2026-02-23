@@ -6,6 +6,7 @@ import SavedBookBar from "./components/SavedBookBar";
 import { useFavoritesStore } from "./store/favoritesStore";
 import { Book } from "./types/bookProps";
 import { useSelectedBookStore } from "./store/useSelectedBookStore";
+import Header from "./components/Header";
 
 //placeholder böcker för att kunna styla
 const PLACEHOLDER_BOOKS: Book[] = [
@@ -109,25 +110,28 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>FOLIO</Text>
-      <Booksearchbar />
-      <Link href="/searchResults">
-        <Text style={styles.link}>Search Results</Text>
-      </Link>
-      <Link href="/details">
-        <Text style={styles.link}>Book Details</Text>
-      </Link>
-      <SavedBookBar
-        // books={favorites}
-        books={PLACEHOLDER_BOOKS}
-        onBookPress={handleBookPress}
-        isSaved={() => true}
-        onToggle={() => {}}
-        // isSaved={isSaved}
-        // onToggle={toggleFavorite}
-      />
-    </View>
+    <>
+      <Header title='Book Search' />
+      <View style={styles.container}>
+        <Booksearchbar />
+
+        <Link href='/searchResults'>
+          <Text style={styles.link}>Search Results</Text>
+        </Link>
+        <Link href='/details'>
+          <Text style={styles.link}>Book Details</Text>
+        </Link>
+        <SavedBookBar
+          // books={favorites}
+          books={PLACEHOLDER_BOOKS}
+          onBookPress={handleBookPress}
+          isSaved={() => true}
+          onToggle={() => {}}
+          // isSaved={isSaved}
+          // onToggle={toggleFavorite}
+        />
+      </View>
+    </>
   );
 }
 
@@ -137,6 +141,7 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "flex-start",
     alignItems: "center",
+    marginInline: "auto",
   },
   title: {
     fontSize: 24,
