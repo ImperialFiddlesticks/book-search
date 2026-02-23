@@ -13,6 +13,12 @@ export default function RootLayout() {
           icon: (props) => <MaterialCommunityIcons {...props} />,
         }}
       >
+        <Stack>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="details" />
+          <Stack.Screen name="searchResults" />
+          <Stack.Screen name="scanner" options={{ presentation: "modal" }} />
+        </Stack>
         <Stack screenOptions={{ headerShown: false }} />
       </PaperProvider>
     </QueryClientProvider>

@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useRouter } from "expo-router";
+import ScannerButton from "./ScannerButton";
 
 const APYHUB_TOKEN =
   "APY0SBhWWI0kixOpkR0bkTaqthd3QpAaIzd4EwBzMO7OFRvAMqYM6cMXQ4e0Q29X";
@@ -156,6 +157,7 @@ const Booksearchbar = () => {
           recorderState.isRecording ? stopRecording : startRecording
         }
       />
+      <ScannerButton />
     </View>
   );
 };
