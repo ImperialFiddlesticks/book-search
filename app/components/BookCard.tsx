@@ -7,12 +7,9 @@ import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/app/store/useSelectedBookStore";
 import { useFavoritesStore } from "@/app/store/favoritesStore";
 
-interface BookCardProps extends SavedProps {
-  readonly book: Book;
-}
-export default function BookCard({ book, isSaved, onToggle }: BookCardProps) {
+export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
-
+  const { favorites, isSaved, toggleFavorite } = useFavoritesStore();
   const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -26,7 +23,7 @@ export default function BookCard({ book, isSaved, onToggle }: BookCardProps) {
     <Card style={styles.card} onPress={handlePress}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
-          <Save isSaved={isSaved} onToggle={onToggle} />
+          <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
         </View>
         <View style={styles.row}>
           {coverUrl ? (

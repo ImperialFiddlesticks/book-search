@@ -5,7 +5,7 @@ import BookDetails from "./components/BookDetails";
 
 export default function Details() {
   const { selectedBook } = useSelectedBookStore();
-  const { isSaved, toggleFavorite } = useFavoritesStore();
+  const { favorites, isSaved, toggleFavorite } = useFavoritesStore();
 
   if (!selectedBook) {
     return (
@@ -16,11 +16,7 @@ export default function Details() {
   }
   return (
     <View style={styles.container}>
-      <BookDetails
-        book={selectedBook}
-        isSaved={isSaved(selectedBook)}
-        onToggle={() => toggleFavorite(selectedBook)}
-      />
+      <BookDetails book={selectedBook} />
     </View>
   );
 }

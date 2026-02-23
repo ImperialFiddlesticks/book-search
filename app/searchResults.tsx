@@ -16,7 +16,8 @@ export default function SearchResults() {
   const { query } = useLocalSearchParams<{ query: string }>();
   const [searchQuery, setSearchQuery] = useState(query ?? "lord of the rings");
   const { data, isLoading, isError } = useBookSearch(searchQuery);
-  const { isSaved, toggleFavorite, loadFavorites } = useFavoritesStore();
+  const { favorites, isSaved, toggleFavorite, loadFavorites } =
+    useFavoritesStore();
 
   useEffect(() => {
     loadFavorites();
@@ -44,15 +45,7 @@ export default function SearchResults() {
       <FlatList
         data={data?.docs ?? []}
         keyExtractor={(item) => item.key}
-        renderItem={({ item }) => (
-          <BookCard
-            book={item}
-            isSaved={isSaved(item)}
-            onToggle={() => {
-              toggleFavorite(item);
-            }}
-          />
-        )}
+        renderItem={({ item }) => <BookCard book={item} />}
         ListEmptyComponent={<Text>No results found.</Text>}
       />
     </View>
