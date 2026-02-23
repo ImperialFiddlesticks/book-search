@@ -4,26 +4,23 @@ import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
 import { Card, Text } from "react-native-paper";
 import Save from "./Save";
 import { useBookDescription } from "@/app/hooks/openLibraryApi";
+import { useFavoritesStore } from "../store/favoritesStore";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
 }
 
-export default function BookDetails({
-  book,
-  isSaved,
-  onToggle,
-}: BookDetailProps) {
+export default function BookDetails({ book }: { book: Book }) {
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
   const { data, isLoading, isError } = useBookDescription(book.key);
-
+  const { favorites, isSaved, toggleFavorite } = useFavoritesStore();
   return (
     <Card style={styles.card}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
-          <Save isSaved={isSaved} onToggle={onToggle} />
+          <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
         </View>
         <View style={styles.coverBox}>
           {coverUrl ? (
@@ -50,7 +47,7 @@ export default function BookDetails({
             <View>
               {isLoading && <ActivityIndicator />}
               {isError && <Text>Description unavailable.</Text>}
-              {data && <Text>{data}</Text>}{" "}
+              {data && <Text>{data}</Text>}
             </View>
             {!isLoading && !isError && !data && (
               <Text>No description available.</Text>
