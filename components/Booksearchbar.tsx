@@ -127,6 +127,8 @@ const Booksearchbar = () => {
       }
       console.log("Starting recording...");
       await audioRecorder.prepareToRecordAsync();
+      audioRecorder.record();
+      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
