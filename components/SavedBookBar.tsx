@@ -1,4 +1,4 @@
-import { Book } from "@/app/types/bookProps";
+import { Book } from "@/types/bookProps";
 import {
   FlatList,
   StyleSheet,
