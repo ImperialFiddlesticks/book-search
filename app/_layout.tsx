@@ -19,6 +19,7 @@ export default function RootLayout() {
           <Stack.Screen name="searchResults" />
           <Stack.Screen name="scanner" options={{ presentation: "modal" }} />
         </Stack>
+        <Stack screenOptions={{ headerShown: false }} />
       </PaperProvider>
     </QueryClientProvider>
   );
