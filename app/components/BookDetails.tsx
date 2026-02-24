@@ -48,7 +48,12 @@ export default function BookDetails({ book }: { book: Book }) {
             )}
             {book.isbn && <Text>ISBN: {book.isbn}</Text>}
             <View>
-              {isLoading && <ActivityIndicator />}
+              {isLoading && (
+                <ActivityIndicator
+                  accessibilityLabel="Loading results"
+                  accessibilityRole="progressbar"
+                />
+              )}
               {isError && <Text>Description unavailable.</Text>}
               {data && <Text>{data}</Text>}
             </View>

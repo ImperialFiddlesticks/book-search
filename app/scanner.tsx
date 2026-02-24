@@ -5,7 +5,7 @@ import {
   useCameraPermissions,
 } from "expo-camera";
 import { Text, View, StyleSheet } from "react-native";
-import { Button, IconButton } from "react-native-paper";
+import { ActivityIndicator, Button, IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
 
 export default function Scanner() {
@@ -16,7 +16,10 @@ export default function Scanner() {
     // Camera permissions are still loading
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <ActivityIndicator
+          accessibilityLabel="Loading results"
+          accessibilityRole="progressbar"
+        />
       </View>
     );
   } else if (!permission.granted) {
@@ -54,6 +57,7 @@ export default function Scanner() {
           icon="close"
           size={30}
           style={{ alignSelf: "flex-end", margin: 16 }}
+          accessibilityLabel="Close Scanner"
         />
       </View>
     </View>
