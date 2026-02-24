@@ -1,6 +1,6 @@
 import { Book } from "@/types/bookProps";
 import SavedProps from "@/types/savedProps";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
@@ -19,8 +19,16 @@ export default function BookCard({ book }: { book: Book }) {
     : null;
 
   const handlePress = () => {
+    console.log(book.author_key?.[0]);
     setSelectedBook(book);
     router.push("/details");
+  };
+
+  const handleAuthorPress = () => {
+    const key = book.author_key?.[0];
+    if (key) {
+      router.push(`/author/${key}`);
+    }
   };
   return (
     <Card style={styles.card} onPress={handlePress}>
@@ -37,10 +45,12 @@ export default function BookCard({ book }: { book: Book }) {
             </View>
           )}
           <View style={styles.info}>
-            <Card.Title
-              title={book.title}
-              subtitle={book.author_name?.join(", ")}
-            />
+            <Card.Title title={book.title} />
+            <TouchableOpacity onPress={handleAuthorPress}>
+              <Text style={styles.authorName}>
+                {book.author_name?.join(", ")}
+              </Text>
+            </TouchableOpacity>
 
             {book.first_publish_year && (
               <Text style={styles.year}>{book.first_publish_year}</Text>
@@ -66,4 +76,5 @@ const styles = StyleSheet.create({
   },
   info: { flex: 1 },
   year: { paddingHorizontal: 16, color: "#888", fontSize: 12 },
+  authorName: { paddingHorizontal: 16, color: "#4A90E2", fontSize: 13 },
 });

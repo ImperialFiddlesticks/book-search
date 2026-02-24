@@ -6,4 +6,5 @@ export default interface Author {
   birth_date?: string;
   death_date?: string;
   ratings_average?: number;
+  bio?: string | { type: string; value: string };
 }
