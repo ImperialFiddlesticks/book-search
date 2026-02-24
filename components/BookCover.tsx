@@ -1,5 +1,5 @@
-import { Book } from "@/app/types/bookProps";
-import SavedProps from "@/app/types/savedProps";
+import { Book } from "@/types/bookProps";
+import SavedProps from "@/types/savedProps";
 
 import { useState } from "react";
 import {
