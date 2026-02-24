@@ -122,13 +122,11 @@ export default function Home() {
           <Text style={styles.link}>Book Details</Text>
         </Link>
         <SavedBookBar
-          // books={favorites}
-          books={PLACEHOLDER_BOOKS}
+          books={favorites}
+       
           onBookPress={handleBookPress}
-          isSaved={() => true}
-          onToggle={() => {}}
-          // isSaved={isSaved}
-          // onToggle={toggleFavorite}
+          isSaved={isSaved}
+          onToggle={toggleFavorite}
         />
       </View>
     </>

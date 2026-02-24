@@ -11,6 +11,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import { useBookSearch } from "./hooks/openLibraryApi";
 import { useFavoritesStore } from "./store/favoritesStore";
+import Header from "./components/Header";
 
 export default function SearchResults() {
   const { query } = useLocalSearchParams<{ query: string }>();
@@ -38,6 +39,8 @@ export default function SearchResults() {
     );
   }
   return (
+    <>
+    <Header title='Search results'/>
     <View style={styles.container}>
       <Booksearchbar />
       <Text style={styles.title}>Search Results</Text>
@@ -48,6 +51,7 @@ export default function SearchResults() {
         ListEmptyComponent={<Text>No results found.</Text>}
       />
     </View>
+    </>
   );
 }
 
