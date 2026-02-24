@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
-import { useSelectedBookStore } from "@/app/store/useSelectedBookStore";
+import { useSelectedBookStore } from "@/app/store/searchStore";
 import { useFavoritesStore } from "@/app/store/favoritesStore";
 
 export default function BookCard({ book }: { book: Book }) {

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { useSelectedBookStore } from "./store/useSelectedBookStore";
+import { useSelectedBookStore } from "./store/searchStore";
 import BookDetails from "./components/BookDetails";
 import { useLocalSearchParams } from "expo-router";
 import { useBookByIsbn } from "./hooks/openLibraryApi";

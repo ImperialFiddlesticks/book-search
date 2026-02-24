@@ -5,7 +5,7 @@ import Booksearchbar from "./components/Booksearchbar";
 import SavedBookBar from "./components/SavedBookBar";
 import { useFavoritesStore } from "./store/favoritesStore";
 import { Book } from "./types/bookProps";
-import { useSelectedBookStore } from "./store/useSelectedBookStore";
+import { useSelectedBookStore } from "./store/searchStore";
 import Header from "./components/Header";
 
 //placeholder böcker för att kunna styla
@@ -111,14 +111,14 @@ export default function Home() {
 
   return (
     <>
-      <Header title='Book Search' />
+      <Header title="FOLIO" />
       <View style={styles.container}>
         <Booksearchbar />
 
-        <Link href='/searchResults'>
+        <Link href="/searchResults">
           <Text style={styles.link}>Search Results</Text>
         </Link>
-        <Link href='/details'>
+        <Link href="/details">
           <Text style={styles.link}>Book Details</Text>
         </Link>
         <SavedBookBar
