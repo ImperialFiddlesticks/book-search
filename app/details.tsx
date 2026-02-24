@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
-import { useSelectedBookStore } from "./store/searchStore";
-import BookDetails from "./components/BookDetails";
+import { useSelectedBookStore } from "../store/useSelectedBookStore";
+import BookDetails from "../components/BookDetails";
 import { useLocalSearchParams } from "expo-router";
-import { useBookByIsbn } from "./hooks/openLibraryApi";
+import { useBookByIsbn } from "../hooks/openLibraryApi";
 import { ActivityIndicator } from "react-native-paper";
 
 export default function Details() {

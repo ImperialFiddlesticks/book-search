@@ -1,11 +1,11 @@
-import { Book } from "@/app/types/bookProps";
-import SavedProps from "@/app/types/savedProps";
+import { Book } from "@/types/bookProps";
+import SavedProps from "@/types/savedProps";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
-import { useSelectedBookStore } from "@/app/store/searchStore";
-import { useFavoritesStore } from "@/app/store/favoritesStore";
+import { useSelectedBookStore } from "@/store/useSelectedBookStore";
+import { useFavoritesStore } from "@/store/favoritesStore";
 
 export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();

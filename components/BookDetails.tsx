@@ -1,9 +1,9 @@
-import { Book } from "@/app/types/bookProps";
-import SavedProps from "@/app/types/savedProps";
+import { Book } from "@/types/bookProps";
+import SavedProps from "@/types/savedProps";
 import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
 import { Card, Text, Button } from "react-native-paper";
 import Save from "./Save";
-import { useBookDescription } from "@/app/hooks/openLibraryApi";
+import { useBookDescription } from "@/hooks/openLibraryApi";
 import { useFavoritesStore } from "../store/favoritesStore";
 import { useRouter } from "expo-router";
 import { useSearchStore } from "../store/searchStore";

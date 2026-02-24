@@ -12,9 +12,9 @@ export default function Header({title}: {title: string}) {
 
   return (
     <Appbar.Header style={styles.header}>
-      <Appbar.BackAction onPress={goBack} />
+      <Appbar.BackAction style={styles.iconButton} onPress={goBack} />
       <Appbar.Content titleStyle={styles.headerTitle} title={title} />
-      <Appbar.Action icon='star' onPress={_handleMore} />
+      <Appbar.Action style={styles.iconButton} icon='star' onPress={_handleMore} />
     </Appbar.Header>
   );
 }
@@ -35,4 +35,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     textAlign: "center",
   },
+
+  iconButton: {
+    borderWidth: 2,
+    borderColor: "rgb(73, 69, 79)",
+    borderStyle: "solid",
+    borderRadius: "15px"
+  }
 });
