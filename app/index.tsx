@@ -1,11 +1,13 @@
 import { Link, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Booksearchbar from "./components/Booksearchbar";
-import SavedBookBar from "./components/SavedBookBar";
-import { useFavoritesStore } from "./store/favoritesStore";
-import { Book } from "./types/bookProps";
-import { useSelectedBookStore } from "./store/useSelectedBookStore";
+import Booksearchbar from "../components/Booksearchbar";
+import SavedBookBar from "../components/SavedBookBar";
+import { useFavoritesStore } from "../store/favoritesStore";
+import { Book } from "../types/bookProps";
+import { useSelectedBookStore } from "../store/useSelectedBookStore";
+import PreviousSearched from "../components/PreviousSearched";
+import { useStore } from "../store/previousSearched";
 
 //placeholder böcker för att kunna styla
 const PLACEHOLDER_BOOKS: Book[] = [
@@ -100,6 +102,15 @@ export default function Home() {
   const { favorites, isSaved, toggleFavorite, loadFavorites } =
     useFavoritesStore();
   const { setSelectedBook } = useSelectedBookStore();
+
+  const { previousSearched } = useStore();
+  useEffect(() => {
+    loadFavorites();
+    loadPreviousSearched();
+  }, []);
+
+  const { loadPreviousSearched } = useStore();
+
   useEffect(() => {
     loadFavorites();
   }, []);
@@ -112,6 +123,7 @@ export default function Home() {
     <View style={styles.container}>
       <Text style={styles.title}>FOLIO</Text>
       <Booksearchbar />
+      <PreviousSearched />
       <Link href="/searchResults">
         <Text style={styles.link}>Search Results</Text>
       </Link>

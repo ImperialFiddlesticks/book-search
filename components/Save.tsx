@@ -1,4 +1,4 @@
-import SavedProps from "@/app/types/savedProps";
+import SavedProps from "@/types/savedProps";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 
