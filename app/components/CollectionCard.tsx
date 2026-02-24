@@ -5,10 +5,10 @@ import { Book } from "@/app/types/bookProps";
 
 interface CollectionCardProps {
     collection: {
-        preview: Book[],
+        savedItems: Book[],
         title: string,
     },
-    onPress: () => {}
+    onPress?: () => {}
 }
 
 export default function CollectionCard({ collection, onPress }: CollectionCardProps) {
@@ -18,7 +18,7 @@ export default function CollectionCard({ collection, onPress }: CollectionCardPr
 
         {/* Preview Grid */}
         <View style={styles.previewContainer}>
-          {collection.preview.slice(0, 4).map(({cover_i, key}: Book) => (
+          {collection.savedItems.slice(0, 4).map(({cover_i, key}: Book) => (
             <Image
               key={key}
               source={{ uri: cover_i
@@ -34,7 +34,7 @@ export default function CollectionCard({ collection, onPress }: CollectionCardPr
           <View>
             <Text variant="titleMedium">{collection.title}</Text>
             <Text variant="bodySmall">
-              {collection.preview.length} items
+              {collection.savedItems.length} items
             </Text>
           </View>
           <IconButton icon="chevron-right" />
