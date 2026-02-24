@@ -43,6 +43,15 @@ export const useBookSearch = (query: string) => {
   });
 };
 
+export const useBookByIsbn = (isbn: string) => {
+  return useQuery({
+    queryKey: ["bookByIsbn", isbn],
+    queryFn: () => fetchBooks(`isbn:${isbn}`),
+    enabled: !!isbn && isbn.length > 0,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
 export const useBookDescription = (key: string) => {
   return useQuery({
     queryKey: ["bookDescription", key],
