@@ -1,10 +1,12 @@
 import { Book } from "@/types/bookProps";
 import SavedProps from "@/types/savedProps";
 import { Image, StyleSheet, View, ActivityIndicator } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Card, Text, Button } from "react-native-paper";
 import Save from "./Save";
 import { useBookDescription } from "@/hooks/openLibraryApi";
 import { useFavoritesStore } from "../store/favoritesStore";
+import { useRouter } from "expo-router";
+import { useSearchStore } from "../store/searchStore";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
@@ -19,6 +21,14 @@ export default function BookDetails({ book }: { book: Book }) {
     state.favorites.some((f) => f.key === book.key),
   );
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const router = useRouter();
+  const searchByAuthor = useSearchStore((state) => state.searchByAuthor);
+  const handleAuthorSearch = () => {
+    const author = book.author_name?.[0] ?? "";
+    if (!author) return;
+    searchByAuthor(author);
+    router.push({ pathname: "/searchResults" });
+  };
   return (
     <Card style={styles.card}>
       <View style={styles.cardContent}>
@@ -60,6 +70,15 @@ export default function BookDetails({ book }: { book: Book }) {
             {!isLoading && !isError && !data && (
               <Text>No description available.</Text>
             )}
+            <View style={styles.authorSearchButton}>
+              <Button
+                mode="contained"
+                onPress={handleAuthorSearch}
+                accessibilityLabel="Search by author"
+              >
+                Works by {book.author_name?.[0] ?? "this author"}
+              </Button>
+            </View>
           </Card.Content>
         </View>
       </View>
@@ -80,4 +99,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0e0e0",
   },
   info: { flex: 1 },
+  authorSearchButton: { marginTop: 12 },
 });
