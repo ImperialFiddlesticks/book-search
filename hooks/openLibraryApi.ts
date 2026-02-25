@@ -21,15 +21,13 @@ const fetchBooks = async (query: string): Promise<BookSearchResponse> => {
   const data = await response.json();
   return data;
 };
-const fetchAuthor = async (query: string): Promise<Author[]> => {
-  const response = await fetch(
-    `https://openlibrary.org/search/authors.json?q=${encodeURIComponent(query)}&limit=5`,
-  );
+const fetchAuthor = async (key: string): Promise<Author> => {
+  const response = await fetch(`https://openlibrary.org/authors/${key}.json`);
   if (!response.ok) {
     throw new Error("Failed to fetch author");
   }
   const data = await response.json();
-  return data.docs;
+  return data;
 };
 
 const fetchBookDescription = async (key: string): Promise<string | null> => {
@@ -70,11 +68,11 @@ export const useBookDescription = (key: string) => {
   });
 };
 
-export const useAuthorSearch = (name: string) => {
+export const useAuthorDetail = (key: string) => {
   return useQuery({
-    queryKey: ["authors", name],
-    queryFn: () => fetchAuthor(name),
-    enabled: !!name,
+    queryKey: ["authors", key],
+    queryFn: () => fetchAuthor(key),
+    enabled: !!key,
     staleTime: 1000 * 60 * 5,
   });
 };

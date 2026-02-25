@@ -10,94 +10,6 @@ import Header from "../components/Header";
 import PreviousSearched from "../components/PreviousSearched";
 import { useStore } from "../store/previousSearched";
 
-//placeholder böcker för att kunna styla
-const PLACEHOLDER_BOOKS: Book[] = [
-  {
-    key: "1",
-    title: "The Great Gatsby",
-    author_name: ["F. Scott Fitzgerald"],
-    first_publish_year: 1925,
-    cover_i: 153747,
-  },
-  {
-    key: "2",
-    title: "To Kill a Mockingbird",
-    author_name: ["Harper Lee"],
-    first_publish_year: 1960,
-    cover_i: 8228691,
-  },
-  {
-    key: "3",
-    title: "1984",
-    author_name: ["George Orwell"],
-    first_publish_year: 1949,
-    cover_i: 8575708,
-  },
-  {
-    key: "4",
-    title: "Dune",
-    author_name: ["Frank Herbert"],
-    first_publish_year: 1965,
-    cover_i: 6895512,
-  },
-  {
-    key: "5",
-    title: "The Great Gatsby",
-    author_name: ["F. Scott Fitzgerald"],
-    first_publish_year: 1925,
-    cover_i: 153747,
-  },
-  {
-    key: "6",
-    title: "To Kill a Mockingbird",
-    author_name: ["Harper Lee"],
-    first_publish_year: 1960,
-    cover_i: 8228691,
-  },
-  {
-    key: "7",
-    title: "1984",
-    author_name: ["George Orwell"],
-    first_publish_year: 1949,
-    cover_i: 8575708,
-  },
-  {
-    key: "8",
-    title: "Dune",
-    author_name: ["Frank Herbert"],
-    first_publish_year: 1965,
-    cover_i: 6895512,
-  },
-  {
-    key: "9",
-    title: "The Great Gatsby",
-    author_name: ["F. Scott Fitzgerald"],
-    first_publish_year: 1925,
-    cover_i: 153747,
-  },
-  {
-    key: "10",
-    title: "To Kill a Mockingbird",
-    author_name: ["Harper Lee"],
-    first_publish_year: 1960,
-    cover_i: 8228691,
-  },
-  {
-    key: "11",
-    title: "1984",
-    author_name: ["George Orwell"],
-    first_publish_year: 1949,
-    cover_i: 8575708,
-  },
-  {
-    key: "12",
-    title: "Dune",
-    author_name: ["Frank Herbert"],
-    first_publish_year: 1965,
-    cover_i: 6895512,
-  },
-];
-
 export default function Home() {
   const router = useRouter();
   const { favorites, isSaved, toggleFavorite, loadFavorites } =
@@ -127,13 +39,10 @@ export default function Home() {
           <Text style={styles.link}>Book Details</Text>
         </Link>
         <SavedBookBar
-          // books={favorites}
-          books={PLACEHOLDER_BOOKS}
+          books={favorites}
           onBookPress={handleBookPress}
-          isSaved={() => true}
-          onToggle={() => {}}
-          // isSaved={isSaved}
-          // onToggle={toggleFavorite}
+          isSaved={isSaved}
+          onToggle={toggleFavorite}
         />
       </View>
     </>
