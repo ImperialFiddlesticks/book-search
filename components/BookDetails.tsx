@@ -6,6 +6,7 @@ import {
   View,
   ActivityIndicator,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Card, Text, Button } from "react-native-paper";
 import Save from "./Save";
@@ -43,64 +44,66 @@ export default function BookDetails({ book }: { book: Book }) {
   return (
     <>
       <Header title={book.title} />
-      <Card style={styles.card}>
-        <View style={styles.cardContent}>
-          <View style={styles.saveButton}>
-            <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
-          </View>
-          <View style={styles.coverBox}>
-            {coverUrl ? (
-              <Image source={{ uri: coverUrl }} style={styles.cover} />
-            ) : (
-              <View style={styles.placeholder}>
-                <Text>No cover available.</Text>
-              </View>
-            )}
-          </View>
-          <View style={styles.info}>
-            <Card.Title title={book.title} titleStyle={styles.title} />
-            {book.author_name && (
-              <TouchableOpacity onPress={handleAuthorPress}>
-                <Text style={styles.authorName}>
-                  {book.author_name.join(", ")}
-                </Text>
-              </TouchableOpacity>
-            )}
-            <Card.Content>
-              {book.first_publish_year && (
-                <Text>First Published: {book.first_publish_year}</Text>
+      <ScrollView>
+        <Card style={styles.card}>
+          <View style={styles.cardContent}>
+            <View style={styles.saveButton}>
+              <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
+            </View>
+            <View style={styles.coverBox}>
+              {coverUrl ? (
+                <Image source={{ uri: coverUrl }} style={styles.cover} />
+              ) : (
+                <View style={styles.placeholder}>
+                  <Text>No cover available.</Text>
+                </View>
               )}
-              {book.number_of_pages_median && (
-                <Text>Pages: {book.number_of_pages_median}</Text>
+            </View>
+            <View style={styles.info}>
+              <Card.Title title={book.title} titleStyle={styles.title} />
+              {book.author_name && (
+                <TouchableOpacity onPress={handleAuthorPress}>
+                  <Text style={styles.authorName}>
+                    {book.author_name.join(", ")}
+                  </Text>
+                </TouchableOpacity>
               )}
-              {book.isbn && <Text>ISBN: {book.isbn}</Text>}
-              <View>
-                {isLoading && (
-                  <ActivityIndicator
-                    accessibilityLabel="Loading results"
-                    accessibilityRole="progressbar"
-                  />
+              <Card.Content>
+                {book.first_publish_year && (
+                  <Text>First Published: {book.first_publish_year}</Text>
                 )}
-                {isError && <Text>Description unavailable.</Text>}
-                {data && <Text>{data}</Text>}
-              </View>
-              {!isLoading && !isError && !data && (
-                <Text>No description available.</Text>
-              )}
-              <View style={styles.authorSearchButton}>
-                <Button
-                  mode="contained"
-                  onPress={handleAuthorSearch}
-                  accessibilityLabel="Search by author"
-                  style={styles.worksButton}
-                >
-                  Works by {book.author_name?.[0] ?? "this author"}
-                </Button>
-              </View>
-            </Card.Content>
+                {book.number_of_pages_median && (
+                  <Text>Pages: {book.number_of_pages_median}</Text>
+                )}
+                {book.isbn && <Text>ISBN: {book.isbn}</Text>}
+                <View>
+                  {isLoading && (
+                    <ActivityIndicator
+                      accessibilityLabel="Loading results"
+                      accessibilityRole="progressbar"
+                    />
+                  )}
+                  {isError && <Text>Description unavailable.</Text>}
+                  {data && <Text>{data}</Text>}
+                </View>
+                {!isLoading && !isError && !data && (
+                  <Text>No description available.</Text>
+                )}
+                <View style={styles.authorSearchButton}>
+                  <Button
+                    mode="contained"
+                    onPress={handleAuthorSearch}
+                    accessibilityLabel="Search by author"
+                    style={styles.worksButton}
+                  >
+                    Works by {book.author_name?.[0] ?? "this author"}
+                  </Button>
+                </View>
+              </Card.Content>
+            </View>
           </View>
-        </View>
-      </Card>
+        </Card>
+      </ScrollView>
     </>
   );
 }

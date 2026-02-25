@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useAuthorDetail } from "@/hooks/openLibraryApi";
 import Author from "@/types/authorProps";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
 import Header from "@/components/Header";
 import { Card, Text, Button, ActivityIndicator } from "react-native-paper";
 import { useSearchStore } from "@/store/searchStore";
@@ -11,6 +11,10 @@ export default function AuthorDetails() {
   console.log(key);
   const { data: author, isLoading, isError } = useAuthorDetail(key as string);
   const searchByAuthor = useSearchStore((state) => state.searchByAuthor);
+
+  const authorUrl = key
+    ? `https://covers.openlibrary.org/a/olid/${key}-M.jpg`
+    : null;
   const handleAuthorSearch = () => {
     const name = author?.name ?? "";
     if (!author) return;
@@ -51,9 +55,18 @@ export default function AuthorDetails() {
   return (
     <>
       <Header title={author.name} />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Card style={styles.card}>
           <View style={styles.cardContent}>
+            <View style={styles.photoBox}>
+              {authorUrl ? (
+                <Image source={{ uri: authorUrl }} style={styles.photo} />
+              ) : (
+                <View style={styles.placeholder}>
+                  <Text>No photo available.</Text>
+                </View>
+              )}
+            </View>
             <View style={styles.info}>
               <Card.Title
                 title={author.name}
@@ -89,7 +102,7 @@ export default function AuthorDetails() {
             </View>
           </View>
         </Card>
-      </View>
+      </ScrollView>
     </>
   );
 }
@@ -101,6 +114,23 @@ const styles = StyleSheet.create({
   },
   card: { marginBottom: 8, marginHorizontal: 16 },
   cardContent: { position: "relative" },
+  photoBox: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  photo: {
+    height: 240,
+    width: 160,
+    borderRadius: 10,
+  },
+  placeholder: {
+    width: 160,
+    height: 240,
+    borderRadius: 10,
+    backgroundColor: "#e0e0e0",
+  },
   title: { fontWeight: "700" },
   lifespan: { fontWeight: "600", marginBottom: 10 },
   info: { flex: 1 },
