@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { Card, Text, Button } from "react-native-paper";
+import { Card, Text, Button, Chip } from "react-native-paper";
 import Save from "./Save";
 import { useBookDescription } from "@/hooks/openLibraryApi";
 import { useFavoritesStore } from "../store/favoritesStore";
@@ -21,10 +21,12 @@ interface BookDetailProps extends SavedProps {
 }
 
 export default function BookDetails({ book }: { book: Book }) {
+  console.log(book.subject);
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
   const { data, isLoading, isError } = useBookDescription(book.key);
+
   const isSaved = useFavoritesStore((state) =>
     state.favorites.some((f) => f.key === book.key),
   );
@@ -69,13 +71,26 @@ export default function BookDetails({ book }: { book: Book }) {
                 </TouchableOpacity>
               )}
               <Card.Content>
+                {book.subject && (
+                  <View style={styles.subjects}>
+                    {book.subject?.slice(0, 5).map((sub) => (
+                      <Chip
+                        key={sub}
+                        style={styles.chip}
+                        textStyle={styles.chipText}
+                      >
+                        {sub}
+                      </Chip>
+                    ))}
+                  </View>
+                )}
                 {book.first_publish_year && (
                   <Text>First Published: {book.first_publish_year}</Text>
                 )}
                 {book.number_of_pages_median && (
                   <Text>Pages: {book.number_of_pages_median}</Text>
                 )}
-                {book.isbn && <Text>ISBN: {book.isbn}</Text>}
+                {book.isbn && <Text>ISBN: {book.isbn[0]}</Text>}
                 <View>
                   {isLoading && (
                     <ActivityIndicator
@@ -135,5 +150,22 @@ const styles = StyleSheet.create({
   authorName: { paddingHorizontal: 16, color: "#4A90E2", fontSize: 13 },
   worksButton: {
     margin: 20,
+  },
+  subjects: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  chip: {
+    marginRight: 5,
+    marginBottom: 5,
+    borderRadius: 999,
+    backgroundColor: "#f8b197",
+  },
+  chipText: {
+    color: "#ffffff",
+    fontWeight: "700",
   },
 });

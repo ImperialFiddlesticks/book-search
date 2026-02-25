@@ -7,4 +7,5 @@ export interface Book {
   isbn?: string[];
   number_of_pages_median?: number;
   author_key?: string[];
+  subject?: string[];
 }
