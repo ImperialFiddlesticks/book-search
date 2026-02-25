@@ -28,16 +28,11 @@ export default function Home() {
 
   return (
     <>
-      <Header title="Book Search" />
+      <Header title="FOLIO" />
       <View style={styles.container}>
         <Booksearchbar />
         <PreviousSearched />
-        <Link href="/searchResults">
-          <Text style={styles.link}>Search Results</Text>
-        </Link>
-        <Link href="/details">
-          <Text style={styles.link}>Book Details</Text>
-        </Link>
+
         <SavedBookBar
           books={favorites}
           onBookPress={handleBookPress}
