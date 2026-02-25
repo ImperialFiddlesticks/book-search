@@ -21,7 +21,6 @@ interface BookDetailProps extends SavedProps {
 }
 
 export default function BookDetails({ book }: { book: Book }) {
-  console.log(book.subject);
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
