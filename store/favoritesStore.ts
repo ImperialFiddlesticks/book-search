@@ -26,6 +26,22 @@ export const useFavoritesStore = create<FavoritesStore>()((set, get) => ({
     set({ favorites: newFavorites });
     try {
       await AsyncStorage.setItem("favorites", JSON.stringify(newFavorites));
+
+      // update "All favorites" collection
+      const stored = await AsyncStorage.getItem("collections");
+      const collections: { title: string; books: Book[] }[] = stored
+        ? JSON.parse(stored)
+        : [];
+
+      const index = collections.findIndex((c) => c.title === "All favorites");
+
+      if (index === -1) {
+        collections.push({ title: "All favorites", books: newFavorites });
+      } else {
+        collections[index].books = newFavorites;
+      }
+
+      await AsyncStorage.setItem("collections", JSON.stringify(collections));
     } catch (error) {
       console.error("Failed to save Favorites", error);
     }
