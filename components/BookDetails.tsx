@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  Linking,
+  Share,
 } from "react-native";
 import { Card, Text, Button, Chip } from "react-native-paper";
 import Save from "./Save";
@@ -15,6 +17,13 @@ import { useFavoritesStore } from "../store/favoritesStore";
 import { useRouter } from "expo-router";
 import { useSearchStore } from "../store/searchStore";
 import Header from "./Header";
+import {
+  ShoppingCart,
+  BookOpenText,
+  SendHorizonal,
+  BookMarked,
+} from "lucide-react-native";
+import ActionButton from "./ActionButton";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
@@ -41,6 +50,38 @@ export default function BookDetails({ book }: { book: Book }) {
   const handleAuthorPress = () => {
     const key = book.author_key?.[0];
     if (key) router.push(`/author/${key}`);
+  };
+
+  const handleBuy = async () => {
+    try {
+      await Linking.openURL(
+        `https://www.amazon.com/s?k=${encodeURIComponent(book.title)}`,
+      );
+    } catch (error) {
+      console.error("Failed to open URL", error);
+    }
+  };
+
+  const handleLoan = async () => {
+    try {
+      await Linking.openURL(`https://openlibrary.org${book.key}`);
+    } catch (error) {
+      console.error("Failed to open URL", error);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Check out ${book.title}: : https://openlibrary.org${book.key}`,
+      });
+    } catch (error) {
+      console.error("Failed to share book", error);
+    }
+  };
+
+  const handleReadingList = () => {
+    console.log("Add to reading list: ", book.title);
   };
   return (
     <>
@@ -103,6 +144,28 @@ export default function BookDetails({ book }: { book: Book }) {
                 {!isLoading && !isError && !data && (
                   <Text>No description available.</Text>
                 )}
+                <View style={styles.actionContainer}>
+                  <ActionButton
+                    icon={ShoppingCart}
+                    label="Buy"
+                    onPress={handleBuy}
+                  />
+                  <ActionButton
+                    icon={BookOpenText}
+                    label="Loan"
+                    onPress={handleLoan}
+                  />
+                  <ActionButton
+                    icon={BookMarked}
+                    label="Add to Reading List"
+                    onPress={handleReadingList}
+                  />
+                  <ActionButton
+                    icon={SendHorizonal}
+                    label="Share"
+                    onPress={handleShare}
+                  />
+                </View>
                 <View style={styles.authorSearchButton}>
                   <Button
                     mode="contained"
@@ -123,7 +186,12 @@ export default function BookDetails({ book }: { book: Book }) {
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: 8, marginHorizontal: 16, marginTop: 16 },
+  card: {
+    marginBottom: 8,
+    marginHorizontal: 16,
+    marginTop: 16,
+    backgroundColor: "white",
+  },
   cardContent: { position: "relative" },
   saveButton: { position: "absolute", top: 10, right: 10, zIndex: 1 },
   coverBox: {
@@ -143,12 +211,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#e0e0e0",
   },
-  title: { fontWeight: "700" },
+  title: { fontWeight: "700", fontSize: 25 },
   info: { flex: 1 },
   authorSearchButton: { marginTop: 12 },
-  authorName: { paddingHorizontal: 16, color: "#4A90E2", fontSize: 13 },
+  authorName: {
+    paddingHorizontal: 16,
+    color: "#858585",
+    fontSize: 15,
+  },
   worksButton: {
     margin: 20,
+    backgroundColor: "#fa6b47",
   },
   subjects: {
     flexDirection: "row",
@@ -166,5 +239,10 @@ const styles = StyleSheet.create({
   chipText: {
     color: "#ffffff",
     fontWeight: "700",
+  },
+  actionContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
