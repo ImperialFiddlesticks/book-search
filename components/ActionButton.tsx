@@ -5,12 +5,14 @@ interface ActionButtonProps {
   readonly icon: LucideIcon;
   readonly label: string;
   readonly onPress: () => void;
+  readonly color?: string;
 }
 
 export default function ActionButton({
   icon: Icon,
   label,
   onPress,
+  color,
 }: ActionButtonProps) {
   return (
     <TouchableOpacity
@@ -19,7 +21,7 @@ export default function ActionButton({
       accessibilityLabel={label}
     >
       <View style={styles.iconContainer}>
-        <Icon size={30} color="white" />
+        <Icon size={30} color={color ?? "#fff"} />
       </View>
     </TouchableOpacity>
   );

@@ -14,6 +14,7 @@ import { Card, Text, Button, Chip } from "react-native-paper";
 import Save from "./Save";
 import { useBookDescription } from "@/hooks/openLibraryApi";
 import { useFavoritesStore } from "../store/favoritesStore";
+import { useReadingListStore } from "@/store/readingListStore";
 import { useRouter } from "expo-router";
 import { useSearchStore } from "../store/searchStore";
 import Header from "./Header";
@@ -39,6 +40,12 @@ export default function BookDetails({ book }: { book: Book }) {
     state.favorites.some((f) => f.key === book.key),
   );
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const toggleReadingList = useReadingListStore(
+    (state) => state.toggleReadingList,
+  );
+  const isOnReadingList = useReadingListStore((state) =>
+    state.readingList.some((b) => b.key === book.key),
+  );
   const router = useRouter();
   const searchByAuthor = useSearchStore((state) => state.searchByAuthor);
   const handleAuthorSearch = () => {
@@ -81,7 +88,7 @@ export default function BookDetails({ book }: { book: Book }) {
   };
 
   const handleReadingList = () => {
-    console.log("Add to reading list: ", book.title);
+    toggleReadingList(book);
   };
   return (
     <>
@@ -159,6 +166,7 @@ export default function BookDetails({ book }: { book: Book }) {
                     icon={BookMarked}
                     label="Add to Reading List"
                     onPress={handleReadingList}
+                    color={isOnReadingList ? "#fa6b47" : "#fff"}
                   />
                   <ActionButton
                     icon={SendHorizonal}

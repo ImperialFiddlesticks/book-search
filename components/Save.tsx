@@ -7,7 +7,6 @@ export default function Save({ isSaved, onToggle }: SavedProps) {
     <Pressable
       hitSlop={10}
       onPress={(e) => {
-        console.log("Save button pressed!");
         e.stopPropagation();
         onToggle();
       }}
