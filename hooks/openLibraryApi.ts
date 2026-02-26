@@ -1,23 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { Book } from "../types/bookProps";
-
+import Author from "../types/authorProps";
 interface BookSearchResponse {
   numFound: number;
   start: number;
   docs: Book[];
 }
-
 interface BookWorksResponse {
   description?: string | { type: string; value: string };
 }
 
 const fetchBooks = async (query: string): Promise<BookSearchResponse> => {
   const response = await fetch(
-    `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20`,
+    `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`,
   );
 
   if (!response.ok) {
     throw new Error("Failed to fetch books");
+  }
+  const data = await response.json();
+  return data;
+};
+const fetchAuthor = async (key: string): Promise<Author> => {
+  const response = await fetch(`https://openlibrary.org/authors/${key}.json`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch author");
   }
   const data = await response.json();
   return data;
@@ -58,5 +65,14 @@ export const useBookDescription = (key: string) => {
     queryFn: () => fetchBookDescription(key),
     enabled: !!key,
     staleTime: 1000 * 60 * 60,
+  });
+};
+
+export const useAuthorDetail = (key: string) => {
+  return useQuery({
+    queryKey: ["authors", key],
+    queryFn: () => fetchAuthor(key),
+    enabled: !!key,
+    staleTime: 1000 * 60 * 5,
   });
 };

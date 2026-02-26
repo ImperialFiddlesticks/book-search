@@ -1,11 +1,18 @@
-import { Book } from "@/app/types/bookProps";
-import SavedProps from "@/app/types/savedProps";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Book } from "@/types/bookProps";
+import SavedProps from "@/types/savedProps";
+import {
+  GestureResponderEvent,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
-import { useSelectedBookStore } from "@/app/store/useSelectedBookStore";
-import { useFavoritesStore } from "@/app/store/favoritesStore";
+import { useSelectedBookStore } from "@/store/useSelectedBookStore";
+import { useFavoritesStore } from "@/store/favoritesStore";
 
 export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
@@ -17,7 +24,11 @@ export default function BookCard({ book }: { book: Book }) {
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
-
+  const handleAuthorPress = (e: GestureResponderEvent) => {
+    e.stopPropagation();
+    const key = book.author_key?.[0];
+    if (key) router.push(`/author/${key}`);
+  };
   const handlePress = () => {
     setSelectedBook(book);
     router.push("/details");
@@ -37,10 +48,14 @@ export default function BookCard({ book }: { book: Book }) {
             </View>
           )}
           <View style={styles.info}>
-            <Card.Title
-              title={book.title}
-              subtitle={book.author_name?.join(", ")}
-            />
+            <Card.Title title={book.title} titleStyle={styles.title} />
+            {book.author_name && (
+              <TouchableOpacity onPress={(e) => handleAuthorPress(e)}>
+                <Text style={styles.authorName}>
+                  {book.author_name.join(", ")}
+                </Text>
+              </TouchableOpacity>
+            )}
 
             {book.first_publish_year && (
               <Text style={styles.year}>{book.first_publish_year}</Text>
@@ -53,7 +68,7 @@ export default function BookCard({ book }: { book: Book }) {
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: 8, marginHorizontal: 16 },
+  card: { marginBottom: 8, marginHorizontal: 16, backgroundColor: "white" },
   cardContent: { position: "relative" },
   saveButton: { position: "absolute", top: 8, right: 8, zIndex: 1 },
   row: { flexDirection: "row" },
@@ -66,4 +81,9 @@ const styles = StyleSheet.create({
   },
   info: { flex: 1 },
   year: { paddingHorizontal: 16, color: "#888", fontSize: 12 },
+  authorName: { paddingHorizontal: 16, color: "#858585", fontSize: 15 },
+  title: {
+    fontWeight: "700",
+    fontSize: 18,
+  },
 });

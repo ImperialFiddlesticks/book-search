@@ -11,6 +11,7 @@ import { Platform, StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { useRouter } from "expo-router";
 import ScannerButton from "./ScannerButton";
+import { useStore } from "../store/previousSearched";
 
 const APYHUB_TOKEN =
   "APY0SBhWWI0kixOpkR0bkTaqthd3QpAaIzd4EwBzMO7OFRvAMqYM6cMXQ4e0Q29X";
@@ -18,9 +19,11 @@ const APYHUB_TOKEN =
 const Booksearchbar = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const router = useRouter();
+  const { addPreviousSearched } = useStore();
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
+      addPreviousSearched(searchQuery.trim());
       router.push({
         pathname: "/searchResults",
         params: { query: searchQuery },
