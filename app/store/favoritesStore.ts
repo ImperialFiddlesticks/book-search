@@ -4,7 +4,7 @@ import { Book } from "../types/bookProps";
 
 interface FavoritesStore {
   favorites: Book[];
-  toggleFavorite: (book: Book) => void;
+  toggleFavorite: (book: Book) => Promise<void>;
   isSaved: (book: Book) => boolean;
   loadFavorites: () => Promise<void>;
 }
@@ -15,7 +15,7 @@ export const useFavoritesStore = create<FavoritesStore>()((set, get) => ({
     const result = get().favorites.some((f) => f.key === book.key);
     return result;
   },
-  toggleFavorite: (book: Book) => {
+  toggleFavorite: async (book: Book) => {
     const current = get().favorites;
     const alreadySaved = current.some((f) => f.key === book.key);
 
@@ -25,6 +25,22 @@ export const useFavoritesStore = create<FavoritesStore>()((set, get) => ({
 
     set({ favorites: newFavorites });
     AsyncStorage.setItem("favorites", JSON.stringify(newFavorites));
+
+    // update "All favorites" collection
+    const stored = await AsyncStorage.getItem("collections");
+    const collections: { title: string; books: Book[] }[] = stored
+      ? JSON.parse(stored)
+      : [];
+
+    const index = collections.findIndex((c) => c.title === "All favorites");
+
+    if (index === -1) {
+      collections.push({ title: "All favorites", books: newFavorites });
+    } else {
+      collections[index].books = newFavorites;
+    }
+
+    AsyncStorage.setItem("collections", JSON.stringify(collections));
   },
   loadFavorites: async () => {
     try {
