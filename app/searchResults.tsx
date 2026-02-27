@@ -12,15 +12,20 @@ import { useState, useEffect } from "react";
 import { useFavoritesStore } from "../store/favoritesStore";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
+import SubjectChips from "@/components/Subjects";
 
 export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
+  const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
 
   const [searchQuery, setSearchQuery] = useState(query || "");
   const activeQuery =
     searchMode === "author" ? `author:${authorName}` : searchQuery;
-  const { data, isLoading, isError } = useBookSearch(activeQuery);
+  const { data, isLoading, isError } = useBookSearch(
+    activeQuery || "",
+    selectedSubjects,
+  );
   const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
 
   useEffect(() => {
@@ -28,24 +33,15 @@ export default function SearchResults() {
     return () => resetToBooks();
   }, []);
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
-  if (isError) {
-    return (
-      <View style={styles.container}>
-        <Text>Something went wrong. Please try again.</Text>
-      </View>
-    );
-  }
   return (
     <View style={styles.container}>
       <Booksearchbar />
+      <SubjectChips
+        selectedSubjects={selectedSubjects}
+        onSelectSubject={(newSubjects) => {
+          setselectedSubjects(newSubjects);
+        }}
+      />
       <Text style={styles.title}>
         {searchMode === "author" ? `Works by ${authorName}` : "Search Results"}
       </Text>
@@ -63,6 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    overflow: "visible",
   },
   title: {
     fontSize: 24,
