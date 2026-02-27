@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  card: { marginBottom: 8, marginHorizontal: 16 },
+  card: { marginBottom: 8, marginHorizontal: 16, backgroundColor: "white" },
   cardContent: { position: "relative" },
   photoBox: {
     display: "flex",
@@ -131,11 +131,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#e0e0e0",
   },
-  title: { fontWeight: "700" },
+  title: { fontWeight: "700", fontSize: 25 },
   lifespan: { fontWeight: "600", marginBottom: 10 },
   info: { flex: 1 },
   authorSearchButton: { marginTop: 12 },
   worksButton: {
     margin: 20,
+    backgroundColor: "#fa6b47",
   },
 });

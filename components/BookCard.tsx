@@ -48,7 +48,7 @@ export default function BookCard({ book }: { book: Book }) {
             </View>
           )}
           <View style={styles.info}>
-            <Card.Title title={book.title} />
+            <Card.Title title={book.title} titleStyle={styles.title} />
             {book.author_name && (
               <TouchableOpacity onPress={(e) => handleAuthorPress(e)}>
                 <Text style={styles.authorName}>
@@ -68,7 +68,7 @@ export default function BookCard({ book }: { book: Book }) {
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: 8, marginHorizontal: 16 },
+  card: { marginBottom: 8, marginHorizontal: 16, backgroundColor: "white" },
   cardContent: { position: "relative" },
   saveButton: { position: "absolute", top: 8, right: 8, zIndex: 1 },
   row: { flexDirection: "row" },
@@ -81,5 +81,9 @@ const styles = StyleSheet.create({
   },
   info: { flex: 1 },
   year: { paddingHorizontal: 16, color: "#888", fontSize: 12 },
-  authorName: { paddingHorizontal: 16, color: "#4A90E2", fontSize: 13 },
+  authorName: { paddingHorizontal: 16, color: "#858585", fontSize: 15 },
+  title: {
+    fontWeight: "700",
+    fontSize: 18,
+  },
 });
