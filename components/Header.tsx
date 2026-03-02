@@ -8,13 +8,13 @@ export default function Header({title}: {title: string}) {
   const router = useRouter();
   const goBack = () => router.back();
 
-  const _handleMore = () => console.log("Shown more");
+  const navigateToFavorites = () => router.push("/favoritesPage");
 
   return (
     <Appbar.Header style={styles.header}>
       <Appbar.BackAction style={styles.iconButton} onPress={goBack} />
       <Appbar.Content titleStyle={styles.headerTitle} title={title} />
-      <Appbar.Action style={styles.iconButton} icon='star' onPress={_handleMore} />
+      <Appbar.Action style={styles.iconButton} icon='star' onPress={navigateToFavorites} />
     </Appbar.Header>
   );
 }

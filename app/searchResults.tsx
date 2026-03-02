@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useFavoritesStore } from "../store/favoritesStore";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
+import Header from "../components/Header";
 
 export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
@@ -44,6 +45,8 @@ export default function SearchResults() {
     );
   }
   return (
+    <>
+    <Header title='Search results'/>
     <View style={styles.container}>
       <Booksearchbar />
       <Text style={styles.title}>
@@ -56,6 +59,7 @@ export default function SearchResults() {
         ListEmptyComponent={<Text>No results found.</Text>}
       />
     </View>
+    </>
   );
 }
 
