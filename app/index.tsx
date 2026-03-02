@@ -20,6 +20,7 @@ export default function Home() {
     toggleFavorite,
     loadFavorites,
   } = useFavoritesStore();
+
   const { readingList, toggleReadingList, loadReadingList } =
     useReadingListStore();
   const { setSelectedBook } = useSelectedBookStore();
