@@ -14,22 +14,22 @@ import { useReadingListStore } from "@/store/readingListStore";
 
 export default function Home() {
   const router = useRouter();
-  const { favorites, isSaved, toggleFavorite, loadFavorites } =
-    useFavoritesStore();
   const {
-    readingList,
-    toggleReadingList,
-    isSaved: isInReadingList,
-    loadReadingList,
-  } = useReadingListStore();
+    favorites,
+    isSaved: isFavorited,
+    toggleFavorite,
+    loadFavorites,
+  } = useFavoritesStore();
+  const { readingList, toggleReadingList, loadReadingList } =
+    useReadingListStore();
   const { setSelectedBook } = useSelectedBookStore();
-  const { previousSearched } = useStore();
+  const { previousSearched, loadPreviousSearched } = useStore();
   useEffect(() => {
     loadFavorites();
     loadPreviousSearched();
     loadReadingList();
   }, []);
-  const { loadPreviousSearched } = useStore();
+
   const handleBookPress = (book: Book) => {
     setSelectedBook(book);
     router.push("/details");
@@ -48,7 +48,7 @@ export default function Home() {
             emptyMessage="No favorites yet..."
             books={favorites}
             onBookPress={handleBookPress}
-            isSaved={isSaved}
+            isSaved={isFavorited}
             onToggle={toggleFavorite}
           />
           <BookBar
@@ -56,8 +56,9 @@ export default function Home() {
             emptyMessage="No books in reading list yet..."
             onBookPress={handleBookPress}
             books={readingList}
-            isSaved={isInReadingList}
-            onToggle={toggleReadingList}
+            isSaved={isFavorited}
+            onToggle={toggleFavorite}
+            onLongPress={(book) => toggleReadingList(book)}
           />
         </ScrollView>
       </View>
