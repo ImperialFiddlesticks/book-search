@@ -13,18 +13,22 @@ interface BookWorksResponse {
 const fetchBooks = async (
   query: string,
   subject: string[] = [],
+  sort: string = "Relevance",
 ): Promise<BookSearchResponse> => {
   let url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`;
   /*const response = await fetch(
     `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`,
   );*/
 
+  if (sort !== "Relevance") {
+    url += `&sort=${encodeURIComponent(sort.toLowerCase())}`;
+  }
+
   if (subject.length > 0) {
     subject.forEach((sub) => {
       url += `&subject=${encodeURIComponent(sub.toLowerCase())}`;
     });
   }
-
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch books");
@@ -32,6 +36,7 @@ const fetchBooks = async (
   const data = await response.json();
   return data;
 };
+
 const fetchAuthor = async (key: string): Promise<Author> => {
   const response = await fetch(`https://openlibrary.org/authors/${key}.json`);
   if (!response.ok) {
@@ -52,10 +57,14 @@ const fetchBookDescription = async (key: string): Promise<string | null> => {
   return data.description.value;
 };
 
-export const useBookSearch = (query: string, subject: string[] = []) => {
+export const useBookSearch = (
+  query: string,
+  subject: string[] = [],
+  sort: string = "Relevance",
+) => {
   return useQuery({
-    queryKey: ["books", query, subject],
-    queryFn: () => fetchBooks(query, subject),
+    queryKey: ["books", query, subject, sort],
+    queryFn: () => fetchBooks(query, subject, sort),
     enabled: query.length > 0,
     staleTime: 1000 * 60 * 5,
   });
