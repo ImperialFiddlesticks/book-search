@@ -4,6 +4,7 @@ import {
   IOSOutputFormat,
   useAudioRecorder,
   useAudioRecorderState,
+  setAudioModeAsync,
 } from "expo-audio";
 import * as React from "react";
 import { useEffect } from "react";
@@ -20,6 +21,8 @@ const Booksearchbar = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const router = useRouter();
   const { addPreviousSearched } = useStore();
+
+  const isIOS = Platform.OS === "ios";
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -61,7 +64,6 @@ const Booksearchbar = () => {
   useEffect(() => {
     const getPermissions = async () => {
       const permission = await AudioModule.requestRecordingPermissionsAsync();
-
       if (permission.status === "granted") {
         console.log("Audio recording permission granted");
       }
@@ -121,6 +123,11 @@ const Booksearchbar = () => {
 
   async function startRecording() {
     try {
+      await setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+      });
+
       const perms = await AudioModule.getRecordingPermissionsAsync();
       if (!perms.granted) {
         await AudioModule.requestRecordingPermissionsAsync();
@@ -157,9 +164,19 @@ const Booksearchbar = () => {
         onChangeText={setSearchQuery}
         value={searchQuery}
         onSubmitEditing={handleSearch}
-        traileringIcon={recorderState.isRecording ? "stop" : "microphone"}
+        traileringIcon={
+          isIOS
+            ? recorderState.isRecording
+              ? "stop"
+              : "microphone"
+            : undefined
+        }
         onTraileringIconPress={
-          recorderState.isRecording ? stopRecording : startRecording
+          isIOS
+            ? recorderState.isRecording
+              ? stopRecording
+              : startRecording
+            : undefined
         }
       />
       <ScannerButton />
