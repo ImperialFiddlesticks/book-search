@@ -45,12 +45,64 @@ export default function SearchResults() {
     return () => resetToBooks();
   }, []);
 
+  if (isLoading) {
+    return (
+      <>
+        <Header title="FOLIO" />
+        <SafeAreaView
+          style={[styles.container, { paddingBottom: insets.bottom }]}
+        >
+          <Booksearchbar />
+          <SubjectChips
+            selectedSubjects={selectedSubjects}
+            onSelectSubject={(newSubjects) => {
+              setselectedSubjects(newSubjects);
+            }}
+          />
+          <Text style={styles.title}>
+            {searchMode === "author"
+              ? `Works by ${authorName}`
+              : "Search Results"}
+          </Text>
+          <ActivityIndicator
+            size="large"
+            color="#f8b197"
+            accessibilityLabel="Loading Books"
+            accessibilityRole="progressbar"
+          />
+        </SafeAreaView>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <Header title="FOLIO" />
+        <SafeAreaView
+          style={[styles.container, { paddingBottom: insets.bottom }]}
+        >
+          <Booksearchbar />
+          <SubjectChips
+            selectedSubjects={selectedSubjects}
+            onSelectSubject={(newSubjects) => {
+              setselectedSubjects(newSubjects);
+            }}
+          />
+          <Text style={styles.title}>
+            {searchMode === "author"
+              ? `Works by ${authorName}`
+              : "Search Results"}
+          </Text>
+          <Text>Error loading results. Please try again.</Text>
+        </SafeAreaView>
+      </>
+    );
+  }
   return (
     <>
       <Header title="FOLIO" />
-      <SafeAreaView
-        style={[styles.container, { paddingBottom: insets.bottom }]}
-      >
+      <SafeAreaView style={[styles.container]}>
         <Booksearchbar />
         <SubjectChips
           selectedSubjects={selectedSubjects}
@@ -96,7 +148,7 @@ export default function SearchResults() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 5,
     overflow: "visible",
   },
   title: {
