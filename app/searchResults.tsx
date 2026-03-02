@@ -13,6 +13,7 @@ import { useFavoritesStore } from "../store/favoritesStore";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
+import Header from "../components/Header";
 
 export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
@@ -34,6 +35,8 @@ export default function SearchResults() {
   }, []);
 
   return (
+    <>
+    <Header title='Search results'/>
     <View style={styles.container}>
       <Booksearchbar />
       <SubjectChips
@@ -52,6 +55,7 @@ export default function SearchResults() {
         ListEmptyComponent={<Text>No results found.</Text>}
       />
     </View>
+    </>
   );
 }
 

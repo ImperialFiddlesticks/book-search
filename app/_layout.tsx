@@ -17,6 +17,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="details" />
           <Stack.Screen name="searchResults" />
+          <Stack.Screen name="favoritesPage" />
           <Stack.Screen name="scanner" options={{ presentation: "modal" }} />
         </Stack>
       </PaperProvider>
