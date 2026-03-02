@@ -1,5 +1,4 @@
 import { Book } from "@/types/bookProps";
-import SavedProps from "@/types/savedProps";
 import {
   Image,
   StyleSheet,
@@ -13,7 +12,7 @@ import {
 import { Card, Text, Button, Chip } from "react-native-paper";
 import Save from "./Save";
 import { useBookDescription } from "@/hooks/openLibraryApi";
-import { useFavoritesStore } from "../store/favoritesStore";
+import { useCollectionsStore } from "@/store/collectionsStore";
 import { useReadingListStore } from "@/store/readingListStore";
 import { useRouter } from "expo-router";
 import { useSearchStore } from "../store/searchStore";
@@ -26,20 +25,13 @@ import {
 } from "lucide-react-native";
 import ActionButton from "./ActionButton";
 
-interface BookDetailProps extends SavedProps {
-  readonly book: Book;
-}
-
 export default function BookDetails({ book }: { book: Book }) {
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
   const { data, isLoading, isError } = useBookDescription(book.key);
 
-  const isSaved = useFavoritesStore((state) =>
-    state.favorites.some((f) => f.key === book.key),
-  );
-  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const {isSaved, toggleFavorite} = useCollectionsStore()
   const toggleReadingList = useReadingListStore(
     (state) => state.toggleReadingList,
   );
@@ -97,7 +89,7 @@ export default function BookDetails({ book }: { book: Book }) {
         <Card style={styles.card}>
           <View style={styles.cardContent}>
             <View style={styles.saveButton}>
-              <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
+              <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
             </View>
             <View style={styles.coverBox}>
               {coverUrl ? (

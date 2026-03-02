@@ -9,7 +9,6 @@ import BookCard from "../components/BookCard";
 import Booksearchbar from "../components/Booksearchbar";
 import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
-import { useFavoritesStore } from "../store/favoritesStore";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
@@ -27,10 +26,7 @@ export default function SearchResults() {
     activeQuery || "",
     selectedSubjects,
   );
-  const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
-
   useEffect(() => {
-    loadFavorites();
     return () => resetToBooks();
   }, []);
 

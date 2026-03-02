@@ -1,6 +1,5 @@
 import React from "react";
 import CollectionCard from "../components/CollectionCard";
-import { useFavoritesStore } from "../store/favoritesStore";
 import { ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Header from "../components/Header";

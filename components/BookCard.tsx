@@ -1,5 +1,4 @@
 import { Book } from "@/types/bookProps";
-import SavedProps from "@/types/savedProps";
 import {
   GestureResponderEvent,
   Image,
@@ -12,14 +11,11 @@ import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/store/useSelectedBookStore";
-import { useFavoritesStore } from "@/store/favoritesStore";
+import { useCollectionsStore } from "@/store/collectionsStore";
 
 export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
-  const isSaved = useFavoritesStore((state) =>
-    state.favorites.some((f) => f.key === book.key),
-  );
-  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const {isSaved, toggleFavorite} = useCollectionsStore()
   const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -37,7 +33,7 @@ export default function BookCard({ book }: { book: Book }) {
     <Card style={styles.card} onPress={handlePress}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
-          <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
+          <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
         </View>
         <View style={styles.row}>
           {coverUrl ? (
