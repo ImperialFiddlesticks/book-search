@@ -10,6 +10,8 @@ import { useCollectionsStore } from "../store/collectionsStore";
 export default function FavoritesScreen() {
   const { collections, addNewCollection } = useCollectionsStore();
 
+  console.log({ collections });
+
   return (
     <ScrollView style={{ position: "relative" }}>
       <Header title='Favorites' />

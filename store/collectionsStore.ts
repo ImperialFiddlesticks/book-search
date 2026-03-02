@@ -97,7 +97,17 @@ export const useCollectionsStore = create<CollectionsStore>()(
     }),
     {
       name: "collections",
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => {
+        // return dummy Storage during SSR
+        if (typeof window === "undefined") {
+          return {
+            getItem: async () => null,
+            setItem: async () => {},
+            removeItem: async () => {},
+          };
+        }
+        return AsyncStorage;
+      }),
       partialize: (state) => ({ collections: state.collections }),
     },
   ),

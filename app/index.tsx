@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Booksearchbar from "../components/Booksearchbar";
 import SavedBookBar from "../components/SavedBookBar";
 import { useFavoritesStore } from "../store/favoritesStore";
+import { useCollectionsStore } from "@/store/collectionsStore";
 import { Book } from "../types/bookProps";
 import { useSelectedBookStore } from "../store/useSelectedBookStore";
 import Header from "../components/Header";
@@ -12,12 +13,12 @@ import { useStore } from "../store/previousSearched";
 
 export default function Home() {
   const router = useRouter();
-  const { favorites, isSaved, toggleFavorite, loadFavorites } =
-    useFavoritesStore();
+  // const { favorites, isSaved, toggleFavorite, loadFavorites } =
+  //   useFavoritesStore();
+  const {collections, getAllFavorites, isSaved, toggleFavorite} = useCollectionsStore()
   const { setSelectedBook } = useSelectedBookStore();
   const { previousSearched } = useStore();
   useEffect(() => {
-    loadFavorites();
     loadPreviousSearched();
   }, []);
   const { loadPreviousSearched } = useStore();
@@ -34,7 +35,7 @@ export default function Home() {
         <PreviousSearched />
 
         <SavedBookBar
-          books={favorites}
+          books={getAllFavorites().books.slice(0, 5)}
           onBookPress={handleBookPress}
           isSaved={isSaved}
           onToggle={toggleFavorite}
