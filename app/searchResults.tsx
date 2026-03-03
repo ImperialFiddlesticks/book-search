@@ -8,17 +8,20 @@ import {
 import BookCard from "../components/BookCard";
 import Booksearchbar from "../components/Booksearchbar";
 import { useLocalSearchParams } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useFavoritesStore } from "../store/favoritesStore";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
+import Sorting from "@/components/Sorting";
+import { SortOption } from "@/components/Sorting";
 
 export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
   const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
+  const [currentSort, setCurrentSort] = useState<SortOption>("Relevance");
 
   const [searchQuery, setSearchQuery] = useState(query || "");
   const activeQuery =
@@ -26,6 +29,7 @@ export default function SearchResults() {
   const { data, isLoading, isError } = useBookSearch(
     activeQuery || "",
     selectedSubjects,
+    currentSort,
   );
   const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
 
@@ -36,25 +40,34 @@ export default function SearchResults() {
 
   return (
     <>
-    <Header title='Search results'/>
-    <View style={styles.container}>
-      <Booksearchbar />
-      <SubjectChips
-        selectedSubjects={selectedSubjects}
-        onSelectSubject={(newSubjects) => {
-          setselectedSubjects(newSubjects);
-        }}
-      />
-      <Text style={styles.title}>
-        {searchMode === "author" ? `Works by ${authorName}` : "Search Results"}
-      </Text>
-      <FlatList
-        data={data?.docs ?? []}
-        keyExtractor={(item) => item.key}
-        renderItem={({ item }) => <BookCard book={item} />}
-        ListEmptyComponent={<Text>No results found.</Text>}
-      />
-    </View>
+      <Header title="Search results" />
+      <View style={styles.container}>
+        <Booksearchbar />
+        <SubjectChips
+          selectedSubjects={selectedSubjects}
+          onSelectSubject={(newSubjects) => {
+            setselectedSubjects(newSubjects);
+          }}
+        />
+        <Sorting
+          currentSort={currentSort}
+          onSortChange={(newSort) => {
+            setCurrentSort(newSort);
+          }}
+        />
+
+        <Text style={styles.title}>
+          {searchMode === "author"
+            ? `Works by ${authorName}`
+            : "Search Results"}
+        </Text>
+        <FlatList
+          data={data?.docs ?? []}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => <BookCard book={item} />}
+          ListEmptyComponent={<Text>No results found.</Text>}
+        />
+      </View>
     </>
   );
 }
