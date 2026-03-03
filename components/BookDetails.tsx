@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   },
   chipText: {
     color: "#ffffff",
-    fontWeight: "700",
+    fontFamily: "SourceSans3_600SemiBold",
   },
   actionContainer: {
     display: "flex",
