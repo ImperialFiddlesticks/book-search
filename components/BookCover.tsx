@@ -15,6 +15,7 @@ import Save from "./Save";
 interface BookCoverProps extends SavedProps {
   readonly book: Book;
   readonly onPress: () => void;
+  readonly onLongPress?: () => void;
 }
 
 export default function BookCover({
@@ -22,6 +23,7 @@ export default function BookCover({
   onPress,
   isSaved,
   onToggle,
+  onLongPress,
 }: BookCoverProps) {
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -30,7 +32,11 @@ export default function BookCover({
   const [isLoading, setIsLoading] = useState(!!coverUrl);
 
   return (
-    <Pressable onPress={onPress} style={styles.coverBox}>
+    <Pressable
+      onPress={onPress}
+      style={styles.coverBox}
+      onLongPress={onLongPress}
+    >
       {coverUrl ? (
         <Image
           source={{ uri: coverUrl }}

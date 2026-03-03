@@ -14,10 +14,20 @@ import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
+import { Button } from "react-native-paper";
+
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+
+const pageSize = 10;
 import Sorting from "@/components/Sorting";
 import { SortOption } from "@/components/Sorting";
 
 export default function SearchResults() {
+  const insets = useSafeAreaInsets();
+  const [currentPage, setCurrentPage] = useState(1);
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
   const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
@@ -29,6 +39,7 @@ export default function SearchResults() {
   const { data, isLoading, isError } = useBookSearch(
     activeQuery || "",
     selectedSubjects,
+    currentPage,
     currentSort,
   );
   const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
@@ -38,10 +49,64 @@ export default function SearchResults() {
     return () => resetToBooks();
   }, []);
 
+  if (isLoading) {
+    return (
+      <>
+        <Header title="FOLIO" />
+        <SafeAreaView
+          style={[styles.container, { paddingBottom: insets.bottom }]}
+        >
+          <Booksearchbar />
+          <SubjectChips
+            selectedSubjects={selectedSubjects}
+            onSelectSubject={(newSubjects) => {
+              setselectedSubjects(newSubjects);
+            }}
+          />
+          <Text style={styles.title}>
+            {searchMode === "author"
+              ? `Works by ${authorName}`
+              : "Search Results"}
+          </Text>
+          <ActivityIndicator
+            size="large"
+            color="#f8b197"
+            accessibilityLabel="Loading Books"
+            accessibilityRole="progressbar"
+          />
+        </SafeAreaView>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <Header title="FOLIO" />
+        <SafeAreaView
+          style={[styles.container, { paddingBottom: insets.bottom }]}
+        >
+          <Booksearchbar />
+          <SubjectChips
+            selectedSubjects={selectedSubjects}
+            onSelectSubject={(newSubjects) => {
+              setselectedSubjects(newSubjects);
+            }}
+          />
+          <Text style={styles.title}>
+            {searchMode === "author"
+              ? `Works by ${authorName}`
+              : "Search Results"}
+          </Text>
+          <Text>Error loading results. Please try again.</Text>
+        </SafeAreaView>
+      </>
+    );
+  }
   return (
     <>
-      <Header title="Search results" />
-      <View style={styles.container}>
+      <Header title="FOLIO" />
+      <SafeAreaView style={[styles.container]}>
         <Booksearchbar />
         <SubjectChips
           selectedSubjects={selectedSubjects}
@@ -66,8 +131,27 @@ export default function SearchResults() {
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => <BookCard book={item} />}
           ListEmptyComponent={<Text>No results found.</Text>}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: insets.bottom + 60,
+          }}
         />
-      </View>
+        <View style={styles.controls}>
+          <Button
+            onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <Text>Page {currentPage}</Text>
+          <Button
+            onPress={() => setCurrentPage((p) => p + 1)}
+            disabled={data ? currentPage * pageSize >= data.numFound : true}
+          >
+            Next
+          </Button>
+        </View>
+      </SafeAreaView>
     </>
   );
 }
@@ -75,12 +159,18 @@ export default function SearchResults() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 5,
     overflow: "visible",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
+  },
+  controls: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+    paddingTop: 5,
   },
 });

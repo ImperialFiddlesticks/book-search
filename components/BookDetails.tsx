@@ -30,7 +30,7 @@ interface BookDetailProps extends SavedProps {
   readonly book: Book;
 }
 
-export default function BookDetails({ book }: { book: Book }) {
+export default function BookDetails({ book }: { readonly book: Book }) {
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;

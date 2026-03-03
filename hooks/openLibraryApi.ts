@@ -9,16 +9,15 @@ interface BookSearchResponse {
 interface BookWorksResponse {
   description?: string | { type: string; value: string };
 }
+const pageSize = 20;
 
 const fetchBooks = async (
   query: string,
   subject: string[] = [],
+  page: number = 1,
   sort: string = "Relevance",
 ): Promise<BookSearchResponse> => {
-  let url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`;
-  /*const response = await fetch(
-    `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`,
-  );*/
+  let url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&page=${page}&limit=${pageSize}&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`;
 
   if (sort !== "Relevance") {
     url += `&sort=${encodeURIComponent(sort.toLowerCase())}`;
@@ -46,6 +45,20 @@ const fetchAuthor = async (key: string): Promise<Author> => {
   return data;
 };
 
+const fetchSingleBookByIsbn = async (isbn: string): Promise<Book | null> => {
+  const url = `https://openlibrary.org/search.json?q=isbn:${encodeURIComponent(
+    isbn,
+  )}&limit=1&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch book by ISBN");
+  }
+  const data = await response.json();
+  return data.docs[0] ?? null;
+};
+
 const fetchBookDescription = async (key: string): Promise<string | null> => {
   const response = await fetch(`https://openlibrary.org${key}.json`);
   if (!response.ok) {
@@ -60,12 +73,14 @@ const fetchBookDescription = async (key: string): Promise<string | null> => {
 export const useBookSearch = (
   query: string,
   subject: string[] = [],
-  sort: string = "Relevance",
+  page: number = 1,
+    sort: string = "Relevance",
 ) => {
   return useQuery({
-    queryKey: ["books", query, subject, sort],
-    queryFn: () => fetchBooks(query, subject, sort),
+    queryKey: ["books", query, subject, sort, page],
+    queryFn: () => fetchBooks(query, subject, sort, page),
     enabled: query.length > 0,
+
     staleTime: 1000 * 60 * 5,
   });
 };
@@ -73,7 +88,7 @@ export const useBookSearch = (
 export const useBookByIsbn = (isbn: string) => {
   return useQuery({
     queryKey: ["bookByIsbn", isbn],
-    queryFn: () => fetchBooks(`isbn:${isbn}`),
+    queryFn: () => fetchSingleBookByIsbn(isbn),
     enabled: !!isbn && isbn.length > 0,
     staleTime: 1000 * 60 * 5,
   });
