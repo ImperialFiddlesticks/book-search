@@ -15,7 +15,7 @@ import { useCollectionsStore } from "@/store/collectionsStore";
 
 export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
-  const {isSaved, toggleFavorite} = useCollectionsStore()
+  const { isSaved, toggleFavorite } = useCollectionsStore();
   const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -64,7 +64,12 @@ export default function BookCard({ book }: { book: Book }) {
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: 8, marginHorizontal: 16, backgroundColor: "white" },
+  card: {
+    marginBottom: 8,
+    marginHorizontal: 16,
+    backgroundColor: "transparent",
+    borderRadius: 4,
+  },
   cardContent: { position: "relative" },
   saveButton: { position: "absolute", top: 8, right: 8, zIndex: 1 },
   row: { flexDirection: "row" },

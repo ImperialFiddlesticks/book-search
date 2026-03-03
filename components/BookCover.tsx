@@ -58,7 +58,12 @@ export default function BookCover({
 }
 
 const styles = StyleSheet.create({
-  coverBox: { height: 120, width: 80, borderRadius: 4, position: "relative" },
+  coverBox: {
+    height: 120,
+    width: 80,
+    borderRadius: 4,
+    position: "relative",
+  },
   cover: { height: 120, width: 80, borderRadius: 4, resizeMode: "cover" },
   activity: { position: "absolute" },
   saveButton: { position: "absolute", top: 4, right: 4 },
