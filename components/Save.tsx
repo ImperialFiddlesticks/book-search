@@ -1,5 +1,6 @@
 import SavedProps from "@/types/savedProps";
-import { Ionicons } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Pressable } from "react-native";
 
 export default function Save({ isSaved, onToggle }: SavedProps) {
@@ -11,11 +12,11 @@ export default function Save({ isSaved, onToggle }: SavedProps) {
         onToggle();
       }}
     >
-      <Ionicons
-        name={isSaved ? "star" : "star-outline"}
-        size={24}
-        color={isSaved ? "gold" : "grey"}
-      />
+      {isSaved ? (
+        <FontAwesome name="star" size={24} color="gold" />
+      ) : (
+        <Feather name="star" size={24} color="grey" />
+      )}
     </Pressable>
   );
 }
