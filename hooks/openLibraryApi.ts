@@ -15,15 +15,19 @@ const fetchBooks = async (
   query: string,
   subject: string[] = [],
   page: number = 1,
+  sort: string = "Relevance",
 ): Promise<BookSearchResponse> => {
   let url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&page=${page}&limit=${pageSize}&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`;
+
+  if (sort !== "Relevance") {
+    url += `&sort=${encodeURIComponent(sort.toLowerCase())}`;
+  }
 
   if (subject.length > 0) {
     subject.forEach((sub) => {
       url += `&subject=${encodeURIComponent(sub.toLowerCase())}`;
     });
   }
-
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch books");
@@ -31,6 +35,7 @@ const fetchBooks = async (
   const data = await response.json();
   return data;
 };
+
 const fetchAuthor = async (key: string): Promise<Author> => {
   const response = await fetch(`https://openlibrary.org/authors/${key}.json`);
   if (!response.ok) {
@@ -69,11 +74,11 @@ export const useBookSearch = (
   query: string,
   subject: string[] = [],
   page: number = 1,
+    sort: string = "Relevance",
 ) => {
   return useQuery({
-    queryKey: ["books", query, subject, page],
-    queryFn: () => fetchBooks(query, subject, page),
-
+    queryKey: ["books", query, subject, sort, page],
+    queryFn: () => fetchBooks(query, subject, sort, page),
     enabled: query.length > 0,
 
     staleTime: 1000 * 60 * 5,

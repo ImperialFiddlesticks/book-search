@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "flex-start",
     alignItems: "center",
-    marginInline: "auto",
   },
   title: {
     fontSize: 24,

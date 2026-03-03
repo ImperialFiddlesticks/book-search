@@ -8,7 +8,7 @@ import {
 import BookCard from "../components/BookCard";
 import Booksearchbar from "../components/Booksearchbar";
 import { useLocalSearchParams } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useFavoritesStore } from "../store/favoritesStore";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
@@ -22,6 +22,8 @@ import {
 } from "react-native-safe-area-context";
 
 const pageSize = 10;
+import Sorting from "@/components/Sorting";
+import { SortOption } from "@/components/Sorting";
 
 export default function SearchResults() {
   const insets = useSafeAreaInsets();
@@ -29,6 +31,7 @@ export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
   const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
+  const [currentSort, setCurrentSort] = useState<SortOption>("Relevance");
 
   const [searchQuery, setSearchQuery] = useState(query || "");
   const activeQuery =
@@ -37,6 +40,7 @@ export default function SearchResults() {
     activeQuery || "",
     selectedSubjects,
     currentPage,
+    currentSort,
   );
   const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
 
@@ -110,6 +114,13 @@ export default function SearchResults() {
             setselectedSubjects(newSubjects);
           }}
         />
+        <Sorting
+          currentSort={currentSort}
+          onSortChange={(newSort) => {
+            setCurrentSort(newSort);
+          }}
+        />
+
         <Text style={styles.title}>
           {searchMode === "author"
             ? `Works by ${authorName}`
