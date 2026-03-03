@@ -42,10 +42,7 @@ export default function SearchResults() {
     currentPage,
     currentSort,
   );
-  const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
-
   useEffect(() => {
-    loadFavorites();
     return () => resetToBooks();
   }, []);
 

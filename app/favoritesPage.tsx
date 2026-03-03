@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CollectionCard from "../components/CollectionCard";
-import { useFavoritesStore } from "../store/favoritesStore";
 import { ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Header from "../components/Header";
@@ -8,13 +7,9 @@ import ModalComponent from "../components/ModalComponent";
 import { useCollectionsStore } from "../store/collectionsStore";
 
 export default function FavoritesScreen() {
-  const { favorites, loadFavorites } = useFavoritesStore();
-  const { collections, addNewCollection, loadCollections } =
-    useCollectionsStore();
+  const { collections, addNewCollection } = useCollectionsStore();
 
-  useEffect(() => {
-    loadCollections();
-  }, []);
+  console.log({ collections });
 
   return (
     <ScrollView style={{ position: "relative" }}>
