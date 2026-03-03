@@ -13,7 +13,7 @@ export default function Save({ isSaved, onToggle }: SavedProps) {
       }}
     >
       {isSaved ? (
-        <FontAwesome name="star" size={24} color="gold" />
+        <FontAwesome name="star" size={24} color="#f8b197" />
       ) : (
         <Feather name="star" size={24} color="grey" />
       )}
