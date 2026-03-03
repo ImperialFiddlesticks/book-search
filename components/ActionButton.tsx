@@ -1,8 +1,11 @@
-import { LucideIcon } from "lucide-react-native";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
+interface IconProps {
+  size: number;
+  color: string;
+}
 interface ActionButtonProps {
-  readonly icon: LucideIcon;
+  readonly icon: React.ComponentType<IconProps>;
   readonly label: string;
   readonly onPress: () => void;
   readonly color?: string;
@@ -36,5 +39,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8b197",
     padding: 5,
     borderRadius: 5,
+    width: 40,
+    height: 40,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
