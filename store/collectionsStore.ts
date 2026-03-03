@@ -47,6 +47,8 @@ export const useCollectionsStore = create<CollectionsStore>()(
       },
 
       toggleFavorite: (book: Book) => {
+        get().getAllFavorites();
+
         const alreadySaved = get()
           .getAllFavorites()
           .books.some((b) => b.key === book.key);
@@ -99,7 +101,7 @@ export const useCollectionsStore = create<CollectionsStore>()(
       name: "collections",
       storage: createJSONStorage(() => {
         // return dummy Storage during SSR
-        if (typeof window === "undefined") {
+        if (globalThis.window === undefined) {
           return {
             getItem: async () => null,
             setItem: async () => {},

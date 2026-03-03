@@ -13,9 +13,10 @@ export default function FavoritesScreen() {
 
   return (
     <ScrollView style={{ position: "relative" }}>
-      <Header title='Favorites' />
+      <Header title="Favorites" />
       {collections.map((c) => (
         <CollectionCard
+          key={c.title}
           collection={{
             savedItems: c.books,
             title: c.title,
@@ -23,10 +24,10 @@ export default function FavoritesScreen() {
         />
       ))}
 
-      <ModalComponent text='+ New Collection'>
+      <ModalComponent text="+ New Collection">
         <form>
-          <label htmlFor='new-collection-name'>Collection name</label>
-          <input type='text' id='new-collection-name'></input>
+          <label htmlFor="new-collection-name">Collection name</label>
+          <input type="text" id="new-collection-name"></input>
           <Button>Create new collection</Button>
         </form>
       </ModalComponent>

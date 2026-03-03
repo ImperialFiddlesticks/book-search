@@ -2,10 +2,7 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import Booksearchbar from "../components/Booksearchbar";
-import SavedBookBar from "../components/SavedBookBar";
 import { useCollectionsStore } from "@/store/collectionsStore";
-
-import { useFavoritesStore } from "../store/favoritesStore";
 import { Book } from "../types/bookProps";
 import { useSelectedBookStore } from "../store/useSelectedBookStore";
 import Header from "../components/Header";
@@ -16,13 +13,12 @@ import { useReadingListStore } from "@/store/readingListStore";
 
 export default function Home() {
   const router = useRouter();
-  const {collections, getAllFavorites, isSaved, toggleFavorite} = useCollectionsStore()
   const {
-    favorites,
+    collections,
+    getAllFavorites,
     isSaved: isFavorited,
     toggleFavorite,
-    loadFavorites,
-  } = useFavoritesStore();
+  } = useCollectionsStore();
 
   const { readingList, toggleReadingList, loadReadingList } =
     useReadingListStore();
@@ -42,20 +38,14 @@ export default function Home() {
     <>
       <Header title="FOLIO" />
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView style={{ width: "100%" }}>
           <Booksearchbar />
           <PreviousSearched />
 
-        <SavedBookBar
-          books={getAllFavorites().books.slice(0, 5)}
-          onBookPress={handleBookPress}
-          isSaved={isSaved}
-          onToggle={toggleFavorite}
-        />
           <BookBar
             title="Favorites"
             emptyMessage="No favorites yet..."
-            books={favorites}
+            books={getAllFavorites().books.slice(0, 10)}
             onBookPress={handleBookPress}
             isSaved={isFavorited}
             onToggle={toggleFavorite}
@@ -80,7 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "flex-start",
-    alignItems: "center",
+    // alignItems: "center",
   },
   title: {
     fontSize: 24,

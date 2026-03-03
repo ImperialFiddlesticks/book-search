@@ -74,11 +74,11 @@ export const useBookSearch = (
   query: string,
   subject: string[] = [],
   page: number = 1,
-    sort: string = "Relevance",
+  sort: string = "Relevance",
 ) => {
   return useQuery({
-    queryKey: ["books", query, subject, sort, page],
-    queryFn: () => fetchBooks(query, subject, sort, page),
+    queryKey: ["books", query, subject, page, sort],
+    queryFn: () => fetchBooks(query, subject, page, sort),
     enabled: query.length > 0,
 
     staleTime: 1000 * 60 * 5,

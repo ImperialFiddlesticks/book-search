@@ -8,22 +8,19 @@ import {
 import BookCard from "../components/BookCard";
 import Booksearchbar from "../components/Booksearchbar";
 import { useLocalSearchParams } from "expo-router";
-import { useState, useEffect, use } from "react";
-import { useFavoritesStore } from "../store/favoritesStore";
+import { useState, useEffect } from "react";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
 import { Button } from "react-native-paper";
-
+import Sorting, { SortOption } from "@/components/Sorting";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
 const pageSize = 10;
-import Sorting from "@/components/Sorting";
-import { SortOption } from "@/components/Sorting";
 
 export default function SearchResults() {
   const insets = useSafeAreaInsets();
