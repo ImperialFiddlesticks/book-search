@@ -14,7 +14,7 @@ export default function Details() {
     isLoading: isbnIsLoading,
     isError: isbnIsError,
   } = useBookByIsbn(isbn as string);
-  const isbnBook = isbnData?.docs[0] || null;
+  const isbnBook = isbnData;
   const book = isbnBook || selectedBook;
   if (isbnIsLoading) {
     return (
