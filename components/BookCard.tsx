@@ -30,7 +30,7 @@ export default function BookCard({ book }: { book: Book }) {
     router.push("/details");
   };
   return (
-    <Card style={styles.card} onPress={handlePress}>
+    <Card elevation={0} style={styles.card} onPress={handlePress}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
           <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
@@ -40,7 +40,7 @@ export default function BookCard({ book }: { book: Book }) {
             <Image source={{ uri: coverUrl }} style={styles.cover} />
           ) : (
             <View style={styles.placeholder}>
-              <Text>No cover available.</Text>
+              <Text style={styles.placeholderText}>No cover available.</Text>
             </View>
           )}
           <View style={styles.info}>
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     backgroundColor: "transparent",
     borderRadius: 4,
+    borderWidth: 0,
   },
   cardContent: { position: "relative" },
   saveButton: { position: "absolute", top: 8, right: 8, zIndex: 1 },
@@ -79,12 +80,31 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: "#e0e0e0",
     borderRadius: 4,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  placeholderText: {
+    fontSize: 10,
+    color: "#888",
+    textAlign: "center",
+    fontFamily: "SourceSans3_400Regular",
   },
   info: { flex: 1 },
-  year: { paddingHorizontal: 16, color: "#888", fontSize: 12 },
-  authorName: { paddingHorizontal: 16, color: "#858585", fontSize: 15 },
+  year: {
+    paddingHorizontal: 16,
+    color: "#888",
+    fontSize: 12,
+    fontFamily: "SourceSans3_400Regular",
+  },
+  authorName: {
+    paddingHorizontal: 16,
+    color: "#858585",
+    fontSize: 15,
+    fontFamily: "SourceSans3_600SemiBold",
+  },
   title: {
-    fontWeight: "700",
+    fontFamily: "LibreBaskerville_700Bold",
     fontSize: 18,
   },
 });

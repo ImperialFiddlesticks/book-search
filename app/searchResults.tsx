@@ -134,13 +134,15 @@ export default function SearchResults() {
           <Button
             onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
+            labelStyle={styles.controlButton}
           >
             Previous
           </Button>
-          <Text>Page {currentPage}</Text>
+          <Text style={styles.pageNumber}>Page {currentPage}</Text>
           <Button
             onPress={() => setCurrentPage((p) => p + 1)}
             disabled={data ? currentPage * pageSize >= data.numFound : true}
+            labelStyle={styles.controlButton}
           >
             Next
           </Button>
@@ -157,14 +159,23 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontFamily: "LibreBaskerville_700Bold",
     marginBottom: 16,
   },
   controls: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 5,
     paddingTop: 5,
+  },
+  controlButton: {
+    fontFamily: "SourceSans3_600SemiBold",
+    color: "black",
+  },
+  pageNumber: {
+    fontFamily: "SourceSans3_400Regular",
+    color: "black",
   },
 });

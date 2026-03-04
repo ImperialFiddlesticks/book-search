@@ -100,7 +100,9 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                 <Image source={{ uri: coverUrl }} style={styles.cover} />
               ) : (
                 <View style={styles.placeholder}>
-                  <Text>No cover available.</Text>
+                  <Text style={styles.placeholderText}>
+                    No cover available.
+                  </Text>
                 </View>
               )}
             </View>
@@ -143,7 +145,9 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                   {data && <Text style={styles.description}>{data}</Text>}
                 </View>
                 {!isLoading && !isError && !data && (
-                  <Text>No description available.</Text>
+                  <Text style={styles.description}>
+                    No description available.
+                  </Text>
                 )}
                 {book.first_publish_year && (
                   <Text style={styles.year}>
@@ -246,7 +250,18 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 10,
     backgroundColor: "#e0e0e0",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
+
+  placeholderText: {
+    fontSize: 10,
+    color: "#888",
+    textAlign: "center",
+    fontFamily: "SourceSans3_400Regular",
+  },
+
   title: { fontSize: 25, fontFamily: "LibreBaskerville_700Bold" },
   info: { flex: 1 },
   authorSearchButton: { marginTop: 12 },
