@@ -38,7 +38,10 @@ export default function Home() {
     <>
       <Header title="FOLIO" />
       <View style={styles.container}>
-        <ScrollView style={{ width: "100%" }}>
+        <ScrollView
+          style={{ width: "100%" }}
+          accessibilityLabel="Home screen content"
+        >
           <Booksearchbar />
           <PreviousSearched />
 

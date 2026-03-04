@@ -49,7 +49,13 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <Button mode="outlined" onPress={openMenu}>
+          <Button
+            mode="outlined"
+            onPress={openMenu}
+            accessibilityLabel={`Sort by ${getSortLabel()}`}
+            accessibilityHint="Opens sorting options"
+            accessibilityState={{ expanded: visible }}
+          >
             Sort by: {getSortLabel()}
           </Button>
         }
@@ -59,6 +65,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
             handleSelect("Relevance");
           }}
           title="Relevance"
+          accessibilityState={{ selected: currentSort === "Relevance" }}
         />
         <Divider />
         <Menu.Item
@@ -66,12 +73,14 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
             handleSelect("new");
           }}
           title="Newest"
+          accessibilityState={{ selected: currentSort === "new" }}
         />
         <Menu.Item
           onPress={() => {
             handleSelect("old");
           }}
           title="Oldest"
+          accessibilityState={{ selected: currentSort === "old" }}
         />
         <Divider />
         <Menu.Item
@@ -79,12 +88,14 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
             handleSelect("rating desc");
           }}
           title="Rating (High to Low)"
+          accessibilityState={{ selected: currentSort === "rating desc" }}
         />
         <Menu.Item
           onPress={() => {
             handleSelect("rating asc");
           }}
           title="Rating (Low to High)"
+          accessibilityState={{ selected: currentSort === "rating asc" }}
         />
         <Divider />
         <Menu.Item
@@ -92,6 +103,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
             handleSelect("title");
           }}
           title="Title (A-Z)"
+          accessibilityState={{ selected: currentSort === "title" }}
         />
       </Menu>
     </View>

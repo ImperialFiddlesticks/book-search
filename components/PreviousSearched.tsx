@@ -13,7 +13,7 @@ export default function PreviousSearched() {
 
   return (
     <View style={styles.container}>
-      <List.Section title="Previous Searched">
+      <List.Section title="Previous Searched" accessibilityRole="header">
         {previousSearched.map((item, index) => (
           <List.Item
             key={index}
@@ -24,7 +24,17 @@ export default function PreviousSearched() {
                 params: { query: item },
               });
             }}
-            left={(props) => <List.Icon {...props} icon="history" />}
+            accessibilityRole="link"
+            accessibilityLabel={`Search again for ${item}`}
+            accessibilityHint="Opens search results"
+            left={(props) => (
+              <View
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no-hide-descendants"
+              >
+                <List.Icon {...props} icon="history" />
+              </View>
+            )}
           />
         ))}
       </List.Section>

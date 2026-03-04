@@ -14,6 +14,8 @@ export default function ScannerButton() {
       onPress={handlePress}
       icon="barcode-scan"
       style={{ margin: 10 }}
+      accessibilityLabel="Scan book barcode"
+      accessibilityHint="Opens barcode scanner"
     >
       Scan Book
     </Button>

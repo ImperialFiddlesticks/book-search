@@ -55,7 +55,7 @@ export default function SearchResults() {
               setselectedSubjects(newSubjects);
             }}
           />
-          <Text style={styles.title}>
+          <Text style={styles.title} accessibilityRole="header">
             {searchMode === "author"
               ? `Works by ${authorName}`
               : "Search Results"}

@@ -14,7 +14,7 @@ export default function Header({ title }: { readonly title: string }) {
       <Appbar.BackAction
         style={styles.iconButton}
         onPress={goBack}
-        accessibilityLabel="Back Button"
+        accessibilityLabel="Go back"
         accessibilityHint="Navigates to the previous screen"
       />
       <Appbar.Content titleStyle={styles.headerTitle} title={title} />
@@ -22,7 +22,7 @@ export default function Header({ title }: { readonly title: string }) {
         style={styles.iconButton}
         icon="star"
         onPress={navigateToFavorites}
-        accessibilityLabel="Favorites Page button"
+        accessibilityLabel="Favorites Page"
         accessibilityHint="Navigates to the Favorites Page"
       />
     </Appbar.Header>

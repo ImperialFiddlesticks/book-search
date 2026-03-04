@@ -149,7 +149,7 @@ const Booksearchbar = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityRole="search">
       <Searchbar
         placeholder="Search book"
         onChangeText={setSearchQuery}
@@ -158,6 +158,9 @@ const Booksearchbar = () => {
         traileringIcon={recorderState.isRecording ? "stop" : "microphone"}
         onTraileringIconPress={
           recorderState.isRecording ? stopRecording : startRecording
+        }
+        traileringIconAccessibilityLabel={
+          recorderState.isRecording ? "Stop recording" : "Search by voice"
         }
       />
       <ScannerButton />
