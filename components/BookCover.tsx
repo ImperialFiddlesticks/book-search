@@ -1,5 +1,4 @@
 import { Book } from "@/types/bookProps";
-import SavedProps from "@/types/savedProps";
 
 import { useState } from "react";
 import {
@@ -11,8 +10,9 @@ import {
   View,
 } from "react-native";
 import Save from "./Save";
+import { useCollectionsStore } from "@/store/collectionsStore";
 
-interface BookCoverProps extends SavedProps {
+interface BookCoverProps {
   readonly book: Book;
   readonly onPress: () => void;
   readonly onLongPress?: () => void;
@@ -22,11 +22,11 @@ interface BookCoverProps extends SavedProps {
 export default function BookCover({
   book,
   onPress,
-  isSaved,
-  onToggle,
   onLongPress,
   listPosition,
 }: BookCoverProps) {
+  const isSaved = useCollectionsStore((state) => state.isSaved(book));
+  const { toggleFavorite } = useCollectionsStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
@@ -62,7 +62,7 @@ export default function BookCover({
         </View>
       )}
       <View style={styles.saveButton}>
-        <Save isSaved={isSaved} onToggle={onToggle} />
+        <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
       </View>
       {isLoading && (
         <ActivityIndicator

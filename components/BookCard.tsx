@@ -15,7 +15,8 @@ import { useCollectionsStore } from "@/store/collectionsStore";
 
 export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
-  const { isSaved, toggleFavorite } = useCollectionsStore();
+  const isSaved = useCollectionsStore((state) => state.isSaved(book));
+  const { toggleFavorite } = useCollectionsStore();
   const { setSelectedBook } = useSelectedBookStore();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -33,7 +34,7 @@ export default function BookCard({ book }: { book: Book }) {
     <Card elevation={0} style={styles.card} onPress={handlePress}>
       <View style={styles.cardContent}>
         <View style={styles.saveButton}>
-          <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
+          <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
         </View>
         <View style={styles.row}>
           {coverUrl ? (

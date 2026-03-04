@@ -13,8 +13,9 @@ import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
-import { Button }, { SortOption } from "react-native-paper";
-import Sorting, Language, { LanguageOption } from "@/components/Language";
+import { Button } from "react-native-paper";
+import Sorting, { SortOption } from "@/components/Sorting";
+import Language, { LanguageOption } from "@/components/Language";
 import {
   SafeAreaView,
   useSafeAreaInsets,

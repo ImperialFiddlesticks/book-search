@@ -37,7 +37,8 @@ export default function BookDetails({ book }: { readonly book: Book }) {
     : null;
   const { data, isLoading, isError } = useBookDescription(book.key);
 
-  const { isSaved, toggleFavorite } = useCollectionsStore();
+  const isSaved = useCollectionsStore((state) => state.isSaved(book));
+  const { toggleFavorite } = useCollectionsStore();
   const toggleReadingList = useReadingListStore(
     (state) => state.toggleReadingList,
   );
@@ -97,7 +98,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
             <View style={styles.cardContent}>
               <View style={styles.saveButton}>
                 <Save
-                  isSaved={isSaved(book)}
+                  isSaved={isSaved}
                   onToggle={() => toggleFavorite(book)}
                 />
               </View>
