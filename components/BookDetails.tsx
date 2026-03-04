@@ -17,13 +17,10 @@ import { useReadingListStore } from "@/store/readingListStore";
 import { useRouter } from "expo-router";
 import { useSearchStore } from "../store/searchStore";
 import Header from "./Header";
-import {
-  ShoppingCart,
-  BookOpenText,
-  SendHorizonal,
-  BookMarked,
-} from "lucide-react-native";
 import ActionButton from "./ActionButton";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import SavedProps from "@/types/savedProps";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
@@ -35,7 +32,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
     : null;
   const { data, isLoading, isError } = useBookDescription(book.key);
 
-  const {isSaved, toggleFavorite} = useCollectionsStore()
+  const { isSaved, toggleFavorite } = useCollectionsStore();
   const toggleReadingList = useReadingListStore(
     (state) => state.toggleReadingList,
   );
@@ -88,12 +85,15 @@ export default function BookDetails({ book }: { readonly book: Book }) {
   };
   return (
     <>
-      <Header title={book.title} />
+      <Header title="FOLIO" />
       <ScrollView>
-        <Card style={styles.card}>
+        <Card elevation={0} style={styles.card}>
           <View style={styles.cardContent}>
             <View style={styles.saveButton}>
-              <Save isSaved={isSaved(book)} onToggle={() => toggleFavorite(book)} />
+              <Save
+                isSaved={isSaved(book)}
+                onToggle={() => toggleFavorite(book)}
+              />
             </View>
             <View style={styles.coverBox}>
               {coverUrl ? (
@@ -127,13 +127,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                     ))}
                   </View>
                 )}
-                {book.first_publish_year && (
-                  <Text>First Published: {book.first_publish_year}</Text>
-                )}
-                {book.number_of_pages_median && (
-                  <Text>Pages: {book.number_of_pages_median}</Text>
-                )}
-                {book.isbn && <Text>ISBN: {book.isbn[0]}</Text>}
+
                 <View>
                   {isLoading && (
                     <ActivityIndicator
@@ -141,31 +135,64 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                       accessibilityRole="progressbar"
                     />
                   )}
-                  {isError && <Text>Description unavailable.</Text>}
-                  {data && <Text>{data}</Text>}
+                  {isError && (
+                    <Text style={styles.description}>
+                      Description unavailable.
+                    </Text>
+                  )}
+                  {data && <Text style={styles.description}>{data}</Text>}
                 </View>
                 {!isLoading && !isError && !data && (
                   <Text>No description available.</Text>
                 )}
+                {book.first_publish_year && (
+                  <Text style={styles.year}>
+                    First Published: {book.first_publish_year}
+                  </Text>
+                )}
+                {book.number_of_pages_median && (
+                  <Text style={styles.pages}>
+                    Pages: {book.number_of_pages_median}
+                  </Text>
+                )}
+                {book.isbn && (
+                  <Text style={styles.isbn}>ISBN: {book.isbn[0]}</Text>
+                )}
                 <View style={styles.actionContainer}>
                   <ActionButton
-                    icon={ShoppingCart}
+                    icon={({ size, color }) => (
+                      <FontAwesome
+                        name="shopping-cart"
+                        size={size}
+                        color={color}
+                      />
+                    )}
                     label="Buy"
                     onPress={handleBuy}
                   />
                   <ActionButton
-                    icon={BookOpenText}
+                    icon={({ size, color }) => (
+                      <Ionicons name="book" size={size} color={color} />
+                    )}
                     label="Loan"
                     onPress={handleLoan}
                   />
                   <ActionButton
-                    icon={BookMarked}
+                    icon={({ size, color }) => (
+                      <FontAwesome
+                        name={isOnReadingList ? "bookmark" : "bookmark-o"}
+                        size={size}
+                        color={color}
+                      />
+                    )}
                     label="Add to Reading List"
                     onPress={handleReadingList}
                     color={isOnReadingList ? "#fa6b47" : "#fff"}
                   />
                   <ActionButton
-                    icon={SendHorizonal}
+                    icon={({ size, color }) => (
+                      <Ionicons name="send" size={size} color={color} />
+                    )}
                     label="Share"
                     onPress={handleShare}
                   />
@@ -176,6 +203,10 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                     onPress={handleAuthorSearch}
                     accessibilityLabel="Search by author"
                     style={styles.worksButton}
+                    labelStyle={{
+                      fontFamily: "SourceSans3_600SemiBold",
+                      fontSize: 15,
+                    }}
                   >
                     Works by {book.author_name?.[0] ?? "this author"}
                   </Button>
@@ -194,7 +225,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginHorizontal: 16,
     marginTop: 16,
-    backgroundColor: "white",
+    backgroundColor: "transparent",
+    borderWidth: 0,
   },
   cardContent: { position: "relative" },
   saveButton: { position: "absolute", top: 10, right: 10, zIndex: 1 },
@@ -207,7 +239,7 @@ const styles = StyleSheet.create({
   cover: {
     height: 240,
     width: 160,
-    borderRadius: 10,
+    borderRadius: 4,
   },
   placeholder: {
     width: 160,
@@ -215,34 +247,62 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#e0e0e0",
   },
-  title: { fontWeight: "700", fontSize: 25 },
+  title: { fontSize: 25, fontFamily: "LibreBaskerville_700Bold" },
   info: { flex: 1 },
   authorSearchButton: { marginTop: 12 },
   authorName: {
     paddingHorizontal: 16,
     color: "#858585",
     fontSize: 15,
+    fontFamily: "LibreBaskerville_700Bold",
+  },
+  description: {
+    marginTop: 10,
+    fontSize: 15,
+    fontFamily: "SourceSans3_400Regular",
+  },
+  year: {
+    fontSize: 14,
+    marginBottom: 6,
+    marginTop: 20,
+    color: "#858585",
+    fontFamily: "SourceSans3_400Regular",
+  },
+  pages: {
+    fontSize: 14,
+    marginBottom: 6,
+
+    color: "#858585",
+    fontFamily: "SourceSans3_400Regular",
+  },
+  isbn: {
+    fontSize: 14,
+    marginBottom: 15,
+
+    color: "#858585",
+    fontFamily: "SourceSans3_400Regular",
   },
   worksButton: {
-    margin: 20,
+    marginTop: 10,
     backgroundColor: "#fa6b47",
+    borderRadius: 4,
   },
   subjects: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 10,
   },
   chip: {
     marginRight: 5,
     marginBottom: 5,
-    borderRadius: 999,
+    borderRadius: 4,
     backgroundColor: "#f8b197",
   },
   chipText: {
     color: "#ffffff",
-    fontWeight: "700",
+    fontFamily: "SourceSans3_600SemiBold",
   },
   actionContainer: {
     display: "flex",
