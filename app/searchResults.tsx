@@ -14,13 +14,14 @@ import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
-import Sorting from "@/components/Sorting";
-import { SortOption } from "@/components/Sorting";
+import Sorting, { SortOption } from "@/components/Sorting";
+import Language, { LanguageOption } from "@/components/Language";
 
 export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
   const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageOption>("All");
   const [currentSort, setCurrentSort] = useState<SortOption>("Relevance");
 
   const [searchQuery, setSearchQuery] = useState(query || "");
@@ -30,6 +31,7 @@ export default function SearchResults() {
     activeQuery || "",
     selectedSubjects,
     currentSort,
+    currentLanguage,
   );
   const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
 
@@ -49,12 +51,20 @@ export default function SearchResults() {
             setselectedSubjects(newSubjects);
           }}
         />
-        <Sorting
-          currentSort={currentSort}
-          onSortChange={(newSort) => {
-            setCurrentSort(newSort);
-          }}
-        />
+        <View style={styles.filterRow}>
+          <Sorting
+            currentSort={currentSort}
+            onSortChange={(newSort) => {
+              setCurrentSort(newSort);
+            }}
+          />
+          <Language
+            currentLanguage={currentLanguage}
+            onLanguageChange={(newLanguage) => {
+              setCurrentLanguage(newLanguage);
+            }}
+          />
+        </View>
 
         <Text style={styles.title}>
           {searchMode === "author"
@@ -82,5 +92,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
+  },
+  filterRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 16,
+    gap: 8,
   },
 });

@@ -14,7 +14,20 @@ const fetchBooks = async (
   query: string,
   subject: string[] = [],
   sort: string = "Relevance",
+  lang: string = "All",
 ): Promise<BookSearchResponse> => {
+  const langConvert = {
+    English: "en",
+    Spanish: "es",
+    French: "fr",
+    German: "de",
+    Italian: "it",
+    Swedish: "sv",
+  };
+  if (lang in langConvert) {
+    lang = langConvert[lang as keyof typeof langConvert];
+  }
+
   let url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`;
   /*const response = await fetch(
     `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,cover_i,subject,author_key,first_publish_year,number_of_pages_median,isbn`,
@@ -22,6 +35,9 @@ const fetchBooks = async (
 
   if (sort !== "Relevance") {
     url += `&sort=${encodeURIComponent(sort.toLowerCase())}`;
+  }
+  if (lang !== "All") {
+    url += `&lang=${encodeURIComponent(lang.toLowerCase())}`;
   }
 
   if (subject.length > 0) {
@@ -61,10 +77,11 @@ export const useBookSearch = (
   query: string,
   subject: string[] = [],
   sort: string = "Relevance",
+  lang: string = "All",
 ) => {
   return useQuery({
-    queryKey: ["books", query, subject, sort],
-    queryFn: () => fetchBooks(query, subject, sort),
+    queryKey: ["books", query, subject, sort, lang],
+    queryFn: () => fetchBooks(query, subject, sort, lang),
     enabled: query.length > 0,
     staleTime: 1000 * 60 * 5,
   });

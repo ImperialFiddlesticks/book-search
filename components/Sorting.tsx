@@ -99,8 +99,5 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  container: {},
 });
