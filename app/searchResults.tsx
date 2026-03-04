@@ -13,8 +13,8 @@ import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
-import { Button } from "react-native-paper";
-import Sorting, { SortOption } from "@/components/Sorting";
+import { Button }, { SortOption } from "react-native-paper";
+import Sorting, Language, { LanguageOption } from "@/components/Language";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -28,6 +28,7 @@ export default function SearchResults() {
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
   const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageOption>("All");
   const [currentSort, setCurrentSort] = useState<SortOption>("Relevance");
 
   const [searchQuery, setSearchQuery] = useState(query || "");
@@ -38,6 +39,7 @@ export default function SearchResults() {
     selectedSubjects,
     currentPage,
     currentSort,
+    currentLanguage,
   );
   useEffect(() => {
     return () => resetToBooks();
@@ -104,12 +106,20 @@ export default function SearchResults() {
             setselectedSubjects(newSubjects);
           }}
         />
-        <Sorting
-          currentSort={currentSort}
-          onSortChange={(newSort) => {
-            setCurrentSort(newSort);
-          }}
-        />
+        <View style={styles.filterRow}>
+          <Sorting
+            currentSort={currentSort}
+            onSortChange={(newSort) => {
+              setCurrentSort(newSort);
+            }}
+          />
+          <Language
+            currentLanguage={currentLanguage}
+            onLanguageChange={(newLanguage) => {
+              setCurrentLanguage(newLanguage);
+            }}
+          />
+        </View>
 
         <Text style={styles.title}>
           {searchMode === "author"
@@ -158,6 +168,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontFamily: "LibreBaskerville_700Bold",
     marginBottom: 16,
+  },
+  filterRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 16,
+    gap: 8,
   },
   controls: {
     flexDirection: "row",
