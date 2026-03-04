@@ -14,7 +14,7 @@ export default function Details() {
     isLoading: isbnIsLoading,
     isError: isbnIsError,
   } = useBookByIsbn(isbn as string);
-  const isbnBook = isbnData?.docs[0] || null;
+  const isbnBook = isbnData;
   const book = isbnBook || selectedBook;
   if (isbnIsLoading) {
     return (
@@ -22,6 +22,7 @@ export default function Details() {
         <ActivityIndicator
           accessibilityLabel="Loading"
           accessibilityRole="progressbar"
+          accessibilityLiveRegion="polite"
         />
       </View>
     );
@@ -30,14 +31,14 @@ export default function Details() {
   if (isbn && (isbnIsError || !isbnBook)) {
     return (
       <View style={styles.container}>
-        <Text>Error loading book details</Text>
+        <Text accessibilityRole="alert">Error loading book details</Text>
       </View>
     );
   }
   if (!book) {
     return (
       <View style={styles.container}>
-        <Text>No book Selected</Text>
+        <Text accessibilityRole="alert">No book Selected</Text>
       </View>
     );
   }
@@ -51,7 +52,6 @@ export default function Details() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
   },
   title: {
     fontSize: 24,

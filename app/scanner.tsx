@@ -19,6 +19,7 @@ export default function Scanner() {
         <ActivityIndicator
           accessibilityLabel="Loading results"
           accessibilityRole="progressbar"
+          accessibilityLiveRegion="polite"
         />
       </View>
     );
@@ -26,8 +27,16 @@ export default function Scanner() {
     //Camera permissions are not granted yet
     return (
       <View style={styles.container}>
-        <Text>Camera permissions are needed to scan barcodes.</Text>
-        <Button onPress={requestPermission}>Request Permission</Button>
+        <Text accessibilityRole="alert">
+          Camera permissions are needed to scan barcodes.
+        </Text>
+        <Button
+          onPress={requestPermission}
+          accessibilityLabel="Request camera permission"
+          accessibilityHint="Allows the app to use your camera to scan barcodes"
+        >
+          Request Permission
+        </Button>
       </View>
     );
   }
@@ -50,6 +59,8 @@ export default function Scanner() {
         barcodeScannerSettings={{
           barcodeTypes: ["ean13"],
         }}
+        accessibilityLabel="Camera viewfinder, point at a book barcode to scan"
+        accessibilityLiveRegion="polite"
       />
       <View style={StyleSheet.absoluteFillObject}>
         <IconButton
@@ -57,7 +68,8 @@ export default function Scanner() {
           icon="close"
           size={30}
           style={{ alignSelf: "flex-end", margin: 16 }}
-          accessibilityLabel="Close Scanner"
+          accessibilityLabel="Close"
+          accessibilityHint="Closes the barcode scanner"
         />
       </View>
     </View>

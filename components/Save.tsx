@@ -1,5 +1,6 @@
 import SavedProps from "@/types/savedProps";
-import { Ionicons } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Pressable } from "react-native";
 
 export default function Save({ isSaved, onToggle }: SavedProps) {
@@ -7,16 +8,19 @@ export default function Save({ isSaved, onToggle }: SavedProps) {
     <Pressable
       hitSlop={10}
       onPress={(e) => {
-        console.log("Save button pressed!");
         e.stopPropagation();
         onToggle();
       }}
+      accessibilityLabel="Favorite"
+      accessibilityHint="Adds book to Favorites Collection"
+      accessibilityRole="togglebutton"
+      accessibilityState={{ checked: isSaved }}
     >
-      <Ionicons
-        name={isSaved ? "star" : "star-outline"}
-        size={24}
-        color={isSaved ? "gold" : "grey"}
-      />
+      {isSaved ? (
+        <FontAwesome name="star" size={24} color="#f8b197" />
+      ) : (
+        <Feather name="star" size={24} color="grey" />
+      )}
     </Pressable>
   );
 }
