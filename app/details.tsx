@@ -22,6 +22,7 @@ export default function Details() {
         <ActivityIndicator
           accessibilityLabel="Loading"
           accessibilityRole="progressbar"
+          accessibilityLiveRegion="polite"
         />
       </View>
     );
@@ -30,14 +31,14 @@ export default function Details() {
   if (isbn && (isbnIsError || !isbnBook)) {
     return (
       <View style={styles.container}>
-        <Text>Error loading book details</Text>
+        <Text accessibilityRole="alert">Error loading book details</Text>
       </View>
     );
   }
   if (!book) {
     return (
       <View style={styles.container}>
-        <Text>No book Selected</Text>
+        <Text accessibilityRole="alert">No book Selected</Text>
       </View>
     );
   }

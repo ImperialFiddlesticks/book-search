@@ -21,13 +21,17 @@ import ActionButton from "./ActionButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SavedProps from "@/types/savedProps";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
 }
 
 export default function BookDetails({ book }: { readonly book: Book }) {
+  const insets = useSafeAreaInsets();
   const coverUrl = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     : null;
@@ -87,7 +91,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
   return (
     <>
       <Header title="FOLIO" />
-      <SafeAreaView style={styles.container} edges={["bottom"]}>
+      <SafeAreaView style={styles.container}>
         <ScrollView>
           <Card elevation={0} style={styles.card}>
             <View style={styles.cardContent}>
@@ -111,15 +115,23 @@ export default function BookDetails({ book }: { readonly book: Book }) {
               <View style={styles.info}>
                 <Card.Title title={book.title} titleStyle={styles.title} />
                 {book.author_name && (
-                  <TouchableOpacity onPress={handleAuthorPress}>
-                    <Text style={styles.authorName}>
+                  <TouchableOpacity
+                    onPress={handleAuthorPress}
+                    accessibilityRole="link"
+                    accessibilityLabel={`View author ${book.author_name.join(", ")}`}
+                  >
+                    <Text style={styles.authorName} accessibilityRole="header">
                       {book.author_name.join(", ")}
                     </Text>
                   </TouchableOpacity>
                 )}
                 <Card.Content>
                   {book.subject && (
-                    <View style={styles.subjects}>
+                    <View
+                      style={styles.subjects}
+                      accessibilityLabel="Book subjects"
+                      accessibilityRole="list"
+                    >
                       {book.subject?.slice(0, 5).map((sub) => (
                         <Chip
                           key={sub}
@@ -137,17 +149,21 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                       <ActivityIndicator
                         accessibilityLabel="Loading results"
                         accessibilityRole="progressbar"
+                        accessibilityLiveRegion="polite"
                       />
                     )}
                     {isError && (
-                      <Text style={styles.description}>
+                      <Text
+                        style={styles.description}
+                        accessibilityRole="alert"
+                      >
                         Description unavailable.
                       </Text>
                     )}
                     {data && <Text style={styles.description}>{data}</Text>}
                   </View>
                   {!isLoading && !isError && !data && (
-                    <Text style={styles.description}>
+                    <Text style={styles.description} accessibilityRole="alert">
                       No description available.
                     </Text>
                   )}
@@ -175,6 +191,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                       )}
                       label="Buy"
                       onPress={handleBuy}
+                      accessibilityRole="link"
                     />
                     <ActionButton
                       icon={({ size, color }) => (
@@ -182,6 +199,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                       )}
                       label="Loan"
                       onPress={handleLoan}
+                      accessibilityRole="link"
                     />
                     <ActionButton
                       icon={({ size, color }) => (
@@ -194,6 +212,8 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                       label="Add to Reading List"
                       onPress={handleReadingList}
                       color={isOnReadingList ? "#fa6b47" : "#fff"}
+                      accessibilityRole="togglebutton"
+                      accessibilityState={{ checked: isOnReadingList }}
                     />
                     <ActionButton
                       icon={({ size, color }) => (
@@ -235,8 +255,6 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 8,
-    marginHorizontal: 16,
-    marginTop: 16,
     backgroundColor: "transparent",
     borderWidth: 0,
   },

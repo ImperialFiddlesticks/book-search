@@ -4,11 +4,11 @@ import { Card, Text, IconButton } from "react-native-paper";
 import { Book } from "../types/bookProps";
 
 interface CollectionCardProps {
-  collection: {
+  readonly collection: {
     savedItems: Book[];
     title: string;
   };
-  onPress?: () => {};
+  readonly onPress?: () => {};
 }
 
 export default function CollectionCard({
@@ -16,7 +16,13 @@ export default function CollectionCard({
   onPress,
 }: CollectionCardProps) {
   return (
-    <Card style={styles.card} onPress={onPress}>
+    <Card
+      style={styles.card}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${collection.title}, ${collection.savedItems.length} items`}
+      accessibilityHint="Opens collection"
+    >
       <Card.Content>
         {/* Preview Grid */}
         <View style={styles.previewContainer}>
@@ -29,19 +35,28 @@ export default function CollectionCard({
                   : undefined,
               }}
               style={styles.previewImage}
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
             />
           ))}
         </View>
 
         {/* Title + Count */}
         <View style={styles.footer}>
-          <View>
-            <Text variant='titleMedium'>{collection.title}</Text>
-            <Text variant='bodySmall'>
+          <View
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+          >
+            <Text variant="titleMedium">{collection.title}</Text>
+            <Text variant="bodySmall">
               {collection.savedItems.length} items
             </Text>
           </View>
-          <IconButton icon='chevron-right' />
+          <IconButton
+            icon="chevron-right"
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+          />
         </View>
       </Card.Content>
     </Card>

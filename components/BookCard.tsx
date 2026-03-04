@@ -46,7 +46,11 @@ export default function BookCard({ book }: { book: Book }) {
           <View style={styles.info}>
             <Card.Title title={book.title} titleStyle={styles.title} />
             {book.author_name && (
-              <TouchableOpacity onPress={(e) => handleAuthorPress(e)}>
+              <TouchableOpacity
+                onPress={(e) => handleAuthorPress(e)}
+                accessibilityRole="link"
+                accessibilityLabel={`View author ${book.author_name.join(", ")}`}
+              >
                 <Text style={styles.authorName}>
                   {book.author_name.join(", ")}
                 </Text>

@@ -42,12 +42,18 @@ export default function SubjectChips({
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
+        accessibilityRole="list"
+        accessibilityLabel="Filter by subject"
       >
         <Chip
           mode={selectedSubjects.length === 0 ? "flat" : "outlined"}
           selected={selectedSubjects.length === 0}
           onPress={() => handleToggle("")}
           style={styles.chip}
+          accessibilityLabel="All subjects"
+          accessibilityHint="Shows all results"
+          accessibilityRole="togglebutton"
+          accessibilityState={{ checked: selectedSubjects.length === 0 }}
         >
           All
         </Chip>
@@ -58,6 +64,14 @@ export default function SubjectChips({
             selected={selectedSubjects.includes(subject)}
             onPress={() => handleToggle(subject)}
             style={styles.chip}
+            accessibilityRole="togglebutton"
+            accessibilityLabel={subject}
+            accessibilityHint={
+              selectedSubjects.includes(subject)
+                ? "Remove filter"
+                : "Filter by subject"
+            }
+            accessibilityState={{ checked: selectedSubjects.includes(subject) }}
           >
             {subject}
           </Chip>

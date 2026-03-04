@@ -23,24 +23,30 @@ export default function BookBar({
 }: SavedBooksProps) {
   return (
     <View style={styles.listWrapper}>
-      <Text style={styles.listHeadline}>{title}</Text>
+      <Text style={styles.listHeadline} accessibilityRole="header">
+        {title}
+      </Text>
       <FlatList
         data={books}
         horizontal
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <BookCover
             book={item}
             onPress={() => onBookPress(item)}
             isSaved={isSaved(item)}
             onToggle={() => onToggle(item)}
             onLongPress={onLongPress ? () => onLongPress(item) : undefined}
+            listPosition={`${index + 1} of ${books.length}`}
           />
         )}
         keyExtractor={(item) => String(item.key)}
         contentContainerStyle={styles.contentContainer}
         style={styles.list}
-        ListEmptyComponent={<Text>{emptyMessage}</Text>}
+        ListEmptyComponent={
+          <Text accessibilityLiveRegion="polite">{emptyMessage}</Text>
+        }
+        accessibilityLabel={`${title} list, ${books.length} books`}
       />
     </View>
   );

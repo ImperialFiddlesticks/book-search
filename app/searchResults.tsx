@@ -57,7 +57,7 @@ export default function SearchResults() {
               setselectedSubjects(newSubjects);
             }}
           />
-          <Text style={styles.title}>
+          <Text style={styles.title} accessibilityRole="header">
             {searchMode === "author"
               ? `Works by ${authorName}`
               : "Search Results"}
@@ -65,8 +65,9 @@ export default function SearchResults() {
           <ActivityIndicator
             size="large"
             color="#f8b197"
-            accessibilityLabel="Loading Books"
+            accessibilityLabel="Loading Books, please wait"
             accessibilityRole="progressbar"
+            accessibilityLiveRegion="polite"
           />
         </SafeAreaView>
       </>
@@ -90,7 +91,9 @@ export default function SearchResults() {
               ? `Works by ${authorName}`
               : "Search Results"}
           </Text>
-          <Text>Error loading results. Please try again.</Text>
+          <Text accessibilityLiveRegion="assertive" accessibilityRole="alert">
+            Error loading results. Please try again.
+          </Text>
         </SafeAreaView>
       </>
     );
@@ -121,7 +124,7 @@ export default function SearchResults() {
           />
         </View>
 
-        <Text style={styles.title}>
+        <Text style={styles.title} accessibilityRole="header">
           {searchMode === "author"
             ? `Works by ${authorName}`
             : "Search Results"}
@@ -130,25 +133,35 @@ export default function SearchResults() {
           data={data?.docs ?? []}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => <BookCard book={item} />}
-          ListEmptyComponent={<Text>No results found.</Text>}
+          ListEmptyComponent={
+            <Text accessibilityRole="alert">No results found.</Text>
+          }
           contentContainerStyle={{
             flexGrow: 1,
             paddingBottom: insets.bottom + 60,
           }}
+          accessibilityLabel="Search result list"
         />
         <View style={styles.controls}>
           <Button
             onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             labelStyle={styles.controlButton}
+            accessibilityLabel={`Previous page, currently on page ${currentPage}`}
           >
             Previous
           </Button>
-          <Text style={styles.pageNumber}>Page {currentPage}</Text>
+          <Text
+            style={styles.pageNumber}
+            accessibilityLabel={`Page ${currentPage}`}
+          >
+            Page {currentPage}
+          </Text>
           <Button
             onPress={() => setCurrentPage((p) => p + 1)}
             disabled={data ? currentPage * pageSize >= data.numFound : true}
             labelStyle={styles.controlButton}
+            accessibilityLabel={`Next page, currently on page ${currentPage}`}
           >
             Next
           </Button>

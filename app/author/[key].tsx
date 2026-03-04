@@ -34,6 +34,7 @@ export default function AuthorDetails() {
         <ActivityIndicator
           accessibilityLabel="Loading"
           accessibilityRole="progressbar"
+          accessibilityLiveRegion="polite"
         />
       </View>
     );
@@ -41,14 +42,14 @@ export default function AuthorDetails() {
   if (isError) {
     return (
       <View style={styles.container}>
-        <Text>Error loading author</Text>
+        <Text accessibilityRole="alert">Error loading author</Text>
       </View>
     );
   }
   if (!author)
     return (
       <View style={styles.container}>
-        <Text>Author not found.</Text>
+        <Text accessibilityRole="alert">Author not found.</Text>
       </View>
     );
 
@@ -60,9 +61,16 @@ export default function AuthorDetails() {
           <View style={styles.cardContent}>
             <View style={styles.photoBox}>
               {authorUrl ? (
-                <Image source={{ uri: authorUrl }} style={styles.photo} />
+                <Image
+                  source={{ uri: authorUrl }}
+                  style={styles.photo}
+                  accessibilityLabel={`Photo of ${author.name}`}
+                />
               ) : (
-                <View style={styles.placeholder}>
+                <View
+                  style={styles.placeholder}
+                  accessibilityLabel={`No photo available for ${author.name}`}
+                >
                   <Text>No photo available.</Text>
                 </View>
               )}
@@ -71,6 +79,7 @@ export default function AuthorDetails() {
               <Card.Title
                 title={author.name}
                 titleStyle={styles.title}
+                accessibilityRole="header"
                 subtitle={
                   author.ratings_average &&
                   `Average Rating: ${author.ratings_average}`
@@ -102,7 +111,8 @@ export default function AuthorDetails() {
                   <Button
                     mode="contained"
                     onPress={handleAuthorSearch}
-                    accessibilityLabel="Search by author"
+                    accessibilityLabel={`Search works by ${author.name ?? "this author"}`}
+                    accessibilityHint="Opens search results for this author"
                     style={styles.worksButton}
                     labelStyle={{
                       fontFamily: "SourceSans3_600SemiBold",

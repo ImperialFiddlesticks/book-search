@@ -11,12 +11,19 @@ export default function Header({ title }: { readonly title: string }) {
 
   return (
     <Appbar.Header style={styles.header}>
-      <Appbar.BackAction style={styles.iconButton} onPress={goBack} />
+      <Appbar.BackAction
+        style={styles.iconButton}
+        onPress={goBack}
+        accessibilityLabel="Go back"
+        accessibilityHint="Navigates to the previous screen"
+      />
       <Appbar.Content titleStyle={styles.headerTitle} title={title} />
       <Appbar.Action
         style={styles.iconButton}
         icon="star"
         onPress={navigateToFavorites}
+        accessibilityLabel="Favorites Page"
+        accessibilityHint="Navigates to the Favorites Page"
       />
     </Appbar.Header>
   );

@@ -1,4 +1,9 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  AccessibilityRole,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface IconProps {
   size: number;
@@ -9,6 +14,12 @@ interface ActionButtonProps {
   readonly label: string;
   readonly onPress: () => void;
   readonly color?: string;
+  readonly accessibilityRole?: AccessibilityRole;
+  readonly accessibilityState?: {
+    checked?: boolean;
+    disabled?: boolean;
+    selected?: boolean;
+  };
 }
 
 export default function ActionButton({
@@ -16,12 +27,16 @@ export default function ActionButton({
   label,
   onPress,
   color,
+  accessibilityRole,
+  accessibilityState,
 }: ActionButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={styles.button}
       accessibilityLabel={label}
+      accessibilityRole={accessibilityRole}
+      accessibilityState={accessibilityState}
     >
       <View style={styles.iconContainer}>
         <Icon size={30} color={color ?? "#fff"} />
