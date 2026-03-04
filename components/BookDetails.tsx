@@ -21,6 +21,7 @@ import ActionButton from "./ActionButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SavedProps from "@/types/savedProps";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface BookDetailProps extends SavedProps {
   readonly book: Book;
@@ -86,145 +87,152 @@ export default function BookDetails({ book }: { readonly book: Book }) {
   return (
     <>
       <Header title="FOLIO" />
-      <ScrollView>
-        <Card elevation={0} style={styles.card}>
-          <View style={styles.cardContent}>
-            <View style={styles.saveButton}>
-              <Save
-                isSaved={isSaved(book)}
-                onToggle={() => toggleFavorite(book)}
-              />
-            </View>
-            <View style={styles.coverBox}>
-              {coverUrl ? (
-                <Image source={{ uri: coverUrl }} style={styles.cover} />
-              ) : (
-                <View style={styles.placeholder}>
-                  <Text style={styles.placeholderText}>
-                    No cover available.
-                  </Text>
-                </View>
-              )}
-            </View>
-            <View style={styles.info}>
-              <Card.Title title={book.title} titleStyle={styles.title} />
-              {book.author_name && (
-                <TouchableOpacity onPress={handleAuthorPress}>
-                  <Text style={styles.authorName}>
-                    {book.author_name.join(", ")}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              <Card.Content>
-                {book.subject && (
-                  <View style={styles.subjects}>
-                    {book.subject?.slice(0, 5).map((sub) => (
-                      <Chip
-                        key={sub}
-                        style={styles.chip}
-                        textStyle={styles.chipText}
-                      >
-                        {sub}
-                      </Chip>
-                    ))}
+      <SafeAreaView style={styles.container} edges={["bottom"]}>
+        <ScrollView>
+          <Card elevation={0} style={styles.card}>
+            <View style={styles.cardContent}>
+              <View style={styles.saveButton}>
+                <Save
+                  isSaved={isSaved(book)}
+                  onToggle={() => toggleFavorite(book)}
+                />
+              </View>
+              <View style={styles.coverBox}>
+                {coverUrl ? (
+                  <Image source={{ uri: coverUrl }} style={styles.cover} />
+                ) : (
+                  <View style={styles.placeholder}>
+                    <Text style={styles.placeholderText}>
+                      No cover available.
+                    </Text>
                   </View>
                 )}
-
-                <View>
-                  {isLoading && (
-                    <ActivityIndicator
-                      accessibilityLabel="Loading results"
-                      accessibilityRole="progressbar"
-                    />
+              </View>
+              <View style={styles.info}>
+                <Card.Title title={book.title} titleStyle={styles.title} />
+                {book.author_name && (
+                  <TouchableOpacity onPress={handleAuthorPress}>
+                    <Text style={styles.authorName}>
+                      {book.author_name.join(", ")}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                <Card.Content>
+                  {book.subject && (
+                    <View style={styles.subjects}>
+                      {book.subject?.slice(0, 5).map((sub) => (
+                        <Chip
+                          key={sub}
+                          style={styles.chip}
+                          textStyle={styles.chipText}
+                        >
+                          {sub}
+                        </Chip>
+                      ))}
+                    </View>
                   )}
-                  {isError && (
+
+                  <View>
+                    {isLoading && (
+                      <ActivityIndicator
+                        accessibilityLabel="Loading results"
+                        accessibilityRole="progressbar"
+                      />
+                    )}
+                    {isError && (
+                      <Text style={styles.description}>
+                        Description unavailable.
+                      </Text>
+                    )}
+                    {data && <Text style={styles.description}>{data}</Text>}
+                  </View>
+                  {!isLoading && !isError && !data && (
                     <Text style={styles.description}>
-                      Description unavailable.
+                      No description available.
                     </Text>
                   )}
-                  {data && <Text style={styles.description}>{data}</Text>}
-                </View>
-                {!isLoading && !isError && !data && (
-                  <Text style={styles.description}>
-                    No description available.
-                  </Text>
-                )}
-                {book.first_publish_year && (
-                  <Text style={styles.year}>
-                    First Published: {book.first_publish_year}
-                  </Text>
-                )}
-                {book.number_of_pages_median && (
-                  <Text style={styles.pages}>
-                    Pages: {book.number_of_pages_median}
-                  </Text>
-                )}
-                {book.isbn && (
-                  <Text style={styles.isbn}>ISBN: {book.isbn[0]}</Text>
-                )}
-                <View style={styles.actionContainer}>
-                  <ActionButton
-                    icon={({ size, color }) => (
-                      <FontAwesome
-                        name="shopping-cart"
-                        size={size}
-                        color={color}
-                      />
-                    )}
-                    label="Buy"
-                    onPress={handleBuy}
-                  />
-                  <ActionButton
-                    icon={({ size, color }) => (
-                      <Ionicons name="book" size={size} color={color} />
-                    )}
-                    label="Loan"
-                    onPress={handleLoan}
-                  />
-                  <ActionButton
-                    icon={({ size, color }) => (
-                      <FontAwesome
-                        name={isOnReadingList ? "bookmark" : "bookmark-o"}
-                        size={size}
-                        color={color}
-                      />
-                    )}
-                    label="Add to Reading List"
-                    onPress={handleReadingList}
-                    color={isOnReadingList ? "#fa6b47" : "#fff"}
-                  />
-                  <ActionButton
-                    icon={({ size, color }) => (
-                      <Ionicons name="send" size={size} color={color} />
-                    )}
-                    label="Share"
-                    onPress={handleShare}
-                  />
-                </View>
-                <View style={styles.authorSearchButton}>
-                  <Button
-                    mode="contained"
-                    onPress={handleAuthorSearch}
-                    accessibilityLabel="Search by author"
-                    style={styles.worksButton}
-                    labelStyle={{
-                      fontFamily: "SourceSans3_600SemiBold",
-                      fontSize: 15,
-                    }}
-                  >
-                    Works by {book.author_name?.[0] ?? "this author"}
-                  </Button>
-                </View>
-              </Card.Content>
+                  {book.first_publish_year && (
+                    <Text style={styles.year}>
+                      First Published: {book.first_publish_year}
+                    </Text>
+                  )}
+                  {book.number_of_pages_median && (
+                    <Text style={styles.pages}>
+                      Pages: {book.number_of_pages_median}
+                    </Text>
+                  )}
+                  {book.isbn && (
+                    <Text style={styles.isbn}>ISBN: {book.isbn[0]}</Text>
+                  )}
+                  <View style={styles.actionContainer}>
+                    <ActionButton
+                      icon={({ size, color }) => (
+                        <FontAwesome
+                          name="shopping-cart"
+                          size={size}
+                          color={color}
+                        />
+                      )}
+                      label="Buy"
+                      onPress={handleBuy}
+                    />
+                    <ActionButton
+                      icon={({ size, color }) => (
+                        <Ionicons name="book" size={size} color={color} />
+                      )}
+                      label="Loan"
+                      onPress={handleLoan}
+                    />
+                    <ActionButton
+                      icon={({ size, color }) => (
+                        <FontAwesome
+                          name={isOnReadingList ? "bookmark" : "bookmark-o"}
+                          size={size}
+                          color={color}
+                        />
+                      )}
+                      label="Add to Reading List"
+                      onPress={handleReadingList}
+                      color={isOnReadingList ? "#fa6b47" : "#fff"}
+                    />
+                    <ActionButton
+                      icon={({ size, color }) => (
+                        <Ionicons name="send" size={size} color={color} />
+                      )}
+                      label="Share"
+                      onPress={handleShare}
+                    />
+                  </View>
+                  <View style={styles.authorSearchButton}>
+                    <Button
+                      mode="contained"
+                      onPress={handleAuthorSearch}
+                      accessibilityLabel="Search by author"
+                      style={styles.worksButton}
+                      labelStyle={{
+                        fontFamily: "SourceSans3_600SemiBold",
+                        fontSize: 15,
+                      }}
+                    >
+                      Works by {book.author_name?.[0] ?? "this author"}
+                    </Button>
+                  </View>
+                </Card.Content>
+              </View>
             </View>
-          </View>
-        </Card>
-      </ScrollView>
+          </Card>
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 5,
+    overflow: "visible",
+  },
   card: {
     marginBottom: 8,
     marginHorizontal: 16,
@@ -323,5 +331,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
+  },
+  safeArea: {
+    flex: 1,
+    overflow: "visible",
   },
 });

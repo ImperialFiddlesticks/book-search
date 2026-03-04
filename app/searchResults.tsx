@@ -47,9 +47,7 @@ export default function SearchResults() {
     return (
       <>
         <Header title="FOLIO" />
-        <SafeAreaView
-          style={[styles.container, { paddingBottom: insets.bottom }]}
-        >
+        <SafeAreaView style={[styles.container]}>
           <Booksearchbar />
           <SubjectChips
             selectedSubjects={selectedSubjects}
@@ -77,9 +75,7 @@ export default function SearchResults() {
     return (
       <>
         <Header title="FOLIO" />
-        <SafeAreaView
-          style={[styles.container, { paddingBottom: insets.bottom }]}
-        >
+        <SafeAreaView style={[styles.container]}>
           <Booksearchbar />
           <SubjectChips
             selectedSubjects={selectedSubjects}
@@ -100,7 +96,7 @@ export default function SearchResults() {
   return (
     <>
       <Header title="FOLIO" />
-      <SafeAreaView style={[styles.container]}>
+      <SafeAreaView style={[styles.container]} edges={["bottom"]}>
         <Booksearchbar />
         <SubjectChips
           selectedSubjects={selectedSubjects}
