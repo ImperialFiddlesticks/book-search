@@ -8,16 +8,23 @@ import {
 import BookCard from "../components/BookCard";
 import Booksearchbar from "../components/Booksearchbar";
 import { useLocalSearchParams } from "expo-router";
-import { useState, useEffect, use } from "react";
-import { useFavoritesStore } from "../store/favoritesStore";
+import { useState, useEffect } from "react";
 import { useSearchStore } from "../store/searchStore";
 import { useBookSearch } from "../hooks/openLibraryApi";
 import SubjectChips from "@/components/Subjects";
 import Header from "../components/Header";
-import Sorting, { SortOption } from "@/components/Sorting";
-import Language, { LanguageOption } from "@/components/Language";
+import { Button }, { SortOption } from "react-native-paper";
+import Sorting, Language, { LanguageOption } from "@/components/Language";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+
+const pageSize = 10;
 
 export default function SearchResults() {
+  const insets = useSafeAreaInsets();
+  const [currentPage, setCurrentPage] = useState(1);
   const { searchMode, authorName, resetToBooks } = useSearchStore();
   const { query } = useLocalSearchParams<{ query: string }>();
   const [selectedSubjects, setselectedSubjects] = useState<string[]>([]);
@@ -30,20 +37,72 @@ export default function SearchResults() {
   const { data, isLoading, isError } = useBookSearch(
     activeQuery || "",
     selectedSubjects,
+    currentPage,
     currentSort,
     currentLanguage,
   );
-  const loadFavorites = useFavoritesStore((state) => state.loadFavorites);
-
   useEffect(() => {
-    loadFavorites();
     return () => resetToBooks();
   }, []);
 
+  if (isLoading) {
+    return (
+      <>
+        <Header title="FOLIO" />
+        <SafeAreaView
+          style={[styles.container, { paddingBottom: insets.bottom }]}
+        >
+          <Booksearchbar />
+          <SubjectChips
+            selectedSubjects={selectedSubjects}
+            onSelectSubject={(newSubjects) => {
+              setselectedSubjects(newSubjects);
+            }}
+          />
+          <Text style={styles.title}>
+            {searchMode === "author"
+              ? `Works by ${authorName}`
+              : "Search Results"}
+          </Text>
+          <ActivityIndicator
+            size="large"
+            color="#f8b197"
+            accessibilityLabel="Loading Books"
+            accessibilityRole="progressbar"
+          />
+        </SafeAreaView>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <Header title="FOLIO" />
+        <SafeAreaView
+          style={[styles.container, { paddingBottom: insets.bottom }]}
+        >
+          <Booksearchbar />
+          <SubjectChips
+            selectedSubjects={selectedSubjects}
+            onSelectSubject={(newSubjects) => {
+              setselectedSubjects(newSubjects);
+            }}
+          />
+          <Text style={styles.title}>
+            {searchMode === "author"
+              ? `Works by ${authorName}`
+              : "Search Results"}
+          </Text>
+          <Text>Error loading results. Please try again.</Text>
+        </SafeAreaView>
+      </>
+    );
+  }
   return (
     <>
-      <Header title="Search results" />
-      <View style={styles.container}>
+      <Header title="FOLIO" />
+      <SafeAreaView style={[styles.container]}>
         <Booksearchbar />
         <SubjectChips
           selectedSubjects={selectedSubjects}
@@ -76,8 +135,27 @@ export default function SearchResults() {
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => <BookCard book={item} />}
           ListEmptyComponent={<Text>No results found.</Text>}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: insets.bottom + 60,
+          }}
         />
-      </View>
+        <View style={styles.controls}>
+          <Button
+            onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <Text>Page {currentPage}</Text>
+          <Button
+            onPress={() => setCurrentPage((p) => p + 1)}
+            disabled={data ? currentPage * pageSize >= data.numFound : true}
+          >
+            Next
+          </Button>
+        </View>
+      </SafeAreaView>
     </>
   );
 }
@@ -85,7 +163,7 @@ export default function SearchResults() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 5,
     overflow: "visible",
   },
   title: {
@@ -98,5 +176,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 16,
     gap: 8,
+  },
+  controls: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+    paddingTop: 5,
   },
 });

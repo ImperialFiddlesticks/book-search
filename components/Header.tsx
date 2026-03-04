@@ -3,8 +3,7 @@ import { Appbar } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 
-
-export default function Header({title}: {title: string}) {
+export default function Header({ title }: { readonly title: string }) {
   const router = useRouter();
   const goBack = () => router.back();
 
@@ -14,15 +13,17 @@ export default function Header({title}: {title: string}) {
     <Appbar.Header style={styles.header}>
       <Appbar.BackAction style={styles.iconButton} onPress={goBack} />
       <Appbar.Content titleStyle={styles.headerTitle} title={title} />
-      <Appbar.Action style={styles.iconButton} icon='star' onPress={navigateToFavorites} />
+      <Appbar.Action
+        style={styles.iconButton}
+        icon="star"
+        onPress={navigateToFavorites}
+      />
     </Appbar.Header>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    position: "sticky",
-    display: "flex",
     justifyContent: "space-between",
     width: "100%",
     backgroundColor: "white",
@@ -40,6 +41,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "rgb(73, 69, 79)",
     borderStyle: "solid",
-    borderRadius: "15px"
-  }
+    borderRadius: 15,
+  },
 });

@@ -69,12 +69,12 @@ export default function SubjectChips({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     marginHorizontal: -16,
   },
   scrollContainer: {
     paddingHorizontal: 16,
-    gap: 8,
+    gap: 4,
   },
   chip: {
     marginRight: 8,

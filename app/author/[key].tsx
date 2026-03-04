@@ -54,9 +54,9 @@ export default function AuthorDetails() {
 
   return (
     <>
-      <Header title={author.name} />
+      <Header title="FOLIO" />
       <ScrollView style={styles.container}>
-        <Card style={styles.card}>
+        <Card style={styles.card} elevation={0}>
           <View style={styles.cardContent}>
             <View style={styles.photoBox}>
               {authorUrl ? (
@@ -82,10 +82,20 @@ export default function AuthorDetails() {
                     {author.birth_date} - {author.death_date}
                   </Text>
                 )}
-                {author.work_count && <Text>Works: {author.work_count}</Text>}
-                {author.top_work && <Text>Top Work: {author.top_work}</Text>}
+                {author.work_count && (
+                  <Text style={styles.extraInfo}>
+                    Works: {author.work_count}
+                  </Text>
+                )}
+                {author.top_work && (
+                  <Text style={styles.extraInfo}>
+                    Top Work: {author.top_work}
+                  </Text>
+                )}
                 <View>
-                  {getBio(author.bio) && <Text>{getBio(author.bio)}</Text>}
+                  {getBio(author.bio) && (
+                    <Text style={styles.bio}>{getBio(author.bio)}</Text>
+                  )}
                 </View>
 
                 <View style={styles.authorSearchButton}>
@@ -94,6 +104,10 @@ export default function AuthorDetails() {
                     onPress={handleAuthorSearch}
                     accessibilityLabel="Search by author"
                     style={styles.worksButton}
+                    labelStyle={{
+                      fontFamily: "SourceSans3_600SemiBold",
+                      fontSize: 15,
+                    }}
                   >
                     Works by {author.name ?? "this author"}
                   </Button>
@@ -112,7 +126,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  card: { marginBottom: 8, marginHorizontal: 16, backgroundColor: "white" },
+  card: {
+    marginBottom: 8,
+    marginHorizontal: 16,
+    backgroundColor: "transparent",
+    borderWidth: 0,
+  },
   cardContent: { position: "relative" },
   photoBox: {
     display: "flex",
@@ -123,20 +142,36 @@ const styles = StyleSheet.create({
   photo: {
     height: 240,
     width: 160,
-    borderRadius: 10,
+    borderRadius: 4,
   },
   placeholder: {
     width: 160,
     height: 240,
-    borderRadius: 10,
+    borderRadius: 4,
     backgroundColor: "#e0e0e0",
   },
-  title: { fontWeight: "700", fontSize: 25 },
-  lifespan: { fontWeight: "600", marginBottom: 10 },
-  info: { flex: 1 },
+  title: { fontSize: 25, fontFamily: "LibreBaskerville_700Bold" },
+  lifespan: { fontFamily: "SourceSans3_600SemiBold", marginBottom: 10 },
+  info: {
+    flex: 1,
+    marginTop: 10,
+  },
+  extraInfo: {
+    fontSize: 14,
+    marginBottom: 6,
+    marginTop: 20,
+    color: "#858585",
+    fontFamily: "SourceSans3_400Regular",
+  },
+  bio: {
+    marginTop: 10,
+    fontSize: 15,
+    fontFamily: "SourceSans3_400Regular",
+  },
   authorSearchButton: { marginTop: 12 },
   worksButton: {
     margin: 20,
     backgroundColor: "#fa6b47",
+    borderRadius: 4,
   },
 });

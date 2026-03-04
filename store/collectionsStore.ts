@@ -1,10 +1,13 @@
 import { Book } from "../types/bookProps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface CollectionsStore {
   collections: Collection[];
-  loadCollections: () => Promise<void>;
+  isSaved: (book: Book) => boolean;
+  getAllFavorites: () => Collection;
+  toggleFavorite: (book: Book) => void;
   addNewCollection: (title: string, books?: Book[]) => void;
   deleteCollection?: (title: string) => void;
   updateCollection?: (title: string, books: Book[]) => void;
@@ -15,39 +18,99 @@ interface Collection {
   books: Book[];
 }
 
-export const useCollectionsStore = create<CollectionsStore>()((set, get) => ({
-  collections: [] as Collection[],
+export const useCollectionsStore = create<CollectionsStore>()(
+  persist(
+    (set, get) => ({
+      collections: [] as Collection[],
 
-  loadCollections: async () => {
-    try {
-      const storedCollections =
-        (await AsyncStorage.getItem("collections")) || "[]";
-      set({ collections: JSON.parse(storedCollections) });
-    } catch (error) {
-      console.error("Failed to load collections", error);
-    }
-  },
+      isSaved: (book: Book) => {
+        const allFavorites = get().collections.find(
+          (c) => c.title === "All favorites",
+        );
+        return allFavorites
+          ? allFavorites.books.some((f) => f.key === book.key)
+          : false;
+      },
 
-  addNewCollection: (title, books) => {
-    const currentCollections = get().collections;
-    const updatedCollections = [
-      ...currentCollections,
-      { title, books: books ?? [] },
-    ];
+      getAllFavorites: () => {
+        let allFavorites = get().collections.find(
+          (c) => c.title === "All favorites",
+        );
 
-    set({ collections: updatedCollections });
+        if (!allFavorites) {
+          allFavorites = { title: "All favorites", books: [] };
+          const collections = [...get().collections, allFavorites];
+          set({ collections });
+        }
 
-    AsyncStorage.setItem("collections", JSON.stringify(updatedCollections));
-  },
+        return allFavorites;
+      },
 
-  deleteCollection: (title) => {
-    const currentCollections = get().collections;
-    const updatedCollections = currentCollections.filter(
-      (c) => c.title !== title,
-    );
+      toggleFavorite: (book: Book) => {
+        get().getAllFavorites();
 
-    set({ collections: updatedCollections });
+        const alreadySaved = get()
+          .getAllFavorites()
+          .books.some((b) => b.key === book.key);
 
-    AsyncStorage.setItem("collections", JSON.stringify(updatedCollections));
-  },
-}));
+        let newCollections: Collection[];
+
+        if (alreadySaved) {
+          newCollections = get().collections.map((c) => {
+            return {
+              ...c,
+              books: c.books.filter((b) => b.key !== book.key),
+            };
+          });
+        } else {
+          newCollections = get().collections.map((c) => {
+            if (c.title === "All favorites") {
+              return {
+                ...c,
+                books: [...c.books, book],
+              };
+            }
+
+            return c;
+          });
+        }
+
+        set({ collections: newCollections });
+      },
+
+      addNewCollection: (title, books) => {
+        const currentCollections = get().collections;
+        const updatedCollections = [
+          ...currentCollections,
+          { title, books: books ?? [] },
+        ];
+
+        set({ collections: updatedCollections });
+      },
+
+      deleteCollection: (title) => {
+        const currentCollections = get().collections;
+        const updatedCollections = currentCollections.filter(
+          (c) => c.title !== title,
+        );
+
+        set({ collections: updatedCollections });
+      },
+    }),
+    {
+      name: "collections",
+      storage: createJSONStorage(() => {
+        // return dummy Storage during SSR
+        if (globalThis.window === undefined) {
+          return {
+            getItem: async () => null,
+            setItem: async () => {},
+            removeItem: async () => {},
+          };
+        }
+        return AsyncStorage;
+      }),
+      partialize: (state) => ({ collections: state.collections }),
+    },
+  ),
+);

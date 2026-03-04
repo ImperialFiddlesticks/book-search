@@ -1,26 +1,34 @@
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import Booksearchbar from "../components/Booksearchbar";
-import SavedBookBar from "../components/SavedBookBar";
-import { useFavoritesStore } from "../store/favoritesStore";
+import { useCollectionsStore } from "@/store/collectionsStore";
 import { Book } from "../types/bookProps";
 import { useSelectedBookStore } from "../store/useSelectedBookStore";
 import Header from "../components/Header";
 import PreviousSearched from "../components/PreviousSearched";
 import { useStore } from "../store/previousSearched";
+import BookBar from "../components/BookBar";
+import { useReadingListStore } from "@/store/readingListStore";
 
 export default function Home() {
   const router = useRouter();
-  const { favorites, isSaved, toggleFavorite, loadFavorites } =
-    useFavoritesStore();
+  const {
+    collections,
+    getAllFavorites,
+    isSaved: isFavorited,
+    toggleFavorite,
+  } = useCollectionsStore();
+
+  const { readingList, toggleReadingList, loadReadingList } =
+    useReadingListStore();
   const { setSelectedBook } = useSelectedBookStore();
-  const { previousSearched } = useStore();
+  const { previousSearched, loadPreviousSearched } = useStore();
   useEffect(() => {
-    loadFavorites();
     loadPreviousSearched();
+    loadReadingList();
   }, []);
-  const { loadPreviousSearched } = useStore();
+
   const handleBookPress = (book: Book) => {
     setSelectedBook(book);
     router.push("/details");
@@ -30,15 +38,28 @@ export default function Home() {
     <>
       <Header title="FOLIO" />
       <View style={styles.container}>
-        <Booksearchbar />
-        <PreviousSearched />
+        <ScrollView style={{ width: "100%" }}>
+          <Booksearchbar />
+          <PreviousSearched />
 
-        <SavedBookBar
-          books={favorites}
-          onBookPress={handleBookPress}
-          isSaved={isSaved}
-          onToggle={toggleFavorite}
-        />
+          <BookBar
+            title="Favorites"
+            emptyMessage="No favorites yet..."
+            books={getAllFavorites().books.slice(0, 10)}
+            onBookPress={handleBookPress}
+            isSaved={isFavorited}
+            onToggle={toggleFavorite}
+          />
+          <BookBar
+            title="Reading list"
+            emptyMessage="No books in reading list yet..."
+            onBookPress={handleBookPress}
+            books={readingList}
+            isSaved={isFavorited}
+            onToggle={toggleFavorite}
+            onLongPress={(book) => toggleReadingList(book)}
+          />
+        </ScrollView>
       </View>
     </>
   );
@@ -49,7 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "flex-start",
-    alignItems: "center",
+    // alignItems: "center",
   },
   title: {
     fontSize: 24,
