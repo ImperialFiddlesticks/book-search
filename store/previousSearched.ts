@@ -12,7 +12,7 @@ export const useStore = create<PreviousSearchedStore>()((set, get) => ({
 
   addPreviousSearched: (query: string) => {
     const current = get().previousSearched;
-    const updated = [query, ...current.filter((q) => q !== query)].slice(0, 10);
+    const updated = [query, ...current.filter((q) => q !== query)].slice(0, 3);
     set({ previousSearched: updated });
     AsyncStorage.setItem("previousSearched", JSON.stringify(updated));
   },

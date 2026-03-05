@@ -2,6 +2,7 @@ import * as React from "react";
 import { Appbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function Header({ title }: { readonly title: string }) {
   const router = useRouter();
