@@ -4,11 +4,12 @@ import {
   IOSOutputFormat,
   useAudioRecorder,
   useAudioRecorderState,
+  setAudioModeAsync,
 } from "expo-audio";
 import * as React from "react";
 import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import ScannerButton from "./ScannerButton";
 import { useStore } from "../store/previousSearched";
@@ -20,6 +21,10 @@ const Booksearchbar = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const router = useRouter();
   const { addPreviousSearched } = useStore();
+
+  const isIOS = Platform.OS === "ios";
+
+  const theme = useTheme();
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -61,7 +66,6 @@ const Booksearchbar = () => {
   useEffect(() => {
     const getPermissions = async () => {
       const permission = await AudioModule.requestRecordingPermissionsAsync();
-
       if (permission.status === "granted") {
         console.log("Audio recording permission granted");
       }
@@ -121,12 +125,19 @@ const Booksearchbar = () => {
 
   async function startRecording() {
     try {
+      await setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+      });
+
       const perms = await AudioModule.getRecordingPermissionsAsync();
       if (!perms.granted) {
         await AudioModule.requestRecordingPermissionsAsync();
       }
       console.log("Starting recording...");
       await audioRecorder.prepareToRecordAsync();
+      audioRecorder.record();
+      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -155,9 +166,20 @@ const Booksearchbar = () => {
         onChangeText={setSearchQuery}
         value={searchQuery}
         onSubmitEditing={handleSearch}
-        traileringIcon={recorderState.isRecording ? "stop" : "microphone"}
+        style={{ backgroundColor: theme.colors.surface, borderRadius: 2 }}
+        traileringIcon={
+          isIOS
+            ? recorderState.isRecording
+              ? "stop"
+              : "microphone"
+            : undefined
+        }
         onTraileringIconPress={
-          recorderState.isRecording ? stopRecording : startRecording
+          isIOS
+            ? recorderState.isRecording
+              ? stopRecording
+              : startRecording
+            : undefined
         }
         traileringIconAccessibilityLabel={
           recorderState.isRecording ? "Stop recording" : "Search by voice"
