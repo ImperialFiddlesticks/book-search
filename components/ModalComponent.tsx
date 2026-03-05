@@ -22,7 +22,7 @@ export default function ModalComponent({
     <SafeAreaProvider>
       <SafeAreaView style={styles.centeredView}>
         <Modal
-          animationType='slide'
+          animationType='fade'
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -31,7 +31,7 @@ export default function ModalComponent({
           }}
           accessibilityViewIsModal={true}
         >
-          <View style={styles.centeredView}>
+          <View style={[styles.centeredView, styles.overlay]}>
             <View style={{ position: "relative" }}>
               <Pressable
                 style={styles.closeButton}
@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
   modalView: {
     margin: 20,
     backgroundColor: "white",
@@ -120,8 +123,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: -12,
-    right: -12,
+    top: -6,
+    right: -6,
     zIndex: 1,
     width: 28,
     height: 28,
