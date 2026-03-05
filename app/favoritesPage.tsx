@@ -1,7 +1,7 @@
-import React from "react";
+import { useState } from "react";
 import CollectionCard from "../components/CollectionCard";
-import { ScrollView } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { View, ScrollView } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import Header from "../components/Header";
 import ModalComponent from "../components/ModalComponent";
 import { useCollectionsStore } from "../store/collectionsStore";
@@ -9,12 +9,13 @@ import { useCollectionsStore } from "../store/collectionsStore";
 export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
   const { addNewCollection } = useCollectionsStore();
+  const [inputText, setInputText] = useState("");
 
   console.log({ collections });
 
   return (
     <ScrollView style={{ position: "relative" }}>
-      <Header title="Favorites" />
+      <Header title='Favorites' />
       {collections.map((c) => (
         <CollectionCard
           key={c.title}
@@ -25,12 +26,25 @@ export default function FavoritesScreen() {
         />
       ))}
 
-      <ModalComponent text="+ New Collection">
-        <form>
-          <label htmlFor="new-collection-name">Collection name</label>
-          <input type="text" id="new-collection-name"></input>
-          <Button>Create new collection</Button>
-        </form>
+      <ModalComponent text='+ New Collection'
+      submitText="Create collection"
+      disabled={!inputText.trim()}
+      onClose={() => setInputText("")}
+      onPress={() => {
+        if (inputText.trim()) {
+          addNewCollection(inputText.trim());
+          setInputText("");
+        }
+      }}>
+        <View>
+          <Text>Collection name</Text>
+          <TextInput
+            onChangeText={(text) => setInputText(text)}
+            value={inputText}
+            maxLength={40}
+            placeholder='American classics, English poetry, favourite writers, etc.'
+          />
+        </View>
       </ModalComponent>
     </ScrollView>
   );
