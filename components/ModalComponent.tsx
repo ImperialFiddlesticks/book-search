@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function ModalComponent({
   text,
@@ -19,31 +18,30 @@ export default function ModalComponent({
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.centeredView}>
-        <Modal
-          animationType='fade'
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-          accessibilityViewIsModal={true}
-        >
-          <View style={[styles.centeredView, styles.overlay]}>
-            <View style={{ position: "relative" }}>
-              <Pressable
-                style={styles.closeButton}
-                onPress={() => {
-                  onClose?.();
-                  setModalVisible(false);
-                }}
-                accessibilityRole='button'
-                accessibilityLabel='Close modal'
-              >
-                <Text style={styles.closeButtonText}>✕</Text>
-              </Pressable>
+    <View>
+      <Modal
+        animationType='fade'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+        accessibilityViewIsModal={true}
+      >
+        <View style={[styles.overlay]}>
+          <View style={{ position: "relative" }}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => {
+                onClose?.();
+                setModalVisible(false);
+              }}
+              accessibilityRole='button'
+              accessibilityLabel='Close modal'
+            >
+              <Text style={styles.closeButtonText}>✕</Text>
+            </Pressable>
             <View style={styles.modalView}>
               {children}
               <Pressable
@@ -60,30 +58,27 @@ export default function ModalComponent({
                 <Text style={styles.textStyle}>{submitText}</Text>
               </Pressable>
             </View>
-            </View>
           </View>
-        </Modal>
-        <Pressable
-          style={[styles.button, styles.buttonOpen]}
-          onPress={() => setModalVisible(true)}
-          accessibilityRole='button'
-          accessibilityLabel={text}
-          accessibilityHint='Opens modal'
-        >
-          <Text style={styles.textStyle}>{text}</Text>
-        </Pressable>
-      </SafeAreaView>
-    </SafeAreaProvider>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}
+        accessibilityRole='button'
+        accessibilityLabel={text}
+        accessibilityHint='Opens modal'
+      >
+        <Text style={styles.textStyle}>{text}</Text>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  centeredView: {
+  overlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {

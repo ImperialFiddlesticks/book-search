@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CollectionCard from "../components/CollectionCard";
-import { View, ScrollView } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { View, ScrollView, TextInput } from "react-native";
+import { Button, Text } from "react-native-paper";
 import Header from "../components/Header";
 import ModalComponent from "../components/ModalComponent";
 import { useCollectionsStore } from "../store/collectionsStore";
@@ -46,6 +46,7 @@ export default function FavoritesScreen() {
             value={inputText}
             maxLength={40}
             placeholder='American classics, English poetry, favourite writers, etc.'
+            style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginTop: 8, fontSize: 16 }}
           />
         </View>
       </ModalComponent>
