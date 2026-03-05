@@ -68,9 +68,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           }}
           style={{
             backgroundColor:
-              currentSort === "Relevance"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentSort === "Relevance" ? theme.colors.tertiary : undefined,
           }}
           title="Relevance"
           accessibilityState={{ selected: currentSort === "Relevance" }}
@@ -82,7 +80,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           }}
           style={{
             backgroundColor:
-              currentSort === "new" ? theme.colors.tertiary : "transparent",
+              currentSort === "new" ? theme.colors.tertiary : undefined,
           }}
           title="Newest"
           accessibilityState={{ selected: currentSort === "new" }}
@@ -93,7 +91,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           }}
           style={{
             backgroundColor:
-              currentSort === "old" ? theme.colors.tertiary : "transparent",
+              currentSort === "old" ? theme.colors.tertiary : undefined,
           }}
           title="Oldest"
           accessibilityState={{ selected: currentSort === "old" }}
@@ -105,9 +103,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           }}
           style={{
             backgroundColor:
-              currentSort === "rating desc"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentSort === "rating desc" ? theme.colors.tertiary : undefined,
           }}
           title="Rating (High to Low)"
           accessibilityState={{ selected: currentSort === "rating desc" }}
@@ -118,9 +114,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           }}
           style={{
             backgroundColor:
-              currentSort === "rating asc"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentSort === "rating asc" ? theme.colors.tertiary : undefined,
           }}
           title="Rating (Low to High)"
           accessibilityState={{ selected: currentSort === "rating asc" }}
@@ -132,7 +126,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           }}
           style={{
             backgroundColor:
-              currentSort === "title" ? theme.colors.tertiary : "transparent",
+              currentSort === "title" ? theme.colors.tertiary : undefined,
           }}
           title="Title (A-Z)"
           accessibilityState={{ selected: currentSort === "title" }}

@@ -67,7 +67,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "All" ? theme.colors.tertiary : "transparent",
+              currentLanguage === "All" ? theme.colors.tertiary : undefined,
           }}
           title="All"
         />
@@ -77,9 +77,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "English"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentLanguage === "English" ? theme.colors.tertiary : undefined,
           }}
           title="English"
         />
@@ -89,9 +87,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "French"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentLanguage === "French" ? theme.colors.tertiary : undefined,
           }}
           title="French"
         />
@@ -101,9 +97,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "German"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentLanguage === "German" ? theme.colors.tertiary : undefined,
           }}
           title="German"
         />
@@ -113,9 +107,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "Spanish"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentLanguage === "Spanish" ? theme.colors.tertiary : undefined,
           }}
           title="Spanish"
         />
@@ -125,9 +117,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "Italian"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentLanguage === "Italian" ? theme.colors.tertiary : undefined,
           }}
           title="Italian"
         />
@@ -137,9 +127,7 @@ export default function Language({
           }}
           style={{
             backgroundColor:
-              currentLanguage === "Swedish"
-                ? theme.colors.tertiary
-                : "transparent",
+              currentLanguage === "Swedish" ? theme.colors.tertiary : undefined,
           }}
           title="Swedish"
         />
