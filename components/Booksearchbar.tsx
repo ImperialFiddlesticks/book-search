@@ -166,7 +166,7 @@ const Booksearchbar = () => {
         onChangeText={setSearchQuery}
         value={searchQuery}
         onSubmitEditing={handleSearch}
-        style={{ backgroundColor: theme.colors.surface }}
+        style={{ backgroundColor: theme.colors.surface, borderRadius: 2 }}
         traileringIcon={
           isIOS
             ? recorderState.isRecording

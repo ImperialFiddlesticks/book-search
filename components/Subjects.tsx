@@ -57,7 +57,7 @@ export default function SubjectChips({
           mode={selectedSubjects.length === 0 ? "flat" : "outlined"}
           selected={selectedSubjects.length === 0}
           onPress={() => handleToggle("")}
-          style={styles.chip}
+          style={[styles.chip, { borderRadius: 2 }]}
           theme={chipStyle}
           accessibilityLabel="All subjects"
           accessibilityHint="Shows all results"
@@ -72,7 +72,7 @@ export default function SubjectChips({
             mode={selectedSubjects.includes(subject) ? "flat" : "outlined"}
             selected={selectedSubjects.includes(subject)}
             onPress={() => handleToggle(subject)}
-            style={styles.chip}
+            style={[styles.chip, { borderRadius: 2 }]}
             theme={chipStyle}
             accessibilityRole="togglebutton"
             accessibilityLabel={subject}

@@ -54,9 +54,18 @@ export default function Language({
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={{ backgroundColor: theme.colors.secondary }}
+        contentStyle={{
+          backgroundColor: theme.colors.secondary,
+          borderRadius: 2,
+        }}
         anchor={
-          <Button mode="outlined" onPress={openMenu}>
+          <Button
+            mode="outlined"
+            onPress={openMenu}
+            style={{ borderRadius: 2 }}
+            accessibilityLabel={`Language: ${getLanguageLabel()}`}
+            accessibilityHint="Opens language filter options"
+          >
             Language: {getLanguageLabel()}
           </Button>
         }

@@ -13,7 +13,7 @@ export default function ScannerButton() {
       mode="outlined"
       onPress={handlePress}
       icon="barcode-scan"
-      style={{ margin: 10 }}
+      style={{ marginTop: 10, borderRadius: 2 }}
       accessibilityLabel="Scan book barcode"
       accessibilityHint="Opens barcode scanner"
     >

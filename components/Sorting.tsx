@@ -47,12 +47,16 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
   return (
     <View style={styles.container}>
       <Menu
-        contentStyle={{ backgroundColor: theme.colors.secondary }}
+        contentStyle={{
+          backgroundColor: theme.colors.secondary,
+          borderRadius: 2,
+        }}
         visible={visible}
         onDismiss={closeMenu}
         anchor={
           <Button
             mode="outlined"
+            style={{ borderRadius: 2 }}
             onPress={openMenu}
             accessibilityLabel={`Sort by ${getSortLabel()}`}
             accessibilityHint="Opens sorting options"
