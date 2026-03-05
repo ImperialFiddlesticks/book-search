@@ -2,7 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import { FlatList, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
-import CollectionBookItem from "../../components/CollectionBookItem";
+import CollectionBookComponent from "../../components/CollectionBookComponent";
 import Header from "../../components/Header";
 
 export default function CollectionPage() {
@@ -27,7 +27,7 @@ export default function CollectionPage() {
           numColumns={3}
           contentContainerStyle={styles.grid}
           columnWrapperStyle={styles.row}
-          renderItem={({ item }) => <CollectionBookItem book={item} />}
+          renderItem={({ item }) => <CollectionBookComponent book={item} />}
         />
       )}
     </>

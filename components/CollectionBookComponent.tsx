@@ -4,7 +4,7 @@ import { Card, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/store/useSelectedBookStore";
 
-export default function CollectionBookItem({
+export default function CollectionBookComponent({
   book,
 }: {
   readonly book: Book;
