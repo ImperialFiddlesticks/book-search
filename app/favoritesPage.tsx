@@ -5,11 +5,13 @@ import { Button, Text, TextInput } from "react-native-paper";
 import Header from "../components/Header";
 import ModalComponent from "../components/ModalComponent";
 import { useCollectionsStore } from "../store/collectionsStore";
+import { useRouter } from "expo-router";
 
 export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
   const { addNewCollection } = useCollectionsStore();
   const [inputText, setInputText] = useState("");
+  const router = useRouter();
 
   console.log({ collections });
 
@@ -23,6 +25,7 @@ export default function FavoritesScreen() {
             savedItems: c.books,
             title: c.title,
           }}
+          onPress={() => router.push(`/collection/${encodeURIComponent(c.title)}`)}
         />
       ))}
 

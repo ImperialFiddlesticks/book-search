@@ -8,7 +8,7 @@ interface CollectionCardProps {
     savedItems: Book[];
     title: string;
   };
-  readonly onPress?: () => {};
+  readonly onPress?: () => void;
 }
 
 export default function CollectionCard({
