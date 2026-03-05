@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Chip } from "react-native-paper";
+import { Chip, useTheme } from "react-native-paper";
 
 const subjects = [
   "Fantasy",
@@ -23,6 +23,8 @@ export default function SubjectChips({
   selectedSubjects,
   onSelectSubject,
 }: SubjectsProps) {
+  const theme = useTheme();
+
   const handleToggle = (subject: string) => {
     if (subject === "") {
       onSelectSubject([]);
@@ -34,6 +36,12 @@ export default function SubjectChips({
     } else {
       onSelectSubject([...selectedSubjects, subject]);
     }
+  };
+
+  const chipStyle = {
+    colors: {
+      secondaryContainer: theme.colors.secondary,
+    },
   };
 
   return (
@@ -50,6 +58,7 @@ export default function SubjectChips({
           selected={selectedSubjects.length === 0}
           onPress={() => handleToggle("")}
           style={styles.chip}
+          theme={chipStyle}
           accessibilityLabel="All subjects"
           accessibilityHint="Shows all results"
           accessibilityRole="togglebutton"
@@ -64,6 +73,7 @@ export default function SubjectChips({
             selected={selectedSubjects.includes(subject)}
             onPress={() => handleToggle(subject)}
             style={styles.chip}
+            theme={chipStyle}
             accessibilityRole="togglebutton"
             accessibilityLabel={subject}
             accessibilityHint={

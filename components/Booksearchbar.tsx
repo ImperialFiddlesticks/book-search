@@ -9,7 +9,7 @@ import {
 import * as React from "react";
 import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 import ScannerButton from "./ScannerButton";
 import { useStore } from "../store/previousSearched";
@@ -23,6 +23,8 @@ const Booksearchbar = () => {
   const { addPreviousSearched } = useStore();
 
   const isIOS = Platform.OS === "ios";
+
+  const theme = useTheme();
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -164,6 +166,7 @@ const Booksearchbar = () => {
         onChangeText={setSearchQuery}
         value={searchQuery}
         onSubmitEditing={handleSearch}
+        style={{ backgroundColor: theme.colors.surface }}
         traileringIcon={
           isIOS
             ? recorderState.isRecording

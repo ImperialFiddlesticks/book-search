@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Menu, Divider } from "react-native-paper";
+import { Button, Menu, Divider, useTheme } from "react-native-paper";
 
 export type SortOption =
   | "Relevance"
@@ -16,6 +16,7 @@ interface SortingProps {
 }
 
 export default function Sorting({ currentSort, onSortChange }: SortingProps) {
+  const theme = useTheme();
   const [visible, setVisible] = React.useState(false);
 
   const openMenu = () => setVisible(true);
@@ -46,6 +47,7 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
   return (
     <View style={styles.container}>
       <Menu
+        contentStyle={{ backgroundColor: theme.colors.secondary }}
         visible={visible}
         onDismiss={closeMenu}
         anchor={
@@ -64,13 +66,23 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           onPress={() => {
             handleSelect("Relevance");
           }}
+          style={{
+            backgroundColor:
+              currentSort === "Relevance"
+                ? theme.colors.tertiary
+                : "transparent",
+          }}
           title="Relevance"
           accessibilityState={{ selected: currentSort === "Relevance" }}
         />
-        <Divider />
+        <Divider style={{ backgroundColor: theme.colors.onSurface }} />
         <Menu.Item
           onPress={() => {
             handleSelect("new");
+          }}
+          style={{
+            backgroundColor:
+              currentSort === "new" ? theme.colors.tertiary : "transparent",
           }}
           title="Newest"
           accessibilityState={{ selected: currentSort === "new" }}
@@ -79,13 +91,23 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           onPress={() => {
             handleSelect("old");
           }}
+          style={{
+            backgroundColor:
+              currentSort === "old" ? theme.colors.tertiary : "transparent",
+          }}
           title="Oldest"
           accessibilityState={{ selected: currentSort === "old" }}
         />
-        <Divider />
+        <Divider style={{ backgroundColor: theme.colors.onSurface }} />
         <Menu.Item
           onPress={() => {
             handleSelect("rating desc");
+          }}
+          style={{
+            backgroundColor:
+              currentSort === "rating desc"
+                ? theme.colors.tertiary
+                : "transparent",
           }}
           title="Rating (High to Low)"
           accessibilityState={{ selected: currentSort === "rating desc" }}
@@ -94,13 +116,23 @@ export default function Sorting({ currentSort, onSortChange }: SortingProps) {
           onPress={() => {
             handleSelect("rating asc");
           }}
+          style={{
+            backgroundColor:
+              currentSort === "rating asc"
+                ? theme.colors.tertiary
+                : "transparent",
+          }}
           title="Rating (Low to High)"
           accessibilityState={{ selected: currentSort === "rating asc" }}
         />
-        <Divider />
+        <Divider style={{ backgroundColor: theme.colors.onSurface }} />
         <Menu.Item
           onPress={() => {
             handleSelect("title");
+          }}
+          style={{
+            backgroundColor:
+              currentSort === "title" ? theme.colors.tertiary : "transparent",
           }}
           title="Title (A-Z)"
           accessibilityState={{ selected: currentSort === "title" }}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Menu, Divider } from "react-native-paper";
+import { Button, Menu, Divider, useTheme } from "react-native-paper";
 
 export type LanguageOption =
   | "All"
@@ -20,6 +20,7 @@ export default function Language({
   currentLanguage,
   onLanguageChange,
 }: LanguageProps) {
+  const theme = useTheme();
   const [visible, setVisible] = React.useState(false);
 
   const openMenu = () => setVisible(true);
@@ -53,6 +54,7 @@ export default function Language({
       <Menu
         visible={visible}
         onDismiss={closeMenu}
+        contentStyle={{ backgroundColor: theme.colors.secondary }}
         anchor={
           <Button mode="outlined" onPress={openMenu}>
             Language: {getLanguageLabel()}
@@ -63,11 +65,21 @@ export default function Language({
           onPress={() => {
             handleSelect("All");
           }}
+          style={{
+            backgroundColor:
+              currentLanguage === "All" ? theme.colors.tertiary : "transparent",
+          }}
           title="All"
         />
         <Menu.Item
           onPress={() => {
             handleSelect("English");
+          }}
+          style={{
+            backgroundColor:
+              currentLanguage === "English"
+                ? theme.colors.tertiary
+                : "transparent",
           }}
           title="English"
         />
@@ -75,11 +87,23 @@ export default function Language({
           onPress={() => {
             handleSelect("French");
           }}
+          style={{
+            backgroundColor:
+              currentLanguage === "French"
+                ? theme.colors.tertiary
+                : "transparent",
+          }}
           title="French"
         />
         <Menu.Item
           onPress={() => {
             handleSelect("German");
+          }}
+          style={{
+            backgroundColor:
+              currentLanguage === "German"
+                ? theme.colors.tertiary
+                : "transparent",
           }}
           title="German"
         />
@@ -87,17 +111,35 @@ export default function Language({
           onPress={() => {
             handleSelect("Spanish");
           }}
+          style={{
+            backgroundColor:
+              currentLanguage === "Spanish"
+                ? theme.colors.tertiary
+                : "transparent",
+          }}
           title="Spanish"
         />
         <Menu.Item
           onPress={() => {
             handleSelect("Italian");
           }}
+          style={{
+            backgroundColor:
+              currentLanguage === "Italian"
+                ? theme.colors.tertiary
+                : "transparent",
+          }}
           title="Italian"
         />
         <Menu.Item
           onPress={() => {
             handleSelect("Swedish");
+          }}
+          style={{
+            backgroundColor:
+              currentLanguage === "Swedish"
+                ? theme.colors.tertiary
+                : "transparent",
           }}
           title="Swedish"
         />
