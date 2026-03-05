@@ -27,17 +27,18 @@ export default function CollectionCard({
         {/* Preview Grid */}
         <View style={styles.previewContainer}>
           {collection.savedItems.slice(0, 4).map(({ cover_i, key }: Book) => (
-            <Image
-              key={key}
-              source={{
-                uri: cover_i
-                  ? `https://covers.openlibrary.org/b/id/${cover_i}-M.jpg`
-                  : undefined,
-              }}
-              style={styles.previewImage}
-              accessibilityElementsHidden={true}
-              importantForAccessibility="no-hide-descendants"
-            />
+            <View key={key} style={styles.previewImageWrapper}>
+              <Image
+                source={{
+                  uri: cover_i
+                    ? `https://covers.openlibrary.org/b/id/${cover_i}-M.jpg`
+                    : undefined,
+                }}
+                style={styles.previewImage}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no-hide-descendants"
+              />
+            </View>
           ))}
         </View>
 
@@ -73,9 +74,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: 4,
   },
-  previewImage: {
+  previewImageWrapper: {
     width: "48%",
     aspectRatio: 1,
+  },
+  previewImage: {
+    width: "100%",
+    height: "100%",
     borderRadius: 8,
   },
   footer: {
