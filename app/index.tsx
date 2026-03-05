@@ -13,12 +13,10 @@ import { useReadingListStore } from "@/store/readingListStore";
 
 export default function Home() {
   const router = useRouter();
-  const {
-    collections,
-    getAllFavorites,
-    isSaved: isFavorited,
-    toggleFavorite,
-  } = useCollectionsStore();
+  const favoriteBooks = useCollectionsStore(
+    (state) =>
+      state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+  );
 
   const { readingList, toggleReadingList, loadReadingList } =
     useReadingListStore();
@@ -48,18 +46,14 @@ export default function Home() {
           <BookBar
             title="Favorites"
             emptyMessage="No favorites yet..."
-            books={getAllFavorites().books.slice(0, 10)}
+            books={favoriteBooks.slice(0, 10)}
             onBookPress={handleBookPress}
-            isSaved={isFavorited}
-            onToggle={toggleFavorite}
           />
           <BookBar
             title="Reading list"
             emptyMessage="No books in reading list yet..."
             onBookPress={handleBookPress}
             books={readingList}
-            isSaved={isFavorited}
-            onToggle={toggleFavorite}
             onLongPress={(book) => toggleReadingList(book)}
           />
         </ScrollView>

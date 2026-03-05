@@ -1,8 +1,10 @@
+import { useRef } from "react";
 import {
   AccessibilityRole,
   StyleSheet,
   TouchableOpacity,
   View,
+  Animated,
 } from "react-native";
 
 interface IconProps {
@@ -30,6 +32,15 @@ export default function ActionButton({
   accessibilityRole,
   accessibilityState,
 }: ActionButtonProps) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePress = () => {
+    Animated.sequence([
+      Animated.spring(scaleAnim, { toValue: 0.85, useNativeDriver: true }),
+      Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }),
+    ]).start();
+    onPress();
+  };
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -38,9 +49,11 @@ export default function ActionButton({
       accessibilityRole={accessibilityRole}
       accessibilityState={accessibilityState}
     >
-      <View style={styles.iconContainer}>
+      <Animated.View
+        style={[styles.iconContainer, { transform: [{ scale: scaleAnim }] }]}
+      >
         <Icon size={30} color={color ?? "#fff"} />
-      </View>
+      </Animated.View>
     </TouchableOpacity>
   );
 }

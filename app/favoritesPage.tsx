@@ -7,7 +7,8 @@ import ModalComponent from "../components/ModalComponent";
 import { useCollectionsStore } from "../store/collectionsStore";
 
 export default function FavoritesScreen() {
-  const { collections, addNewCollection } = useCollectionsStore();
+  const collections = useCollectionsStore((state) => state.collections);
+  const { addNewCollection } = useCollectionsStore();
 
   console.log({ collections });
 

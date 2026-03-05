@@ -7,8 +7,6 @@ interface SavedBooksProps {
   readonly title: string;
   readonly onBookPress: (book: Book) => void;
   readonly onLongPress?: (book: Book) => void;
-  readonly isSaved: (book: Book) => boolean;
-  readonly onToggle: (book: Book) => void;
   readonly emptyMessage?: string;
 }
 
@@ -17,8 +15,6 @@ export default function BookBar({
   title,
   onBookPress,
   onLongPress,
-  isSaved,
-  onToggle,
   emptyMessage = "No books yet...",
 }: SavedBooksProps) {
   return (
@@ -34,8 +30,6 @@ export default function BookBar({
           <BookCover
             book={item}
             onPress={() => onBookPress(item)}
-            isSaved={isSaved(item)}
-            onToggle={() => onToggle(item)}
             onLongPress={onLongPress ? () => onLongPress(item) : undefined}
             listPosition={`${index + 1} of ${books.length}`}
           />
