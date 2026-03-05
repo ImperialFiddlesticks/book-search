@@ -46,7 +46,7 @@ export default function Home() {
           <BookBar
             title="Favorites"
             emptyMessage="No favorites yet..."
-            books={favoriteBooks.slice(0, 10)}
+            books={favoriteBooks.slice(0, 3)}
             onBookPress={handleBookPress}
           />
           <BookBar
@@ -65,8 +65,8 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     justifyContent: "flex-start",
+    paddingHorizontal: 5,
     // alignItems: "center",
   },
   title: {
