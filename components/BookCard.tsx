@@ -6,14 +6,31 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Animated,
 } from "react-native";
 import { Card } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/store/useSelectedBookStore";
 import { useCollectionsStore } from "@/store/collectionsStore";
+import { useRef } from "react";
 
-export default function BookCard({ book }: { book: Book }) {
+export default function BookCard({ book }: { readonly book: Book }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1.03,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const router = useRouter();
   const isSaved = useCollectionsStore((state) => state.isSaved(book));
   const { toggleFavorite } = useCollectionsStore();
@@ -31,40 +48,49 @@ export default function BookCard({ book }: { book: Book }) {
     router.push("/details");
   };
   return (
-    <Card elevation={0} style={styles.card} onPress={handlePress}>
-      <View style={styles.cardContent}>
-        <View style={styles.saveButton}>
-          <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
-        </View>
-        <View style={styles.row}>
-          {coverUrl ? (
-            <Image source={{ uri: coverUrl }} style={styles.cover} />
-          ) : (
-            <View style={styles.placeholder}>
-              <Text style={styles.placeholderText}>No cover available.</Text>
-            </View>
-          )}
-          <View style={styles.info}>
-            <Card.Title title={book.title} titleStyle={styles.title} />
-            {book.author_name && (
-              <TouchableOpacity
-                onPress={(e) => handleAuthorPress(e)}
-                accessibilityRole="link"
-                accessibilityLabel={`View author ${book.author_name.join(", ")}`}
-              >
-                <Text style={styles.authorName}>
-                  {book.author_name.join(", ")}
-                </Text>
-              </TouchableOpacity>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <Card
+        elevation={0}
+        style={styles.card}
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+      >
+        <View style={styles.cardContent}>
+          <View style={styles.saveButton}>
+            <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
+          </View>
+          <View style={styles.row}>
+            {coverUrl ? (
+              <Image source={{ uri: coverUrl }} style={styles.cover} />
+            ) : (
+              <View style={styles.placeholder}>
+                <Text style={styles.placeholderText}>No cover available.</Text>
+              </View>
             )}
+            <View style={styles.info}>
+              <Card.Title title={book.title} titleStyle={styles.title} />
+              {book.author_name && (
+                <TouchableOpacity
+                  onPress={(e) => handleAuthorPress(e)}
+                  accessibilityRole="link"
+                  accessibilityLabel={`View author ${book.author_name.join(", ")}`}
+                  style={{ alignSelf: "flex-start" }}
+                >
+                  <Text style={styles.authorName}>
+                    {book.author_name.join(", ")}
+                  </Text>
+                </TouchableOpacity>
+              )}
 
-            {book.first_publish_year && (
-              <Text style={styles.year}>{book.first_publish_year}</Text>
-            )}
+              {book.first_publish_year && (
+                <Text style={styles.year}>{book.first_publish_year}</Text>
+              )}
+            </View>
           </View>
         </View>
-      </View>
-    </Card>
+      </Card>
+    </Animated.View>
   );
 }
 
