@@ -14,6 +14,7 @@ export default function ModalComponent({
   disabled,
   onClose,
   onOpen,
+  renderTrigger,
 }: {
   readonly text: string;
   readonly children: React.ReactNode;
@@ -22,6 +23,7 @@ export default function ModalComponent({
   readonly disabled?: boolean;
   readonly onClose?: () => void;
   readonly onOpen?: () => void;
+  readonly renderTrigger?: (openModal: () => void) => React.ReactNode;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -132,15 +134,19 @@ export default function ModalComponent({
           </KeyboardAvoidingView>
         </ScrollView>
       </Modal>
-      <Pressable
-        style={styles.openButton}
-        onPress={() => setModalVisible(true)}
-        accessibilityRole='button'
-        accessibilityLabel={text}
-        accessibilityHint='Opens modal'
-      >
-        <Text style={styles.openButtonText}>{text}</Text>
-      </Pressable>
+      {renderTrigger ? (
+        renderTrigger(() => setModalVisible(true))
+      ) : (
+        <Pressable
+          style={styles.openButton}
+          onPress={() => setModalVisible(true)}
+          accessibilityRole='button'
+          accessibilityLabel={text}
+          accessibilityHint='Opens modal'
+        >
+          <Text style={styles.openButtonText}>{text}</Text>
+        </Pressable>
+      )}
     </View>
   );
 }

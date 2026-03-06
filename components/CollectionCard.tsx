@@ -9,13 +9,11 @@ interface CollectionCardProps {
     title: string;
   };
   readonly onPress?: () => void;
-  readonly onMenuPress?: () => void;
 }
 
 export default function CollectionCard({
   collection,
   onPress,
-  onMenuPress,
 }: CollectionCardProps) {
   const theme = useTheme();
 
@@ -28,14 +26,6 @@ export default function CollectionCard({
       accessibilityHint="Opens collection"
       elevation={0}
     >
-      <View style={styles.menuContainer}>
-      <IconButton
-        icon="dots-vertical"
-        style={styles.menuButton}
-        onPress={onMenuPress}
-        accessibilityLabel="Collection options"
-      />
-      </View>
       <Card.Content>
         {/* Preview Grid */}
         <View style={styles.previewContainer}>
@@ -81,18 +71,6 @@ const styles = StyleSheet.create({
   card: {
     margin: 12,
     borderRadius: 16,
-    position: "relative",
-  },
-
-  menuContainer: {
-    padding: 4,
-    display: "flex",
-    alignItems: "flex-end"
-  },
-
-  
-  menuButton: {
-
   },
   previewContainer: {
     flexDirection: "row",
