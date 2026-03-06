@@ -17,7 +17,7 @@ export default function ModalComponent({
   renderTrigger,
 }: {
   readonly text: string;
-  readonly children: React.ReactNode;
+  readonly children: React.ReactNode | ((closeModal: () => Promise<void>) => React.ReactNode);
   readonly submitText: string;
   readonly onPress?: () => void;
   readonly disabled?: boolean;
@@ -50,22 +50,25 @@ export default function ModalComponent({
 
   const animateClose = (callback?: () => void) => {
     Keyboard.dismiss();
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: ANIM_DURATION,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: SCREEN_HEIGHT,
-        duration: ANIM_DURATION,
-        easing: Easing.in(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setModalVisible(false);
-      onClose?.();
-      callback?.();
+    return new Promise<void>((resolve) => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: ANIM_DURATION,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: SCREEN_HEIGHT,
+          duration: ANIM_DURATION,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setModalVisible(false);
+        onClose?.();
+        callback?.();
+        resolve();
+      });
     });
   };
 
@@ -128,7 +131,7 @@ export default function ModalComponent({
                 </Pressable>
               </View>
               <View style={styles.content}>
-                {children}
+                {typeof children === "function" ? children(() => animateClose()) : children}
               </View>
             </Animated.View>
           </KeyboardAvoidingView>
