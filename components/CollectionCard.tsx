@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Card, Text, IconButton } from "react-native-paper";
+import { Card, Text, IconButton, useTheme } from "react-native-paper";
 import { Book } from "../types/bookProps";
 
 interface CollectionCardProps {
@@ -9,20 +9,33 @@ interface CollectionCardProps {
     title: string;
   };
   readonly onPress?: () => void;
+  readonly onMenuPress?: () => void;
 }
 
 export default function CollectionCard({
   collection,
   onPress,
+  onMenuPress,
 }: CollectionCardProps) {
+  const theme = useTheme();
+
   return (
     <Card
-      style={styles.card}
+      style={[styles.card, { backgroundColor: theme.colors.surface }]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${collection.title}, ${collection.savedItems.length} items`}
       accessibilityHint="Opens collection"
+      elevation={0}
     >
+      <View style={styles.menuContainer}>
+      <IconButton
+        icon="dots-vertical"
+        style={styles.menuButton}
+        onPress={onMenuPress}
+        accessibilityLabel="Collection options"
+      />
+      </View>
       <Card.Content>
         {/* Preview Grid */}
         <View style={styles.previewContainer}>
@@ -68,6 +81,18 @@ const styles = StyleSheet.create({
   card: {
     margin: 12,
     borderRadius: 16,
+    position: "relative",
+  },
+
+  menuContainer: {
+    padding: 4,
+    display: "flex",
+    alignItems: "flex-end"
+  },
+
+  
+  menuButton: {
+
   },
   previewContainer: {
     flexDirection: "row",
