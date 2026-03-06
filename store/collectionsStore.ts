@@ -33,47 +33,37 @@ export const useCollectionsStore = create<CollectionsStore>()(
       },
 
       getAllFavorites: () => {
-        let allFavorites = get().collections.find(
+        const allFavorites = get().collections.find(
           (c) => c.title === "All favorites",
         );
-
-        if (!allFavorites) {
-          allFavorites = { title: "All favorites", books: [] };
-          const collections = [...get().collections, allFavorites];
-          set({ collections });
-        }
-
-        return allFavorites;
+        return allFavorites ?? { title: "All favorites", books: [] };
       },
 
       toggleFavorite: (book: Book) => {
-        get().getAllFavorites();
+        let collections = get().collections;
 
-        const alreadySaved = get()
-          .getAllFavorites()
+        // Ensure "All favorites" exists in state
+        if (!collections.find((c) => c.title === "All favorites")) {
+          collections = [...collections, { title: "All favorites", books: [] }];
+        }
+
+        const alreadySaved = collections
+          .find((c) => c.title === "All favorites")!
           .books.some((b) => b.key === book.key);
 
-        let newCollections: Collection[];
-
-        if (alreadySaved) {
-          newCollections = get().collections.map((c) => {
+        const newCollections = collections.map((c) => {
+          if (c.title === "All favorites") {
             return {
               ...c,
-              books: c.books.filter((b) => b.key !== book.key),
+              books: alreadySaved
+                ? c.books.filter((b) => b.key !== book.key)
+                : [...c.books, book],
             };
-          });
-        } else {
-          newCollections = get().collections.map((c) => {
-            if (c.title === "All favorites") {
-              return {
-                ...c,
-                books: [...c.books, book],
-              };
-            }
-
-            return c;
-          });
-        }
+          }
+          return alreadySaved
+            ? { ...c, books: c.books.filter((b) => b.key !== book.key) }
+            : c;
+        });
 
         set({ collections: newCollections });
       },

@@ -1,96 +1,212 @@
-import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import React, { useEffect, useRef, useState } from "react";
+import { Modal, StyleSheet, Text, Pressable, View, KeyboardAvoidingView, Platform, ScrollView, Keyboard, Animated, Dimensions, Easing } from "react-native";
+
+const KEYBOARD_OVERLAP = 40;
+const CONTENT_PADDING_BOTTOM = KEYBOARD_OVERLAP + 30;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+const ANIM_DURATION = 400;
 
 export default function ModalComponent({
   text,
   children,
+  onPress,
+  submitText,
+  disabled,
+  onClose,
+  onOpen,
 }: {
   readonly text: string;
   readonly children: React.ReactNode;
+  readonly submitText: string;
+  readonly onPress?: () => void;
+  readonly disabled?: boolean;
+  readonly onClose?: () => void;
+  readonly onOpen?: () => void;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+
+  useEffect(() => {
+    if (modalVisible) {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: ANIM_DURATION,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: ANIM_DURATION,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start();
+      setTimeout(() => onOpen?.(), 50);
+    }
+  }, [modalVisible]);
+
+  const animateClose = (callback?: () => void) => {
+    Keyboard.dismiss();
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: ANIM_DURATION,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: SCREEN_HEIGHT,
+        duration: ANIM_DURATION,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setModalVisible(false);
+      onClose?.();
+      callback?.();
+    });
+  };
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-          accessibilityViewIsModal={true}
+    <View>
+      <Modal
+        animationType='none'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => animateClose()}
+        accessibilityViewIsModal={true}
+      >
+        <ScrollView
+          style={{ backgroundColor: "transparent" }}
+          contentContainerStyle={{ flex: 1 }}
+          keyboardShouldPersistTaps="always"
+          bounces={false}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              {children}
+          <KeyboardAvoidingView
+            style={styles.overlay}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={-KEYBOARD_OVERLAP}
+          >
+            <Animated.View
+              style={[StyleSheet.absoluteFill, { opacity: fadeAnim }]}
+            >
               <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-                accessibilityRole="button"
-                accessibilityLabel="Close"
-                accessibilityHint="Closes the modal"
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-        <Pressable
-          style={[styles.button, styles.buttonOpen]}
-          onPress={() => setModalVisible(true)}
-          accessibilityRole="button"
-          accessibilityLabel={text}
-          accessibilityHint="Opens modal"
-        >
-          <Text style={styles.textStyle}>{text}</Text>
-        </Pressable>
-      </SafeAreaView>
-    </SafeAreaProvider>
+                style={styles.overlayBackground}
+                onPress={() => animateClose()}
+              />
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.modalView,
+                { transform: [{ translateY: slideAnim }] },
+              ]}
+            >
+              <View style={styles.header}>
+                <Text style={styles.headerTitle}>{text}</Text>
+                <Pressable
+                  onPress={() => animateClose()}
+                  accessibilityRole='button'
+                  accessibilityLabel='Cancel'
+                  style={styles.headerLeft}
+                >
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  disabled={disabled}
+                  onPress={() => {
+                    animateClose(() => {
+                      onPress?.();
+                    });
+                  }}
+                  accessibilityRole='button'
+                  accessibilityLabel={submitText}
+                  style={styles.headerRight}
+                >
+                  <Text style={[styles.doneText, disabled && styles.doneTextDisabled]}>{submitText}</Text>
+                </Pressable>
+              </View>
+              <View style={styles.content}>
+                {children}
+              </View>
+            </Animated.View>
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </Modal>
+      <Pressable
+        style={styles.openButton}
+        onPress={() => setModalVisible(true)}
+        accessibilityRole='button'
+        accessibilityLabel={text}
+        accessibilityHint='Opens modal'
+      >
+        <Text style={styles.openButtonText}>{text}</Text>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  centeredView: {
+  overlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  overlayBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    width: "100%",
+    backgroundColor: "rgb(254, 255, 243)",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: "hidden",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#ddd",
   },
-  button: {
-    borderRadius: 20,
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+  },
+  headerLeft: {
+    position: "absolute",
+    left: 16,
+  },
+  headerRight: {
+    position: "absolute",
+    right: 16,
+  },
+  cancelText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  doneText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fa6b47",
+  },
+  doneTextDisabled: {
+    color: "#f8b197",
+  },
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: CONTENT_PADDING_BOTTOM,
+  },
+  openButton: {
     padding: 10,
-    elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
+  openButtonText: {
+    color: "#0095f6",
+    fontWeight: "600",
     textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
+    fontSize: 16,
   },
 });

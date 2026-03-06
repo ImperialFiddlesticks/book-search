@@ -11,11 +11,14 @@ import { useStore } from "../store/previousSearched";
 import BookBar from "../components/BookBar";
 import { useReadingListStore } from "@/store/readingListStore";
 
+const EMPTY_BOOKS: Book[] = [];
+
 export default function Home() {
   const router = useRouter();
   const favoriteBooks = useCollectionsStore(
     (state) =>
-      state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+      state.collections.find((c) => c.title === "All favorites")?.books ??
+      EMPTY_BOOKS,
   );
 
   const { readingList, toggleReadingList, loadReadingList } =
