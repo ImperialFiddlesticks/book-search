@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Modal, StyleSheet, Text, Pressable, View, KeyboardAvoidingView, Platform, ScrollView, Keyboard } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Modal, StyleSheet, Text, Pressable, View, KeyboardAvoidingView, Platform, ScrollView, Keyboard, Animated, Dimensions, Easing } from "react-native";
 
 const KEYBOARD_OVERLAP = 40;
 const CONTENT_PADDING_BOTTOM = KEYBOARD_OVERLAP + 30;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+const ANIM_DURATION = 400;
 
 export default function ModalComponent({
   text,
@@ -11,6 +13,7 @@ export default function ModalComponent({
   submitText,
   disabled,
   onClose,
+  onOpen,
 }: {
   readonly text: string;
   readonly children: React.ReactNode;
@@ -18,22 +21,59 @@ export default function ModalComponent({
   readonly onPress?: () => void;
   readonly disabled?: boolean;
   readonly onClose?: () => void;
+  readonly onOpen?: () => void;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
 
-  const handleClose = () => {
+  useEffect(() => {
+    if (modalVisible) {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: ANIM_DURATION,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: ANIM_DURATION,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start();
+      setTimeout(() => onOpen?.(), 50);
+    }
+  }, [modalVisible]);
+
+  const animateClose = (callback?: () => void) => {
     Keyboard.dismiss();
-    onClose?.();
-    setModalVisible(false);
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: ANIM_DURATION,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: SCREEN_HEIGHT,
+        duration: ANIM_DURATION,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setModalVisible(false);
+      onClose?.();
+      callback?.();
+    });
   };
 
   return (
     <View>
       <Modal
-        animationType='slide'
+        animationType='none'
         transparent={true}
         visible={modalVisible}
-        onRequestClose={handleClose}
+        onRequestClose={() => animateClose()}
         accessibilityViewIsModal={true}
       >
         <ScrollView
@@ -47,39 +87,48 @@ export default function ModalComponent({
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={-KEYBOARD_OVERLAP}
           >
-            <Pressable
-              style={StyleSheet.absoluteFill}
-              onPress={handleClose}
+            <Animated.View
+              style={[StyleSheet.absoluteFill, { opacity: fadeAnim }]}
             >
-              <View style={styles.overlayBackground} />
-            </Pressable>
-            <View style={styles.modalView}>
+              <Pressable
+                style={styles.overlayBackground}
+                onPress={() => animateClose()}
+              />
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.modalView,
+                { transform: [{ translateY: slideAnim }] },
+              ]}
+            >
               <View style={styles.header}>
+                <Text style={styles.headerTitle}>{text}</Text>
                 <Pressable
-                  onPress={handleClose}
+                  onPress={() => animateClose()}
                   accessibilityRole='button'
                   accessibilityLabel='Cancel'
+                  style={styles.headerLeft}
                 >
                   <Text style={styles.cancelText}>Cancel</Text>
                 </Pressable>
-                <Text style={styles.headerTitle}>{text}</Text>
                 <Pressable
                   disabled={disabled}
                   onPress={() => {
-                    Keyboard.dismiss();
-                    onPress?.();
-                    setModalVisible(false);
+                    animateClose(() => {
+                      onPress?.();
+                    });
                   }}
                   accessibilityRole='button'
                   accessibilityLabel={submitText}
+                  style={styles.headerRight}
                 >
-                  <Text style={[styles.doneText, disabled && { opacity: 0.3 }]}>{submitText}</Text>
+                  <Text style={[styles.doneText, disabled && styles.doneTextDisabled]}>{submitText}</Text>
                 </Pressable>
               </View>
               <View style={styles.content}>
                 {children}
               </View>
-            </View>
+            </Animated.View>
           </KeyboardAvoidingView>
         </ScrollView>
       </Modal>
@@ -107,14 +156,14 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: "rgb(254, 255, 243)",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     overflow: "hidden",
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -126,6 +175,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#000",
   },
+  headerLeft: {
+    position: "absolute",
+    left: 16,
+  },
+  headerRight: {
+    position: "absolute",
+    right: 16,
+  },
   cancelText: {
     fontSize: 16,
     color: "#000",
@@ -133,7 +190,10 @@ const styles = StyleSheet.create({
   doneText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#0095f6",
+    color: "#fa6b47",
+  },
+  doneTextDisabled: {
+    color: "#f8b197",
   },
   content: {
     paddingHorizontal: 16,

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CollectionCard from "../components/CollectionCard";
-import { View, ScrollView, TextInput } from "react-native";
+import { View, ScrollView, TextInput, type TextInput as TextInputType } from "react-native";
 import { Button, Text } from "react-native-paper";
 import Header from "../components/Header";
 import ModalComponent from "../components/ModalComponent";
@@ -11,6 +11,7 @@ export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
   const { addNewCollection } = useCollectionsStore();
   const [inputText, setInputText] = useState("");
+  const inputRef = useRef<TextInputType>(null);
   const router = useRouter();
 
   console.log({ collections });
@@ -34,6 +35,7 @@ export default function FavoritesScreen() {
         submitText="Done"
         disabled={!inputText.trim()}
         onClose={() => setInputText("")}
+        onOpen={() => inputRef.current?.focus()}
         onPress={() => {
           if (inputText.trim()) {
             addNewCollection(inputText.trim());
@@ -42,13 +44,14 @@ export default function FavoritesScreen() {
         }}
       >
         <TextInput
-          autoFocus
+          ref={inputRef}
           onChangeText={(text) => setInputText(text)}
           value={inputText}
           maxLength={40}
           placeholder='Collection name'
           placeholderTextColor="#999"
-          style={{ fontSize: 16, paddingVertical: 4 }}
+          selectionColor="#fa6b47"
+          style={{ fontSize: 16, height: 50, borderWidth: 1, borderColor: '#e0e0e0', paddingHorizontal: 10, marginVertical: 16 }}
         />
       </ModalComponent>
     </ScrollView>
