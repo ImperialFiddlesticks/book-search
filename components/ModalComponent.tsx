@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Modal, StyleSheet, Text, Pressable, View, KeyboardAvoidingView, Platform, ScrollView, Keyboard } from "react-native";
 
+const KEYBOARD_OVERLAP = 40;
+const CONTENT_PADDING_BOTTOM = KEYBOARD_OVERLAP + 30;
+
 export default function ModalComponent({
   text,
   children,
@@ -34,6 +37,7 @@ export default function ModalComponent({
         accessibilityViewIsModal={true}
       >
         <ScrollView
+          style={{ backgroundColor: "transparent" }}
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="always"
           bounces={false}
@@ -41,11 +45,14 @@ export default function ModalComponent({
           <KeyboardAvoidingView
             style={styles.overlay}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={-KEYBOARD_OVERLAP}
           >
             <Pressable
-              style={styles.overlayBackground}
+              style={StyleSheet.absoluteFill}
               onPress={handleClose}
-            />
+            >
+              <View style={styles.overlayBackground} />
+            </Pressable>
             <View style={styles.modalView}>
               <View style={styles.header}>
                 <Pressable
@@ -103,6 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    overflow: "hidden",
   },
   header: {
     flexDirection: "row",
@@ -129,7 +137,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: CONTENT_PADDING_BOTTOM,
   },
   openButton: {
     padding: 10,
