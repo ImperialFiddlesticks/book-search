@@ -16,7 +16,7 @@ export default function FavoritesScreen() {
   console.log({ collections });
 
   return (
-    <ScrollView style={{ position: "relative" }}>
+    <ScrollView style={{ position: "relative" }} keyboardShouldPersistTaps="always">
       <Header title='Favorites' />
       {collections.map((c) => (
         <CollectionCard
@@ -29,26 +29,27 @@ export default function FavoritesScreen() {
         />
       ))}
 
-      <ModalComponent text='+ New Collection'
-      submitText="Create collection"
-      disabled={!inputText.trim()}
-      onClose={() => setInputText("")}
-      onPress={() => {
-        if (inputText.trim()) {
-          addNewCollection(inputText.trim());
-          setInputText("");
-        }
-      }}>
-        <View>
-          <Text>Collection name</Text>
-          <TextInput
-            onChangeText={(text) => setInputText(text)}
-            value={inputText}
-            maxLength={40}
-            placeholder='American classics, English poetry, favourite writers, etc.'
-            style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginTop: 8, fontSize: 16 }}
-          />
-        </View>
+      <ModalComponent
+        text='New Collection'
+        submitText="Done"
+        disabled={!inputText.trim()}
+        onClose={() => setInputText("")}
+        onPress={() => {
+          if (inputText.trim()) {
+            addNewCollection(inputText.trim());
+            setInputText("");
+          }
+        }}
+      >
+        <TextInput
+          autoFocus
+          onChangeText={(text) => setInputText(text)}
+          value={inputText}
+          maxLength={40}
+          placeholder='Collection name'
+          placeholderTextColor="#999"
+          style={{ fontSize: 16, paddingVertical: 4 }}
+        />
       </ModalComponent>
     </ScrollView>
   );
