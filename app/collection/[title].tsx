@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View, Modal } from "react-native";
+import { FlatList, Pressable, StyleSheet, View, Modal, TextInput, type TextInput as TextInputType } from "react-native";
 import { Appbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
 import CollectionBookComponent from "../../components/CollectionBookComponent";
 import Header from "../../components/Header";
 import ModalComponent from "../../components/ModalComponent";
+
+function AutoOpen({ onMount }: { onMount: () => void }) {
+  useEffect(() => { onMount(); }, []);
+  return null;
+}
 
 export default function CollectionPage() {
   const { title } = useLocalSearchParams<{ title: string }>();
@@ -13,12 +18,17 @@ export default function CollectionPage() {
     state.collections.find((c) => c.title === title),
   );
 
-  const { deleteCollection } = useCollectionsStore();
+  const collections = useCollectionsStore((state) => state.collections);
+  const { deleteCollection, renameCollection } = useCollectionsStore();
   const router = useRouter();
 
   const books = collection?.books ?? [];
 
   const [confirmVisible, setConfirmVisible] = useState(false);
+  const [renameVisible, setRenameVisible] = useState(false);
+  const [renameText, setRenameText] = useState(title);
+  const [renameError, setRenameError] = useState("");
+  const renameInputRef = useRef<TextInputType>(null);
 
   return (
     <>
@@ -38,22 +48,34 @@ export default function CollectionPage() {
         >
           {(closeModal) => (
             <>
-              <Pressable style={styles.modalOption} accessibilityRole='button'>
-                <Text style={styles.modalOptionText}>Rename collection</Text>
-              </Pressable>
+              {title !== "All favorites" && (
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  onPress={async () => {
+                    await closeModal();
+                    setRenameText(title);
+                    setRenameVisible(true);
+                  }}
+                >
+                  <Text style={styles.modalOptionText}>Rename collection</Text>
+                </Pressable>
+              )}
               <Pressable style={styles.modalOption} accessibilityRole='button'>
                 <Text style={styles.modalOptionText}>Add to collection</Text>
               </Pressable>
-              <Pressable
-                style={styles.modalOption}
-                accessibilityRole='button'
-                onPress={async () => {
-                  await closeModal();
-                  setConfirmVisible(true);
-                }}
-              >
-                <Text style={styles.modalDeleteText}>Delete collection</Text>
-              </Pressable>
+              {title !== "All favorites" && (
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  onPress={async () => {
+                    await closeModal();
+                    setConfirmVisible(true);
+                  }}
+                >
+                  <Text style={styles.modalDeleteText}>Delete collection</Text>
+                </Pressable>
+              )}
             </>
           )}
         </ModalComponent>
@@ -99,6 +121,60 @@ export default function CollectionPage() {
             </View>
           </View>
         </Modal>
+
+        {renameVisible && (
+          <ModalComponent
+            text='Rename collection'
+            submitText='Done'
+            disabled={!renameText.trim()}
+            onClose={() => { setRenameVisible(false); setRenameError(""); }}
+            onOpen={() => setTimeout(() => renameInputRef.current?.focus(), 350)}
+            onPress={() => {
+              const trimmed = renameText.trim();
+              if (collections.some((c) => c.title === trimmed && c.title !== title)) {
+                setRenameError("A collection with this name already exists");
+                return false;
+              }
+              if (trimmed) {
+                renameCollection!(title, trimmed);
+                router.replace(`/collection/${encodeURIComponent(trimmed)}`);
+              }
+              setRenameVisible(false);
+            }}
+            renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
+          >
+            <View style={{ position: "relative", marginVertical: 16 }}>
+              <TextInput
+                ref={renameInputRef}
+                onChangeText={(text) => { setRenameText(text); setRenameError(""); }}
+                value={renameText}
+                maxLength={35}
+                placeholder='Collection name'
+                placeholderTextColor='#999'
+                selectionColor='#fa6b47'
+                autoCorrect={false}
+                style={{
+                  fontSize: 16,
+                  height: 50,
+                  borderWidth: 1,
+                  borderColor: renameError ? "red" : "#e0e0e0",
+                  paddingHorizontal: 10,
+                  paddingRight: 36,
+                }}
+              />
+              {renameText ? (
+                <Pressable
+                  onPress={() => { setRenameText(""); setRenameError(""); renameInputRef.current?.focus(); }}
+                  style={styles.clearButton}
+                  hitSlop={8}
+                >
+                  <Text style={styles.clearIcon}>✕</Text>
+                </Pressable>
+              ) : null}
+            </View>
+            {renameError ? <Text style={styles.renameError}>{renameError}</Text> : null}
+          </ModalComponent>
+        )}
       </View>
 
       {books.length === 0 ? (
@@ -184,6 +260,24 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textAlign: "center",
     marginBottom: 8,
+  },
+
+  renameError: {
+    color: "red",
+    fontSize: 13,
+    marginTop: -8,
+  },
+  clearButton: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+    paddingHorizontal: 12,
+  },
+  clearIcon: {
+    fontSize: 14,
+    color: "#999",
   },
 
   confirmMessage: {

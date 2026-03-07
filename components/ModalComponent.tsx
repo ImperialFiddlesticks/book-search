@@ -19,7 +19,7 @@ export default function ModalComponent({
   readonly text: string;
   readonly children: React.ReactNode | ((closeModal: () => Promise<void>) => React.ReactNode);
   readonly submitText: string;
-  readonly onPress?: () => void;
+  readonly onPress?: () => void | boolean;
   readonly disabled?: boolean;
   readonly onClose?: () => void;
   readonly onOpen?: () => void;
@@ -119,9 +119,8 @@ export default function ModalComponent({
                 <Pressable
                   disabled={disabled}
                   onPress={() => {
-                    animateClose(() => {
-                      onPress?.();
-                    });
+                    if (onPress?.() === false) return;
+                    animateClose();
                   }}
                   accessibilityRole='button'
                   accessibilityLabel={submitText}

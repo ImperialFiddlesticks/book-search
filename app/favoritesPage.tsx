@@ -18,6 +18,7 @@ export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
   const { addNewCollection } = useCollectionsStore();
   const [inputText, setInputText] = useState("");
+  const [error, setError] = useState("");
   const inputRef = useRef<TextInputType>(null);
   const router = useRouter();
 
@@ -35,11 +36,16 @@ export default function FavoritesScreen() {
           text='New Collection'
           submitText='Done'
           disabled={!inputText.trim()}
-          onClose={() => setInputText("")}
+          onClose={() => { setInputText(""); setError(""); }}
           onOpen={() => setTimeout(() => inputRef.current?.focus(), 350)}
           onPress={() => {
-            if (inputText.trim()) {
-              addNewCollection(inputText.trim());
+            const trimmed = inputText.trim();
+            if (collections.some((c) => c.title === trimmed)) {
+              setError("A collection with this name already exists");
+              return false;
+            }
+            if (trimmed) {
+              addNewCollection(trimmed);
               setInputText("");
             }
           }}
@@ -49,23 +55,36 @@ export default function FavoritesScreen() {
             </Pressable>
           )}
         >
-          <TextInput
-            ref={inputRef}
-            onChangeText={(text) => setInputText(text)}
-            value={inputText}
-            maxLength={35}
-            placeholder='Collection name'
-            placeholderTextColor='#999'
-            selectionColor='#fa6b47'
-            style={{
-              fontSize: 16,
-              height: 50,
-              borderWidth: 1,
-              borderColor: "#e0e0e0",
-              paddingHorizontal: 10,
-              marginVertical: 16,
-            }}
-          />
+          <View style={{ position: "relative", marginVertical: 16 }}>
+            <TextInput
+              ref={inputRef}
+              onChangeText={(text) => { setInputText(text); setError(""); }}
+              value={inputText}
+              maxLength={35}
+              placeholder='Collection name'
+              placeholderTextColor='#999'
+              selectionColor='#fa6b47'
+              autoCorrect={false}
+              style={{
+                fontSize: 16,
+                height: 50,
+                borderWidth: 1,
+                borderColor: error ? "red" : "#e0e0e0",
+                paddingHorizontal: 10,
+                paddingRight: 36,
+              }}
+            />
+            {inputText ? (
+              <Pressable
+                onPress={() => { setInputText(""); setError(""); inputRef.current?.focus(); }}
+                style={styles.clearButton}
+                hitSlop={8}
+              >
+                <Text style={styles.clearIcon}>✕</Text>
+              </Pressable>
+            ) : null}
+          </View>
+          {error ? <Text style={styles.error}>{error}</Text> : null}
         </ModalComponent>
       </View>
       {collections.map((c) => (
@@ -100,5 +119,22 @@ const styles = StyleSheet.create({
     color: "#fa6b47",
     fontWeight: "600",
     fontSize: 16,
+  },
+  error: {
+    color: "red",
+    fontSize: 13,
+    marginTop: -8,
+  },
+  clearButton: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+    paddingHorizontal: 12,
+  },
+  clearIcon: {
+    fontSize: 14,
+    color: "#999",
   },
 });

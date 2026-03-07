@@ -10,6 +10,7 @@ interface CollectionsStore {
   toggleFavorite: (book: Book) => void;
   addNewCollection: (title: string, books?: Book[]) => void;
   deleteCollection?: (title: string) => void;
+  renameCollection?: (oldTitle: string, newTitle: string) => void;
   updateCollection?: (title: string, books: Book[]) => void;
 }
 
@@ -75,6 +76,14 @@ export const useCollectionsStore = create<CollectionsStore>()(
           { title, books: books ?? [] },
         ];
 
+        set({ collections: updatedCollections });
+      },
+
+      renameCollection: (oldTitle, newTitle) => {
+        const currentCollections = get().collections;
+        const updatedCollections = currentCollections.map((c) =>
+          c.title === oldTitle ? { ...c, title: newTitle } : c,
+        );
         set({ collections: updatedCollections });
       },
 
