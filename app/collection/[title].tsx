@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    marginBottom: 12,
+    paddingVertical: 12,
   },
   collectionTitle: {
     fontFamily: "LibreBaskerville_700Bold",
