@@ -59,6 +59,7 @@ export default function CollectionPage() {
             }
             return false;
           }}
+          onClose={() => { setSelectMode(false); setSelectedBooks(new Set()); }}
           renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
         >
           {() => {
