@@ -3,9 +3,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View, Modal, TextInput, type TextInput as TextInputType } from "react-native";
 import { Appbar, Snackbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
+import { useReadingListStore } from "../../store/readingListStore";
 import BookCard from "../../components/BookCard";
 import Header from "../../components/Header";
 import ModalComponent from "../../components/ModalComponent";
+import NewCollectionModal from "../../components/NewCollectionModal";
 
 function AutoOpen({ onMount }: { onMount: () => void }) {
   useEffect(() => { onMount(); }, []);
@@ -20,6 +22,7 @@ export default function CollectionPage() {
 
   const collections = useCollectionsStore((state) => state.collections);
   const { deleteCollection, renameCollection, moveBooks } = useCollectionsStore();
+  const { addBooks } = useReadingListStore();
   const router = useRouter();
 
   const books = collection?.books ?? [];
@@ -47,6 +50,7 @@ export default function CollectionPage() {
   const [renameText, setRenameText] = useState(title);
   const [renameError, setRenameError] = useState("");
   const renameInputRef = useRef<TextInputType>(null);
+  const [newCollectionVisible, setNewCollectionVisible] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
@@ -79,7 +83,20 @@ export default function CollectionPage() {
                 <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Remove from collection</Text>
                 </Pressable>
-                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  disabled={!hasSelection}
+                  onPress={() => {
+                    const selected = books.filter((b) => selectedBooks.has(b.key));
+                    addBooks(selected);
+                    const count = selected.length;
+                    setSnackbarText(`${count} ${count === 1 ? "item" : "items"} added to Reading list`);
+                    setSelectOptionsVisible(false);
+                    setSelectMode(false);
+                    setSelectedBooks(new Set());
+                  }}
+                >
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Save to Reading list</Text>
                 </Pressable>
               </>
@@ -126,9 +143,33 @@ export default function CollectionPage() {
                     </View>
                   </Pressable>
                 ))}
+              <Pressable
+                style={styles.modalOption}
+                accessibilityRole='button'
+                onPress={() => {
+                  setMoveToVisible(false);
+                  setNewCollectionVisible(true);
+                }}
+              >
+                <Text style={styles.modalOptionText}>+ New collection</Text>
+              </Pressable>
             </>
           )}
         </ModalComponent>
+      )}
+      {newCollectionVisible && (
+        <NewCollectionModal
+          renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
+          onClose={() => { setNewCollectionVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          onCreated={(name) => {
+            const count = selectedBooks.size;
+            moveBooks!(title, name, selectedBooks);
+            setSnackbarText(`${count} ${count === 1 ? "item" : "items"} moved to ${name}`);
+            setNewCollectionVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
+        />
       )}
       {selectMode && !selectOptionsVisible && !moveToVisible && (
         <View style={styles.selectBar}>
@@ -195,9 +236,11 @@ export default function CollectionPage() {
               >
                 <Text style={styles.modalOptionText}>Select...</Text>
               </Pressable>
-              <Pressable style={styles.modalOption} accessibilityRole='button'>
-                <Text style={styles.modalOptionText}>Add to collection</Text>
-              </Pressable>
+              {title !== "All favorites" && (
+                <Pressable style={styles.modalOption} accessibilityRole='button'>
+                  <Text style={styles.modalOptionText}>Add to collection</Text>
+                </Pressable>
+              )}
               {title !== "All favorites" && (
                 <Pressable
                   style={styles.modalOption}

@@ -5,6 +5,7 @@ import { Book } from "@/types/bookProps";
 interface ReadingListStore {
   readingList: Book[];
   toggleReadingList: (book: Book) => Promise<void>;
+  addBooks: (books: Book[]) => Promise<void>;
   isSaved: (book: Book) => boolean;
   loadReadingList: () => Promise<void>;
 }
@@ -25,6 +26,19 @@ export const useReadingListStore = create<ReadingListStore>()((set, get) => ({
     set({ readingList: newReadingList });
     try {
       await AsyncStorage.setItem("readingList", JSON.stringify(newReadingList));
+    } catch (error) {
+      console.error("Failed to save Reading List", error);
+    }
+  },
+  addBooks: async (books: Book[]) => {
+    const current = get().readingList;
+    const existingKeys = new Set(current.map((b) => b.key));
+    const newBooks = books.filter((b) => !existingKeys.has(b.key));
+    if (newBooks.length === 0) return;
+    const updated = [...current, ...newBooks];
+    set({ readingList: updated });
+    try {
+      await AsyncStorage.setItem("readingList", JSON.stringify(updated));
     } catch (error) {
       console.error("Failed to save Reading List", error);
     }

@@ -1,25 +1,13 @@
-import { useRef, useState } from "react";
 import CollectionCard from "../components/CollectionCard";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  TextInput,
-  Pressable,
-  type TextInput as TextInputType,
-} from "react-native";
-import { Button, Text } from "react-native-paper";
+import { StyleSheet, View, ScrollView, Pressable } from "react-native";
+import { Text } from "react-native-paper";
 import Header from "../components/Header";
-import ModalComponent from "../components/ModalComponent";
+import NewCollectionModal from "../components/NewCollectionModal";
 import { useCollectionsStore } from "../store/collectionsStore";
 import { useRouter } from "expo-router";
 
 export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
-  const { addNewCollection } = useCollectionsStore();
-  const [inputText, setInputText] = useState("");
-  const [error, setError] = useState("");
-  const inputRef = useRef<TextInputType>(null);
   const router = useRouter();
 
   console.log({ collections });
@@ -32,60 +20,13 @@ export default function FavoritesScreen() {
       <Header title='Collections' />
       <View style={styles.titleRow}>
         <Text style={styles.pageTitle}>Collections</Text>
-        <ModalComponent
-          text='New Collection'
-          submitText='Done'
-          disabled={!inputText.trim()}
-          onClose={() => { setInputText(""); setError(""); }}
-          onOpen={() => setTimeout(() => inputRef.current?.focus(), 350)}
-          onPress={() => {
-            const trimmed = inputText.trim();
-            if (collections.some((c) => c.title === trimmed)) {
-              setError("A collection with this name already exists");
-              return false;
-            }
-            if (trimmed) {
-              addNewCollection(trimmed);
-              setInputText("");
-            }
-          }}
+        <NewCollectionModal
           renderTrigger={(openModal) => (
             <Pressable onPress={openModal}>
               <Text style={styles.newCollectionBtn}>+ New</Text>
             </Pressable>
           )}
-        >
-          <View style={{ position: "relative", marginVertical: 16 }}>
-            <TextInput
-              ref={inputRef}
-              onChangeText={(text) => { setInputText(text); setError(""); }}
-              value={inputText}
-              maxLength={35}
-              placeholder='Collection name'
-              placeholderTextColor='#999'
-              selectionColor='#fa6b47'
-              autoCorrect={false}
-              style={{
-                fontSize: 16,
-                height: 50,
-                borderWidth: 1,
-                borderColor: error ? "red" : "#e0e0e0",
-                paddingHorizontal: 10,
-                paddingRight: 36,
-              }}
-            />
-            {inputText ? (
-              <Pressable
-                onPress={() => { setInputText(""); setError(""); inputRef.current?.focus(); }}
-                style={styles.clearButton}
-                hitSlop={8}
-              >
-                <Text style={styles.clearIcon}>✕</Text>
-              </Pressable>
-            ) : null}
-          </View>
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-        </ModalComponent>
+        />
       </View>
       {collections.map((c) => (
         <CollectionCard
@@ -119,22 +60,5 @@ const styles = StyleSheet.create({
     color: "#fa6b47",
     fontWeight: "600",
     fontSize: 16,
-  },
-  error: {
-    color: "red",
-    fontSize: 13,
-    marginTop: -8,
-  },
-  clearButton: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    bottom: 0,
-    justifyContent: "center",
-    paddingHorizontal: 12,
-  },
-  clearIcon: {
-    fontSize: 14,
-    color: "#999",
   },
 });
