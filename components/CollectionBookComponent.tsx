@@ -3,6 +3,8 @@ import { Image, StyleSheet, View } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/store/useSelectedBookStore";
+import { useCollectionsStore } from "@/store/collectionsStore";
+import Save from "./Save";
 
 export default function CollectionBookComponent({
   book,
@@ -11,6 +13,8 @@ export default function CollectionBookComponent({
 }) {
   const router = useRouter();
   const { setSelectedBook } = useSelectedBookStore();
+  const isSaved = useCollectionsStore((state) => state.isSaved(book));
+  const { toggleFavorite } = useCollectionsStore();
 
   const handlePress = () => {
     setSelectedBook(book);
@@ -22,14 +26,19 @@ export default function CollectionBookComponent({
     : null;
 
   return (
-    <Card elevation={0} style={styles.card} onPress={handlePress}>
-      {coverUrl ? (
-        <Image source={{ uri: coverUrl }} style={styles.cover} />
-      ) : (
-        <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>No cover</Text>
+    <Card elevation={0} style={styles.card} onPress={handlePress} >
+      <View>
+        {coverUrl ? (
+          <Image source={{ uri: coverUrl }} style={styles.cover} />
+        ) : (
+          <View style={styles.placeholder}>
+            <Text style={styles.placeholderText}>No cover</Text>
+          </View>
+        )}
+        <View style={styles.saveButton}>
+          <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
         </View>
-      )}
+      </View>
       <Text style={styles.title} numberOfLines={2}>
         {book.title}
       </Text>
@@ -65,6 +74,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#888",
     fontFamily: "SourceSans3_400Regular",
+  },
+  saveButton: {
+    position: "absolute",
+    top: 4,
+    right: 4,
   },
   title: {
     fontFamily: "LibreBaskerville_700Bold",
