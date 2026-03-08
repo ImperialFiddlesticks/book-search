@@ -20,11 +20,13 @@ export default function BookCard({
   showTitle,
   showAuthor,
   onLongPress,
+  hideSave,
 }: {
   readonly book: Book;
   readonly showTitle?: boolean;
   readonly showAuthor?: boolean;
   readonly onLongPress?: () => void;
+  readonly hideSave?: boolean;
 }) {
   const compact = showTitle || showAuthor;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -69,9 +71,11 @@ export default function BookCard({
               <Text style={styles.placeholderText}>No cover</Text>
             </View>
           )}
-          <View style={styles.compactSaveButton}>
-            <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
-          </View>
+          {!hideSave && (
+            <View style={styles.compactSaveButton}>
+              <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
+            </View>
+          )}
         </View>
         {showTitle && (
           <Text style={styles.compactTitle} numberOfLines={2}>

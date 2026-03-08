@@ -9,6 +9,7 @@ import Header from "../../components/Header";
 import ModalComponent from "../../components/ModalComponent";
 import NewCollectionModal from "../../components/NewCollectionModal";
 import ConfirmOverlay from "../../components/ConfirmOverlay";
+import BottomOptionsBar from "../../components/BottomOptionsBar";
 
 function AutoOpen({ onMount }: { onMount: () => void }) {
   useEffect(() => { onMount(); }, []);
@@ -33,6 +34,7 @@ export default function CollectionPage() {
     allFavBooks.some((f) => f.key === b.key),
   );
 
+  const collectionBookKeys = new Set(books.map((b) => b.key));
   const [selectMode, setSelectMode] = useState(false);
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
 
@@ -58,6 +60,7 @@ export default function CollectionPage() {
   const renameInputRef = useRef<TextInputType>(null);
   const [newCollectionVisible, setNewCollectionVisible] = useState(false);
   const [removeConfirmVisible, setRemoveConfirmVisible] = useState(false);
+  const [addToCollectionMode, setAddToCollectionMode] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
@@ -186,8 +189,8 @@ export default function CollectionPage() {
           }}
         />
       )}
-      {selectMode && !selectOptionsVisible && !moveToVisible && (
-        <View style={styles.selectBar}>
+      {selectMode && !selectOptionsVisible && !moveToVisible && !addToCollectionMode && (
+        <BottomOptionsBar>
           <Pressable
             onPress={() => { setSelectMode(false); setSelectedBooks(new Set()); }}
           >
@@ -210,7 +213,35 @@ export default function CollectionPage() {
             onPress={() => setSelectOptionsVisible(true)}
             accessibilityLabel='More select options'
           />
-        </View>
+        </BottomOptionsBar>
+      )}
+      {addToCollectionMode && (
+        <BottomOptionsBar>
+          <Pressable
+            onPress={() => {
+              setAddToCollectionMode(false);
+              setSelectMode(false);
+              setSelectedBooks(new Set());
+            }}
+          >
+            <Text style={styles.selectBarCancel}>Cancel</Text>
+          </Pressable>
+          <Pressable
+            disabled={selectedBooks.size === collectionBookKeys.size}
+            onPress={() => {
+              const count = selectedBooks.size - collectionBookKeys.size;
+              moveBooks("All favorites", title, selectedBooks);
+              setSnackbarText(`${count} ${count === 1 ? "item" : "items"} added to ${title}`);
+              setAddToCollectionMode(false);
+              setSelectMode(false);
+              setSelectedBooks(new Set());
+            }}
+          >
+            <Text style={[styles.selectBarAction, selectedBooks.size === collectionBookKeys.size && styles.modalDisabledText]}>
+              Add to collection
+            </Text>
+          </Pressable>
+        </BottomOptionsBar>
       )}
       <View style={styles.titleRow}>
         <Text style={styles.collectionTitle}>{title}</Text>
@@ -252,7 +283,16 @@ export default function CollectionPage() {
                 <Text style={styles.modalOptionText}>Select...</Text>
               </Pressable>
               {title !== "All favorites" && (
-                <Pressable style={styles.modalOption} accessibilityRole='button'>
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  onPress={async () => {
+                    await closeModal();
+                    setAddToCollectionMode(true);
+                    setSelectMode(true);
+                    setSelectedBooks(new Set(collectionBookKeys));
+                  }}
+                >
                   <Text style={styles.modalOptionText}>Add to collection</Text>
                 </Pressable>
               )}
@@ -356,11 +396,11 @@ export default function CollectionPage() {
         )}
       </View>
 
-      {books.length === 0 ? (
+      {(addToCollectionMode ? allFavBooks : books).length === 0 ? (
         <Text style={styles.empty}>No books in this collection yet.</Text>
       ) : (
         <FlatList
-          data={books}
+          data={addToCollectionMode ? allFavBooks : books}
           keyExtractor={(item) => item.key}
           numColumns={3}
           contentContainerStyle={styles.grid}
@@ -368,8 +408,11 @@ export default function CollectionPage() {
           renderItem={({ item }) => (
             <Pressable
               style={styles.checkboxWrapper}
-              onPress={selectMode ? () => toggleSelect(item.key) : undefined}
-              disabled={!selectMode}
+              onPress={selectMode ? () => {
+                if (addToCollectionMode && collectionBookKeys.has(item.key)) return;
+                toggleSelect(item.key);
+              } : undefined}
+              disabled={!selectMode || (addToCollectionMode && collectionBookKeys.has(item.key))}
             >
               {selectMode && (
                 <View style={styles.checkboxOverlay}>
@@ -381,7 +424,7 @@ export default function CollectionPage() {
                 </View>
               )}
               <View pointerEvents={selectMode ? "none" : "auto"}>
-                <BookCard book={item} showTitle showAuthor onLongPress={() => setSelectMode(true)} />
+                <BookCard book={item} showTitle showAuthor onLongPress={addToCollectionMode ? undefined : () => setSelectMode(true)} hideSave={addToCollectionMode} />
               </View>
             </Pressable>
           )}
@@ -401,21 +444,6 @@ export default function CollectionPage() {
 }
 
 const styles = StyleSheet.create({
-  selectBar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: "rgb(254, 255, 243)",
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: "#ddd",
-    zIndex: 10,
-  },
   selectBarCancel: {
     fontSize: 16,
     color: "#000",
