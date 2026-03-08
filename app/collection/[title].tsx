@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View, Modal, TextInput, type TextInput as TextInputType } from "react-native";
 import { Appbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
-import CollectionBookComponent from "../../components/CollectionBookComponent";
+import BookCard from "../../components/BookCard";
 import Header from "../../components/Header";
 import ModalComponent from "../../components/ModalComponent";
 
@@ -186,7 +186,7 @@ export default function CollectionPage() {
           numColumns={3}
           contentContainerStyle={styles.grid}
           columnWrapperStyle={styles.row}
-          renderItem={({ item }) => <CollectionBookComponent book={item} />}
+          renderItem={({ item }) => <BookCard book={item} showTitle showAuthor />}
         />
       )}
     </>
