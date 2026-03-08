@@ -24,6 +24,20 @@ export default function CollectionPage() {
 
   const books = collection?.books ?? [];
 
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
+
+  const toggleSelect = (key: string) => {
+    setSelectedBooks((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  const allSelected = books.length > 0 && selectedBooks.size === books.length;
+
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [renameVisible, setRenameVisible] = useState(false);
   const [renameText, setRenameText] = useState(title);
@@ -33,6 +47,41 @@ export default function CollectionPage() {
   return (
     <>
       <Header title='Collection' />
+      {selectMode && (
+        <ModalComponent
+          text='Select options'
+          submitText={allSelected ? 'Deselect all' : 'Select all'}
+          onPress={() => {
+            if (allSelected) {
+              setSelectedBooks(new Set());
+            } else {
+              setSelectedBooks(new Set(books.map((b) => b.key)));
+            }
+            return false;
+          }}
+          renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
+        >
+          {() => {
+            const hasSelection = selectedBooks.size > 0;
+            return (
+              <>
+                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                  <Text style={[styles.modalDeleteText, !hasSelection && styles.modalDisabledText]}>Unsave</Text>
+                </Pressable>
+                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Move to...</Text>
+                </Pressable>
+                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                  <Text style={[styles.modalDeleteText, !hasSelection && styles.modalDisabledText]}>Remove from collection</Text>
+                </Pressable>
+                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Save to Reading list</Text>
+                </Pressable>
+              </>
+            );
+          }}
+        </ModalComponent>
+      )}
       <View style={styles.titleRow}>
         <Text style={styles.collectionTitle}>{title}</Text>
         <ModalComponent
@@ -61,6 +110,17 @@ export default function CollectionPage() {
                   <Text style={styles.modalOptionText}>Rename collection</Text>
                 </Pressable>
               )}
+              <Pressable
+                style={styles.modalOption}
+                accessibilityRole='button'
+                onPress={async () => {
+                  await closeModal();
+                  setSelectMode(true);
+                  setSelectedBooks(new Set());
+                }}
+              >
+                <Text style={styles.modalOptionText}>Select...</Text>
+              </Pressable>
               <Pressable style={styles.modalOption} accessibilityRole='button'>
                 <Text style={styles.modalOptionText}>Add to collection</Text>
               </Pressable>
@@ -186,7 +246,26 @@ export default function CollectionPage() {
           numColumns={3}
           contentContainerStyle={styles.grid}
           columnWrapperStyle={styles.row}
-          renderItem={({ item }) => <BookCard book={item} showTitle showAuthor />}
+          renderItem={({ item }) => (
+            <Pressable
+              style={styles.checkboxWrapper}
+              onPress={selectMode ? () => toggleSelect(item.key) : undefined}
+              disabled={!selectMode}
+            >
+              {selectMode && (
+                <View style={styles.checkboxOverlay}>
+                  <View style={styles.emptyCircle}>
+                    {selectedBooks.has(item.key) && (
+                      <View style={styles.filledInner} />
+                    )}
+                  </View>
+                </View>
+              )}
+              <View pointerEvents={selectMode ? "none" : "auto"}>
+                <BookCard book={item} showTitle showAuthor />
+              </View>
+            </Pressable>
+          )}
         />
       )}
     </>
@@ -220,6 +299,32 @@ const styles = StyleSheet.create({
     gap: 4,
     marginBottom: 12,
   },
+  checkboxWrapper: {
+    position: "relative",
+  },
+  checkboxOverlay: {
+    position: "absolute",
+    top: 4,
+    left: 4,
+    zIndex: 1,
+  },
+  emptyCircle: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: "#f8b197",
+    backgroundColor: "transparent",
+    margin: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  filledInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#f8b197",
+  },
 
   modalOption: {
     paddingVertical: 16,
@@ -238,6 +343,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "red",
     fontWeight: 600,
+  },
+
+  modalDisabledText: {
+    color: "#ccc",
   },
 
   confirmOverlay: {

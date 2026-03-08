@@ -12,6 +12,7 @@ export default function ModalComponent({
   onPress,
   submitText,
   disabled,
+  dismissable = true,
   onClose,
   onOpen,
   renderTrigger,
@@ -21,6 +22,7 @@ export default function ModalComponent({
   readonly submitText: string;
   readonly onPress?: () => void | boolean;
   readonly disabled?: boolean;
+  readonly dismissable?: boolean;
   readonly onClose?: () => void;
   readonly onOpen?: () => void;
   readonly renderTrigger?: (openModal: () => void) => React.ReactNode;
@@ -97,7 +99,7 @@ export default function ModalComponent({
             >
               <Pressable
                 style={styles.overlayBackground}
-                onPress={() => animateClose()}
+                onPress={dismissable ? () => animateClose() : undefined}
               />
             </Animated.View>
             <Animated.View
