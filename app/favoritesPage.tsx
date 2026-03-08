@@ -8,9 +8,10 @@ import { useRouter } from "expo-router";
 
 export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
+  const allFavBooks = useCollectionsStore((state) =>
+    state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+  );
   const router = useRouter();
-
-  console.log({ collections });
 
   return (
     <ScrollView
@@ -32,7 +33,7 @@ export default function FavoritesScreen() {
         <CollectionCard
           key={c.title}
           collection={{
-            savedItems: c.books,
+            savedItems: c.books.filter((b) => allFavBooks.some((f) => f.key === b.key)),
             title: c.title,
           }}
           onPress={() =>

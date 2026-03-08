@@ -12,6 +12,7 @@ interface CollectionsStore {
   deleteCollection: (title: string) => void;
   renameCollection: (oldTitle: string, newTitle: string) => void;
   moveBooks: (fromTitle: string, toTitle: string, bookKeys: Set<string>) => void;
+  removeBooksFromCollection: (collectionTitle: string, bookKeys: Set<string>) => void;
 }
 
 interface Collection {
@@ -103,6 +104,17 @@ export const useCollectionsStore = create<CollectionsStore>()(
               const existingKeys = new Set(c.books.map((b) => b.key));
               const newBooks = booksToMove.filter((b) => !existingKeys.has(b.key));
               return { ...c, books: [...c.books, ...newBooks] };
+            }
+            return c;
+          }),
+        });
+      },
+
+      removeBooksFromCollection: (collectionTitle, bookKeys) => {
+        set({
+          collections: get().collections.map((c) => {
+            if (c.title === collectionTitle) {
+              return { ...c, books: c.books.filter((b) => !bookKeys.has(b.key)) };
             }
             return c;
           }),

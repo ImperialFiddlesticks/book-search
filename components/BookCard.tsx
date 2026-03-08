@@ -19,10 +19,12 @@ export default function BookCard({
   book,
   showTitle,
   showAuthor,
+  onLongPress,
 }: {
   readonly book: Book;
   readonly showTitle?: boolean;
   readonly showAuthor?: boolean;
+  readonly onLongPress?: () => void;
 }) {
   const compact = showTitle || showAuthor;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -58,7 +60,7 @@ export default function BookCard({
   };
   if (compact) {
     return (
-      <Card elevation={0} style={styles.compactCard} onPress={handlePress}>
+      <Card elevation={0} style={styles.compactCard} onPress={handlePress} onLongPress={onLongPress}>
         <View>
           {coverUrl ? (
             <Image source={{ uri: coverUrl }} style={styles.compactCover} />

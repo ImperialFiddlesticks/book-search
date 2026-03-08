@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View, Modal, TextInput, type TextInput as TextInputType } from "react-native";
+import { FlatList, Pressable, StyleSheet, View, TextInput, type TextInput as TextInputType } from "react-native";
 import { Appbar, Snackbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
 import { useReadingListStore } from "../../store/readingListStore";
@@ -8,6 +8,7 @@ import BookCard from "../../components/BookCard";
 import Header from "../../components/Header";
 import ModalComponent from "../../components/ModalComponent";
 import NewCollectionModal from "../../components/NewCollectionModal";
+import ConfirmOverlay from "../../components/ConfirmOverlay";
 
 function AutoOpen({ onMount }: { onMount: () => void }) {
   useEffect(() => { onMount(); }, []);
@@ -21,11 +22,16 @@ export default function CollectionPage() {
   );
 
   const collections = useCollectionsStore((state) => state.collections);
-  const { deleteCollection, renameCollection, moveBooks } = useCollectionsStore();
+  const { deleteCollection, renameCollection, moveBooks, removeBooksFromCollection } = useCollectionsStore();
   const { addBooks } = useReadingListStore();
   const router = useRouter();
 
-  const books = collection?.books ?? [];
+  const allFavBooks = useCollectionsStore((state) =>
+    state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+  );
+  const books = (collection?.books ?? []).filter((b) =>
+    allFavBooks.some((f) => f.key === b.key),
+  );
 
   const [selectMode, setSelectMode] = useState(false);
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(new Set());
@@ -51,6 +57,7 @@ export default function CollectionPage() {
   const [renameError, setRenameError] = useState("");
   const renameInputRef = useRef<TextInputType>(null);
   const [newCollectionVisible, setNewCollectionVisible] = useState(false);
+  const [removeConfirmVisible, setRemoveConfirmVisible] = useState(false);
 
   return (
     <View style={{ flex: 1 }}>
@@ -80,7 +87,15 @@ export default function CollectionPage() {
                 >
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Move to...</Text>
                 </Pressable>
-                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  disabled={!hasSelection}
+                  onPress={() => {
+                    setSelectOptionsVisible(false);
+                    setRemoveConfirmVisible(true);
+                  }}
+                >
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Remove from collection</Text>
                 </Pressable>
                 <Pressable
@@ -257,47 +272,34 @@ export default function CollectionPage() {
           )}
         </ModalComponent>
 
-        <Modal
-          animationType='fade'
-          transparent={true}
+        <ConfirmOverlay
           visible={confirmVisible}
-          accessibilityViewIsModal={true}
-          onRequestClose={() => setConfirmVisible(false)}
-        >
-          <View style={styles.confirmOverlay}>
-            <View style={styles.confirmBox}>
-              <Text style={styles.confirmTitle}>Delete collection?</Text>
-              <Text style={styles.confirmMessage}>
-                When you delete this collection, the items will still be saved
-              </Text>
+          title='Delete collection?'
+          message='When you delete this collection, the items will still be saved'
+          confirmLabel='Delete'
+          onCancel={() => setConfirmVisible(false)}
+          onConfirm={() => {
+            setConfirmVisible(false);
+            deleteCollection!(title);
+            router.replace("/favoritesPage");
+          }}
+        />
 
-              <Pressable
-                style={styles.modalOption}
-                accessibilityRole='button'
-                onPress={() => {
-                  if (confirmVisible) {
-                    setConfirmVisible(false);
-                  }
-                }}
-              >
-                <Text style={styles.modalOptionText}>Cancel</Text>
-              </Pressable>
-              <Pressable
-                style={styles.modalOption}
-                accessibilityRole='button'
-                onPress={() => {
-                  if (confirmVisible) {
-                    setConfirmVisible(false);
-                    deleteCollection!(title);
-                    router.replace("/favoritesPage");
-                  }
-                }}
-              >
-                <Text style={styles.modalDeleteText}>Delete</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+        <ConfirmOverlay
+          visible={removeConfirmVisible}
+          title='Remove from collection?'
+          message='You will still be able to find these items in "All favorites"'
+          confirmLabel='Remove'
+          onCancel={() => { setRemoveConfirmVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          onConfirm={() => {
+            const count = selectedBooks.size;
+            removeBooksFromCollection(title, selectedBooks);
+            setSnackbarText(`${count} ${count === 1 ? "item" : "items"} removed from collection`);
+            setRemoveConfirmVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
+        />
 
         {renameVisible && (
           <ModalComponent
@@ -379,7 +381,7 @@ export default function CollectionPage() {
                 </View>
               )}
               <View pointerEvents={selectMode ? "none" : "auto"}>
-                <BookCard book={item} showTitle showAuthor />
+                <BookCard book={item} showTitle showAuthor onLongPress={() => setSelectMode(true)} />
               </View>
             </Pressable>
           )}
@@ -407,8 +409,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     backgroundColor: "rgb(254, 255, 243)",
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "#ddd",
@@ -502,27 +504,6 @@ const styles = StyleSheet.create({
     color: "#ccc",
   },
 
-  confirmOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  confirmBox: {
-    backgroundColor: "rgb(254, 255, 243)",
-    borderRadius: 16,
-    paddingVertical: 24,
-    paddingHorizontal: 20,
-    width: "90%",
-  },
-
-  confirmTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 8,
-  },
 
   renameError: {
     color: "red",
@@ -553,13 +534,4 @@ const styles = StyleSheet.create({
     gap: 12,
   },
 
-  confirmMessage: {
-    maxWidth: 250,
-    fontSize: 14,
-    textAlign: "center",
-    color: "#858585",
-    marginBottom: 16,
-    marginTop:16,
-    marginInline: "auto"
-  },
 });
