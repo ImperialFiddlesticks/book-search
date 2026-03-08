@@ -19,7 +19,7 @@ export default function ModalComponent({
 }: {
   readonly text: string;
   readonly children: React.ReactNode | ((closeModal: () => Promise<void>) => React.ReactNode);
-  readonly submitText: string;
+  readonly submitText?: string;
   readonly onPress?: () => void | boolean;
   readonly disabled?: boolean;
   readonly dismissable?: boolean;
@@ -118,18 +118,20 @@ export default function ModalComponent({
                 >
                   <Text style={styles.cancelText}>Cancel</Text>
                 </Pressable>
-                <Pressable
-                  disabled={disabled}
-                  onPress={() => {
-                    if (onPress?.() === false) return;
-                    animateClose();
-                  }}
-                  accessibilityRole='button'
-                  accessibilityLabel={submitText}
-                  style={styles.headerRight}
-                >
-                  <Text style={[styles.doneText, disabled && styles.doneTextDisabled]}>{submitText}</Text>
-                </Pressable>
+                {submitText ? (
+                  <Pressable
+                    disabled={disabled}
+                    onPress={() => {
+                      if (onPress?.() === false) return;
+                      animateClose();
+                    }}
+                    accessibilityRole='button'
+                    accessibilityLabel={submitText}
+                    style={styles.headerRight}
+                  >
+                    <Text style={[styles.doneText, disabled && styles.doneTextDisabled]}>{submitText}</Text>
+                  </Pressable>
+                ) : null}
               </View>
               <View style={styles.content}>
                 {typeof children === "function" ? children(() => animateClose()) : children}

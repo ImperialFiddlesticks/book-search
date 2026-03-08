@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View, Modal, TextInput, type TextInput as TextInputType } from "react-native";
-import { Appbar, Text } from "react-native-paper";
+import { Appbar, Snackbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
 import BookCard from "../../components/BookCard";
 import Header from "../../components/Header";
@@ -19,7 +19,7 @@ export default function CollectionPage() {
   );
 
   const collections = useCollectionsStore((state) => state.collections);
-  const { deleteCollection, renameCollection } = useCollectionsStore();
+  const { deleteCollection, renameCollection, moveBooks } = useCollectionsStore();
   const router = useRouter();
 
   const books = collection?.books ?? [];
@@ -38,6 +38,10 @@ export default function CollectionPage() {
 
   const allSelected = books.length > 0 && selectedBooks.size === books.length;
 
+  const [selectOptionsVisible, setSelectOptionsVisible] = useState(false);
+  const [moveToVisible, setMoveToVisible] = useState(false);
+  const [moveToTarget, setMoveToTarget] = useState<string | null>(null);
+  const [snackbarText, setSnackbarText] = useState("");
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [renameVisible, setRenameVisible] = useState(false);
   const [renameText, setRenameText] = useState(title);
@@ -45,21 +49,12 @@ export default function CollectionPage() {
   const renameInputRef = useRef<TextInputType>(null);
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <Header title='Collection' />
-      {selectMode && (
+      {selectOptionsVisible && (
         <ModalComponent
           text='Select options'
-          submitText={allSelected ? 'Deselect all' : 'Select all'}
-          onPress={() => {
-            if (allSelected) {
-              setSelectedBooks(new Set());
-            } else {
-              setSelectedBooks(new Set(books.map((b) => b.key)));
-            }
-            return false;
-          }}
-          onClose={() => { setSelectMode(false); setSelectedBooks(new Set()); }}
+          onClose={() => { setSelectOptionsVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
           renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
         >
           {() => {
@@ -67,13 +62,22 @@ export default function CollectionPage() {
             return (
               <>
                 <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
-                  <Text style={[styles.modalDeleteText, !hasSelection && styles.modalDisabledText]}>Unsave</Text>
+                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Unsave</Text>
                 </Pressable>
-                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  disabled={!hasSelection}
+                  onPress={() => {
+                    setSelectOptionsVisible(false);
+                    setMoveToTarget(null);
+                    setMoveToVisible(true);
+                  }}
+                >
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Move to...</Text>
                 </Pressable>
                 <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
-                  <Text style={[styles.modalDeleteText, !hasSelection && styles.modalDisabledText]}>Remove from collection</Text>
+                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Remove from collection</Text>
                 </Pressable>
                 <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Save to Reading list</Text>
@@ -82,6 +86,75 @@ export default function CollectionPage() {
             );
           }}
         </ModalComponent>
+      )}
+      {moveToVisible && (
+        <ModalComponent
+          text='Move to'
+          submitText='Done'
+          disabled={!moveToTarget}
+          onClose={() => { setMoveToVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          onPress={() => {
+            if (moveToTarget) {
+              const count = selectedBooks.size;
+              moveBooks!(title, moveToTarget, selectedBooks);
+              setSnackbarText(
+                `${count} ${count === 1 ? "item" : "items"} moved to ${moveToTarget}`
+              );
+            }
+            setMoveToVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
+          renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
+        >
+          {() => (
+            <>
+              {collections
+                .filter((c) => c.title !== "All favorites" && c.title !== title)
+                .map((c) => (
+                  <Pressable
+                    key={c.title}
+                    style={styles.modalOption}
+                    accessibilityRole='radio'
+                    onPress={() => setMoveToTarget(c.title)}
+                  >
+                    <View style={styles.radioRow}>
+                      <View style={styles.emptyCircle}>
+                        {moveToTarget === c.title && <View style={styles.filledInner} />}
+                      </View>
+                      <Text style={styles.modalOptionText}>{c.title}</Text>
+                    </View>
+                  </Pressable>
+                ))}
+            </>
+          )}
+        </ModalComponent>
+      )}
+      {selectMode && !selectOptionsVisible && !moveToVisible && (
+        <View style={styles.selectBar}>
+          <Pressable
+            onPress={() => { setSelectMode(false); setSelectedBooks(new Set()); }}
+          >
+            <Text style={styles.selectBarCancel}>Cancel</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              if (allSelected) {
+                setSelectedBooks(new Set());
+              } else {
+                setSelectedBooks(new Set(books.map((b) => b.key)));
+              }
+            }}
+          >
+            <Text style={styles.selectBarAction}>{allSelected ? 'Deselect all' : 'Select all'}</Text>
+          </Pressable>
+          <Appbar.Action
+            icon='dots-vertical'
+            disabled={selectedBooks.size === 0}
+            onPress={() => setSelectOptionsVisible(true)}
+            accessibilityLabel='More select options'
+          />
+        </View>
       )}
       <View style={styles.titleRow}>
         <Text style={styles.collectionTitle}>{title}</Text>
@@ -269,11 +342,47 @@ export default function CollectionPage() {
           )}
         />
       )}
-    </>
+      <Snackbar
+        visible={!!snackbarText}
+        onDismiss={() => setSnackbarText("")}
+        duration={3000}
+        style={styles.snackbar}
+        theme={{ colors: { inverseOnSurface: "#fff" } }}
+      >
+        <Text style={{ textAlign: "center", color: "#fff", fontWeight: 600}}>{snackbarText}</Text>
+      </Snackbar>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  selectBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: "rgb(254, 255, 243)",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "#ddd",
+    zIndex: 10,
+  },
+  selectBarCancel: {
+    fontSize: 16,
+    color: "#000",
+    fontFamily: "SourceSans3_400Regular",
+    paddingHorizontal: 4,
+  },
+  selectBarAction: {
+    fontSize: 16,
+    color: "#fa6b47",
+    fontWeight: "600",
+    fontFamily: "SourceSans3_600SemiBold",
+  },
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -388,6 +497,17 @@ const styles = StyleSheet.create({
   clearIcon: {
     fontSize: 14,
     color: "#999",
+  },
+
+  snackbar: {
+    backgroundColor: "#fa6b47",
+    borderRadius: 4,
+  },
+
+  radioRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
   },
 
   confirmMessage: {
