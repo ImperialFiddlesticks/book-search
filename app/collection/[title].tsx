@@ -330,7 +330,7 @@ export default function CollectionPage() {
           onConfirm={() => {
             setConfirmVisible(false);
             deleteCollection!(title);
-            router.replace("/favoritesPage");
+            router.replace("/profilePage");
           }}
         />
 
