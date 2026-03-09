@@ -23,7 +23,7 @@ export default function CollectionPage() {
   );
 
   const collections = useCollectionsStore((state) => state.collections);
-  const { deleteCollection, renameCollection, moveBooks, removeBooksFromCollection } = useCollectionsStore();
+  const { deleteCollection, renameCollection, moveBooks, removeBooksFromCollection, unsaveBooks } = useCollectionsStore();
   const { addBooks } = useReadingListStore();
   const router = useRouter();
 
@@ -60,6 +60,7 @@ export default function CollectionPage() {
   const renameInputRef = useRef<TextInputType>(null);
   const [newCollectionVisible, setNewCollectionVisible] = useState(false);
   const [removeConfirmVisible, setRemoveConfirmVisible] = useState(false);
+  const [unsaveConfirmVisible, setUnsaveConfirmVisible] = useState(false);
   const [addToCollectionMode, setAddToCollectionMode] = useState(false);
 
   return (
@@ -75,7 +76,15 @@ export default function CollectionPage() {
             const hasSelection = selectedBooks.size > 0;
             return (
               <>
-                <Pressable style={styles.modalOption} accessibilityRole='button' disabled={!hasSelection}>
+                <Pressable
+                  style={styles.modalOption}
+                  accessibilityRole='button'
+                  disabled={!hasSelection}
+                  onPress={() => {
+                    setSelectOptionsVisible(false);
+                    setUnsaveConfirmVisible(true);
+                  }}
+                >
                   <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Unsave</Text>
                 </Pressable>
                 <Pressable
@@ -336,6 +345,22 @@ export default function CollectionPage() {
             removeBooksFromCollection(title, selectedBooks);
             setSnackbarText(`${count} ${count === 1 ? "item" : "items"} removed from collection`);
             setRemoveConfirmVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
+        />
+
+        <ConfirmOverlay
+          visible={unsaveConfirmVisible}
+          title='Unsave selected items?'
+          message='These items will be removed from all collections'
+          confirmLabel='Unsave'
+          onCancel={() => { setUnsaveConfirmVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          onConfirm={() => {
+            const count = selectedBooks.size;
+            unsaveBooks(selectedBooks);
+            setSnackbarText(`${count} ${count === 1 ? "item" : "items"} unsaved`);
+            setUnsaveConfirmVisible(false);
             setSelectMode(false);
             setSelectedBooks(new Set());
           }}
