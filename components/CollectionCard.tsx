@@ -28,29 +28,33 @@ export default function CollectionCard({
     >
       <Card.Content>
         {/* Preview Grid */}
-        <View style={styles.previewContainer}>
-          {collection.savedItems.slice(0, 4).map(({ cover_i, key }: Book) => (
-            <View key={key} style={styles.previewImageWrapper}>
-              <Image
-                source={{
-                  uri: cover_i
-                    ? `https://covers.openlibrary.org/b/id/${cover_i}-M.jpg`
-                    : undefined,
-                }}
-                style={styles.previewImage}
-                accessibilityElementsHidden={true}
-                importantForAccessibility="no-hide-descendants"
-              />
-            </View>
-          ))}
-        </View>
+        {[0, 2].map((rowStart) => (
+          <View key={rowStart} style={styles.previewRow}>
+            {[rowStart, rowStart + 1].map((i) => {
+              const book = collection.savedItems[i];
+              return (
+                <View key={book?.key ?? `empty-${i}`} style={[styles.previewCell, !book && styles.placeholder]}>
+                  {book && (
+                    <Image
+                      source={{
+                        uri: book.cover_i
+                          ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+                          : undefined,
+                      }}
+                      style={styles.previewImage}
+                      accessibilityElementsHidden={true}
+                      importantForAccessibility="no-hide-descendants"
+                    />
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        ))}
 
         {/* Title + Count */}
         <View style={styles.footer}>
-          <View
-            accessibilityElementsHidden={true}
-            importantForAccessibility="no-hide-descendants"
-          >
+          <View style={{ flex: 1 }}>
             <Text variant="titleMedium">{collection.title}</Text>
             <Text variant="bodySmall">
               {collection.savedItems.length} items
@@ -58,6 +62,8 @@ export default function CollectionCard({
           </View>
           <IconButton
             icon="chevron-right"
+            size={16}
+            style={{ margin: 0, marginBottom: -8 }}
             accessibilityElementsHidden={true}
             importantForAccessibility="no-hide-descendants"
           />
@@ -69,27 +75,32 @@ export default function CollectionCard({
 
 const styles = StyleSheet.create({
   card: {
-    margin: 12,
     borderRadius: 16,
   },
-  previewContainer: {
+  previewRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
     gap: 4,
+    marginBottom: 4,
   },
-  previewImageWrapper: {
-    width: "48%",
-    aspectRatio: 1,
+  previewCell: {
+    flex: 1,
+    aspectRatio: 3 / 4,
+    overflow: "hidden",
+    borderRadius: 8,
   },
   previewImage: {
     width: "100%",
     height: "100%",
-    borderRadius: 8,
+    resizeMode: "cover",
+  },
+  placeholder: {
+    borderWidth: 2,
+    borderColor: "#c0c0c0",
+    backgroundColor: "#e8e8e4",
   },
   footer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 12,
+    alignItems: "flex-end",
+    marginTop: 8,
   },
 });
