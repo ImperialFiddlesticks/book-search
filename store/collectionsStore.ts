@@ -13,6 +13,7 @@ interface CollectionsStore {
   renameCollection: (oldTitle: string, newTitle: string) => void;
   moveBooks: (fromTitle: string, toTitle: string, bookKeys: Set<string>) => void;
   removeBooksFromCollection: (collectionTitle: string, bookKeys: Set<string>) => void;
+  unsaveBooks: (bookKeys: Set<string>) => void;
 }
 
 interface Collection {
@@ -118,6 +119,15 @@ export const useCollectionsStore = create<CollectionsStore>()(
             }
             return c;
           }),
+        });
+      },
+
+      unsaveBooks: (bookKeys) => {
+        set({
+          collections: get().collections.map((c) => ({
+            ...c,
+            books: c.books.filter((b) => !bookKeys.has(b.key)),
+          })),
         });
       },
 
