@@ -1,59 +1,65 @@
-import { useRef, useState } from "react";
 import CollectionCard from "../components/CollectionCard";
-import { View, ScrollView, TextInput, type TextInput as TextInputType } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { StyleSheet, View, ScrollView, Pressable } from "react-native";
+import { Text } from "react-native-paper";
 import Header from "../components/Header";
-import ModalComponent from "../components/ModalComponent";
+import NewCollectionModal from "../components/NewCollectionModal";
 import { useCollectionsStore } from "../store/collectionsStore";
 import { useRouter } from "expo-router";
 
 export default function FavoritesScreen() {
   const collections = useCollectionsStore((state) => state.collections);
-  const { addNewCollection } = useCollectionsStore();
-  const [inputText, setInputText] = useState("");
-  const inputRef = useRef<TextInputType>(null);
+  const allFavBooks = useCollectionsStore((state) =>
+    state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+  );
   const router = useRouter();
 
-  console.log({ collections });
-
   return (
-    <ScrollView style={{ position: "relative" }} keyboardShouldPersistTaps="always">
-      <Header title='Favorites' />
+    <ScrollView
+      style={{ position: "relative" }}
+      keyboardShouldPersistTaps='always'
+    >
+      <Header title='Collections' />
+      <View style={styles.titleRow}>
+        <Text style={styles.pageTitle}>Collections</Text>
+        <NewCollectionModal
+          renderTrigger={(openModal) => (
+            <Pressable onPress={openModal}>
+              <Text style={styles.newCollectionBtn}>+ New</Text>
+            </Pressable>
+          )}
+        />
+      </View>
       {collections.map((c) => (
         <CollectionCard
           key={c.title}
           collection={{
-            savedItems: c.books,
+            savedItems: c.books.filter((b) => allFavBooks.some((f) => f.key === b.key)),
             title: c.title,
           }}
-          onPress={() => router.push(`/collection/${encodeURIComponent(c.title)}`)}
+          onPress={() =>
+            router.push(`/collection/${encodeURIComponent(c.title)}`)
+          }
         />
       ))}
-
-      <ModalComponent
-        text='New Collection'
-        submitText="Done"
-        disabled={!inputText.trim()}
-        onClose={() => setInputText("")}
-        onOpen={() => inputRef.current?.focus()}
-        onPress={() => {
-          if (inputText.trim()) {
-            addNewCollection(inputText.trim());
-            setInputText("");
-          }
-        }}
-      >
-        <TextInput
-          ref={inputRef}
-          onChangeText={(text) => setInputText(text)}
-          value={inputText}
-          maxLength={40}
-          placeholder='Collection name'
-          placeholderTextColor="#999"
-          selectionColor="#fa6b47"
-          style={{ fontSize: 16, height: 50, borderWidth: 1, borderColor: '#e0e0e0', paddingHorizontal: 10, marginVertical: 16 }}
-        />
-      </ModalComponent>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  pageTitle: {
+    fontFamily: "LibreBaskerville_700Bold",
+    fontSize: 22,
+  },
+  newCollectionBtn: {
+    color: "#fa6b47",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+});

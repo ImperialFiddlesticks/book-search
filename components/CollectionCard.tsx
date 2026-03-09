@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Card, Text, IconButton } from "react-native-paper";
+import { Card, Text, IconButton, useTheme } from "react-native-paper";
 import { Book } from "../types/bookProps";
 
 interface CollectionCardProps {
@@ -15,13 +15,16 @@ export default function CollectionCard({
   collection,
   onPress,
 }: CollectionCardProps) {
+  const theme = useTheme();
+
   return (
     <Card
-      style={styles.card}
+      style={[styles.card, { backgroundColor: theme.colors.surface }]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${collection.title}, ${collection.savedItems.length} items`}
       accessibilityHint="Opens collection"
+      elevation={0}
     >
       <Card.Content>
         {/* Preview Grid */}

@@ -9,8 +9,10 @@ interface CollectionsStore {
   getAllFavorites: () => Collection;
   toggleFavorite: (book: Book) => void;
   addNewCollection: (title: string, books?: Book[]) => void;
-  deleteCollection?: (title: string) => void;
-  updateCollection?: (title: string, books: Book[]) => void;
+  deleteCollection: (title: string) => void;
+  renameCollection: (oldTitle: string, newTitle: string) => void;
+  moveBooks: (fromTitle: string, toTitle: string, bookKeys: Set<string>) => void;
+  removeBooksFromCollection: (collectionTitle: string, bookKeys: Set<string>) => void;
 }
 
 interface Collection {
@@ -76,6 +78,47 @@ export const useCollectionsStore = create<CollectionsStore>()(
         ];
 
         set({ collections: updatedCollections });
+      },
+
+      renameCollection: (oldTitle, newTitle) => {
+        const currentCollections = get().collections;
+        const updatedCollections = currentCollections.map((c) =>
+          c.title === oldTitle ? { ...c, title: newTitle } : c,
+        );
+        set({ collections: updatedCollections });
+      },
+
+      moveBooks: (fromTitle, toTitle, bookKeys) => {
+        const collections = get().collections;
+        const from = collections.find((c) => c.title === fromTitle);
+        if (!from) return;
+
+        const booksToMove = from.books.filter((b) => bookKeys.has(b.key));
+
+        set({
+          collections: collections.map((c) => {
+            if (c.title === fromTitle && fromTitle !== "All favorites") {
+              return { ...c, books: c.books.filter((b) => !bookKeys.has(b.key)) };
+            }
+            if (c.title === toTitle) {
+              const existingKeys = new Set(c.books.map((b) => b.key));
+              const newBooks = booksToMove.filter((b) => !existingKeys.has(b.key));
+              return { ...c, books: [...c.books, ...newBooks] };
+            }
+            return c;
+          }),
+        });
+      },
+
+      removeBooksFromCollection: (collectionTitle, bookKeys) => {
+        set({
+          collections: get().collections.map((c) => {
+            if (c.title === collectionTitle) {
+              return { ...c, books: c.books.filter((b) => !bookKeys.has(b.key)) };
+            }
+            return c;
+          }),
+        });
       },
 
       deleteCollection: (title) => {

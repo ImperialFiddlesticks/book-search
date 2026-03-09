@@ -15,7 +15,20 @@ import { useSelectedBookStore } from "@/store/useSelectedBookStore";
 import { useCollectionsStore } from "@/store/collectionsStore";
 import { useRef } from "react";
 
-export default function BookCard({ book }: { readonly book: Book }) {
+export default function BookCard({
+  book,
+  showTitle,
+  showAuthor,
+  onLongPress,
+  hideSave,
+}: {
+  readonly book: Book;
+  readonly showTitle?: boolean;
+  readonly showAuthor?: boolean;
+  readonly onLongPress?: () => void;
+  readonly hideSave?: boolean;
+}) {
+  const compact = showTitle || showAuthor;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
@@ -47,6 +60,37 @@ export default function BookCard({ book }: { readonly book: Book }) {
     setSelectedBook(book);
     router.push("/details");
   };
+  if (compact) {
+    return (
+      <Card elevation={0} style={styles.compactCard} onPress={handlePress} onLongPress={onLongPress}>
+        <View>
+          {coverUrl ? (
+            <Image source={{ uri: coverUrl }} style={styles.compactCover} />
+          ) : (
+            <View style={styles.compactPlaceholder}>
+              <Text style={styles.placeholderText}>No cover</Text>
+            </View>
+          )}
+          {!hideSave && (
+            <View style={styles.compactSaveButton}>
+              <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
+            </View>
+          )}
+        </View>
+        {showTitle && (
+          <Text style={styles.compactTitle} numberOfLines={2}>
+            {book.title}
+          </Text>
+        )}
+        {showAuthor && book.author_name && (
+          <Text style={styles.compactAuthor} numberOfLines={1}>
+            {book.author_name.join(", ")}
+          </Text>
+        )}
+      </Card>
+    );
+  }
+
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <Card
@@ -137,5 +181,39 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "LibreBaskerville_700Bold",
     fontSize: 18,
+  },
+  compactCard: {
+    backgroundColor: "transparent",
+    width: 120,
+    padding: 4,
+  },
+  compactCover: {
+    width: 112,
+    height: 160,
+    borderRadius: 4,
+  },
+  compactPlaceholder: {
+    width: 112,
+    height: 160,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 4,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  compactSaveButton: {
+    position: "absolute",
+    top: 4,
+    right: 4,
+  },
+  compactTitle: {
+    fontFamily: "LibreBaskerville_700Bold",
+    fontSize: 13,
+    marginTop: 6,
+  },
+  compactAuthor: {
+    fontFamily: "SourceSans3_400Regular",
+    fontSize: 12,
+    color: "#858585",
+    marginTop: 2,
   },
 });
