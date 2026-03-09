@@ -253,7 +253,10 @@ export default function CollectionPage() {
         </BottomOptionsBar>
       )}
       <View style={styles.titleRow}>
-        <Text style={styles.collectionTitle}>{title}</Text>
+        <View style={styles.titleGroup}>
+          <Text style={styles.collectionTitle}>{title}</Text>
+          <Text style={styles.bookCount}>{books.length} {books.length === 1 ? "book" : "books"}</Text>
+        </View>
         <ModalComponent
           text='Collection options'
           submitText=''
@@ -431,27 +434,18 @@ export default function CollectionPage() {
           contentContainerStyle={styles.grid}
           columnWrapperStyle={styles.row}
           renderItem={({ item }) => (
-            <Pressable
-              style={styles.checkboxWrapper}
-              onPress={selectMode ? () => {
+            <BookCard
+              book={item}
+              showTitle
+              showAuthor
+              onLongPress={addToCollectionMode ? undefined : () => setSelectMode(true)}
+              hideSave={addToCollectionMode}
+              selected={selectedBooks.has(item.key)}
+              onSelect={selectMode ? () => {
                 if (addToCollectionMode && collectionBookKeys.has(item.key)) return;
                 toggleSelect(item.key);
               } : undefined}
-              disabled={!selectMode || (addToCollectionMode && collectionBookKeys.has(item.key))}
-            >
-              {selectMode && (
-                <View style={styles.checkboxOverlay}>
-                  <View style={styles.emptyCircle}>
-                    {selectedBooks.has(item.key) && (
-                      <View style={styles.filledInner} />
-                    )}
-                  </View>
-                </View>
-              )}
-              <View pointerEvents={selectMode ? "none" : "auto"}>
-                <BookCard book={item} showTitle showAuthor onLongPress={addToCollectionMode ? undefined : () => setSelectMode(true)} hideSave={addToCollectionMode} />
-              </View>
-            </Pressable>
+            />
           )}
         />
       )}
@@ -488,9 +482,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
+  titleGroup: {
+    flexDirection: "column",
+    gap: 4,
+  },
   collectionTitle: {
     fontFamily: "LibreBaskerville_700Bold",
     fontSize: 22,
+  },
+  bookCount: {
+    fontFamily: "SourceSans3_400Regular",
+    fontSize: 14,
+    color: "#858585",
   },
   empty: {
     textAlign: "center",
@@ -507,33 +510,6 @@ const styles = StyleSheet.create({
     gap: 4,
     marginBottom: 12,
   },
-  checkboxWrapper: {
-    position: "relative",
-  },
-  checkboxOverlay: {
-    position: "absolute",
-    top: 4,
-    left: 4,
-    zIndex: 1,
-  },
-  emptyCircle: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 2,
-    borderColor: "#f8b197",
-    backgroundColor: "transparent",
-    margin: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  filledInner: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#f8b197",
-  },
-
   modalOption: {
     paddingVertical: 16,
     paddingHorizontal: 20,
@@ -586,5 +562,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-
+  emptyCircle: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: "#f8b197",
+    backgroundColor: "transparent",
+    margin: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  filledInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#f8b197",
+  },
 });

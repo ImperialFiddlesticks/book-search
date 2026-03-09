@@ -2,6 +2,7 @@ import { Book } from "@/types/bookProps";
 import {
   GestureResponderEvent,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,12 +22,16 @@ export default function BookCard({
   showAuthor,
   onLongPress,
   hideSave,
+  selected,
+  onSelect,
 }: {
   readonly book: Book;
   readonly showTitle?: boolean;
   readonly showAuthor?: boolean;
   readonly onLongPress?: () => void;
   readonly hideSave?: boolean;
+  readonly selected?: boolean;
+  readonly onSelect?: () => void;
 }) {
   const compact = showTitle || showAuthor;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -61,8 +66,8 @@ export default function BookCard({
     router.push("/details");
   };
   if (compact) {
-    return (
-      <Card elevation={0} style={styles.compactCard} onPress={handlePress} onLongPress={onLongPress}>
+    const card = (
+      <Card elevation={0} style={styles.compactCard} onPress={onSelect ? undefined : handlePress} onLongPress={onSelect ? undefined : onLongPress}>
         <View>
           {coverUrl ? (
             <Image source={{ uri: coverUrl }} style={styles.compactCover} />
@@ -89,6 +94,21 @@ export default function BookCard({
         )}
       </Card>
     );
+
+    if (onSelect) {
+      return (
+        <Pressable onPress={onSelect}>
+          <View style={styles.selectOverlay}>
+            <View style={styles.selectCircle}>
+              {selected && <View style={styles.selectFilled} />}
+            </View>
+          </View>
+          <View pointerEvents="none">{card}</View>
+        </Pressable>
+      );
+    }
+
+    return card;
   }
 
   return (
@@ -215,5 +235,28 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#858585",
     marginTop: 2,
+  },
+  selectOverlay: {
+    position: "absolute",
+    top: 4,
+    left: 4,
+    zIndex: 1,
+  },
+  selectCircle: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: "#f8b197",
+    backgroundColor: "transparent",
+    margin: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  selectFilled: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#f8b197",
   },
 });
