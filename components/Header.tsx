@@ -8,13 +8,13 @@ export default function Header({ title }: { readonly title: string }) {
   const router = useRouter();
   const goBack = () => router.back();
   const theme = useTheme();
-  const navigateToFavorites = () => router.push("/favoritesPage");
+  const navigateToFavorites = () => router.push("/profilePage");
 
   return (
     <Appbar.Header style={[styles.header, { backgroundColor: "transparent" }]}>
       <Appbar.BackAction
         style={styles.iconButton}
-        color={theme.colors.onSurface}
+        iconColor={theme.colors.onSurface}
         onPress={goBack}
         accessibilityLabel="Go back"
         accessibilityHint="Navigates to the previous screen"

@@ -5,6 +5,10 @@ import { View, StyleSheet, Image, ScrollView } from "react-native";
 import Header from "@/components/Header";
 import { Card, Text, Button, ActivityIndicator } from "react-native-paper";
 import { useSearchStore } from "@/store/searchStore";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 export default function AuthorDetails() {
   const { key } = useLocalSearchParams();
@@ -30,103 +34,105 @@ export default function AuthorDetails() {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ActivityIndicator
           accessibilityLabel="Loading"
           accessibilityRole="progressbar"
           accessibilityLiveRegion="polite"
         />
-      </View>
+      </SafeAreaView>
     );
   }
   if (isError) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text accessibilityRole="alert">Error loading author</Text>
-      </View>
+      </SafeAreaView>
     );
   }
   if (!author)
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text accessibilityRole="alert">Author not found.</Text>
-      </View>
+      </SafeAreaView>
     );
 
   return (
     <>
       <Header title="FOLIO" />
-      <ScrollView style={styles.container}>
-        <Card style={styles.card} elevation={0}>
-          <View style={styles.cardContent}>
-            <View style={styles.photoBox}>
-              {authorUrl ? (
-                <Image
-                  source={{ uri: authorUrl }}
-                  style={styles.photo}
-                  accessibilityLabel={`Photo of ${author.name}`}
-                />
-              ) : (
-                <View
-                  style={styles.placeholder}
-                  accessibilityLabel={`No photo available for ${author.name}`}
-                >
-                  <Text>No photo available.</Text>
-                </View>
-              )}
-            </View>
-            <View style={styles.info}>
-              <Card.Title
-                title={author.name}
-                titleStyle={styles.title}
-                accessibilityRole="header"
-                subtitle={
-                  author.ratings_average &&
-                  `Average Rating: ${author.ratings_average}`
-                }
-              />
-              <Card.Content>
-                {author.birth_date && author.death_date && (
-                  <Text style={styles.lifespan}>
-                    {author.birth_date} - {author.death_date}
-                  </Text>
-                )}
-                {author.work_count && (
-                  <Text style={styles.extraInfo}>
-                    Works: {author.work_count}
-                  </Text>
-                )}
-                {author.top_work && (
-                  <Text style={styles.extraInfo}>
-                    Top Work: {author.top_work}
-                  </Text>
-                )}
-                <View>
-                  {getBio(author.bio) && (
-                    <Text style={styles.bio}>{getBio(author.bio)}</Text>
-                  )}
-                </View>
-
-                <View style={styles.authorSearchButton}>
-                  <Button
-                    mode="contained"
-                    onPress={handleAuthorSearch}
-                    accessibilityLabel={`Search works by ${author.name ?? "this author"}`}
-                    accessibilityHint="Opens search results for this author"
-                    style={styles.worksButton}
-                    labelStyle={{
-                      fontFamily: "SourceSans3_600SemiBold",
-                      fontSize: 15,
-                    }}
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <Card style={styles.card} elevation={0}>
+            <View style={styles.cardContent}>
+              <View style={styles.photoBox}>
+                {authorUrl ? (
+                  <Image
+                    source={{ uri: authorUrl }}
+                    style={styles.photo}
+                    accessibilityLabel={`Photo of ${author.name}`}
+                  />
+                ) : (
+                  <View
+                    style={styles.placeholder}
+                    accessibilityLabel={`No photo available for ${author.name}`}
                   >
-                    Works by {author.name ?? "this author"}
-                  </Button>
-                </View>
-              </Card.Content>
+                    <Text>No photo available.</Text>
+                  </View>
+                )}
+              </View>
+              <View style={styles.info}>
+                <Card.Title
+                  title={author.name}
+                  titleStyle={styles.title}
+                  accessibilityRole="header"
+                  subtitle={
+                    author.ratings_average &&
+                    `Average Rating: ${author.ratings_average}`
+                  }
+                />
+                <Card.Content>
+                  {author.birth_date && author.death_date && (
+                    <Text style={styles.lifespan}>
+                      {author.birth_date} - {author.death_date}
+                    </Text>
+                  )}
+                  {author.work_count && (
+                    <Text style={styles.extraInfo}>
+                      Works: {author.work_count}
+                    </Text>
+                  )}
+                  {author.top_work && (
+                    <Text style={styles.extraInfo}>
+                      Top Work: {author.top_work}
+                    </Text>
+                  )}
+                  <View>
+                    {getBio(author.bio) && (
+                      <Text style={styles.bio}>{getBio(author.bio)}</Text>
+                    )}
+                  </View>
+
+                  <View style={styles.authorSearchButton}>
+                    <Button
+                      mode="contained"
+                      onPress={handleAuthorSearch}
+                      accessibilityLabel={`Search works by ${author.name ?? "this author"}`}
+                      accessibilityHint="Opens search results for this author"
+                      style={styles.worksButton}
+                      labelStyle={{
+                        fontFamily: "SourceSans3_600SemiBold",
+                        fontSize: 15,
+                      }}
+                    >
+                      Works by {author.name ?? "this author"}
+                    </Button>
+                  </View>
+                </Card.Content>
+              </View>
             </View>
-          </View>
-        </Card>
-      </ScrollView>
+          </Card>
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 }

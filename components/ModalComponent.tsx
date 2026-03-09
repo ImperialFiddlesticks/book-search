@@ -25,16 +25,22 @@ export default function ModalComponent({
   onPress,
   submitText,
   disabled,
+  dismissable = true,
   onClose,
   onOpen,
+  renderTrigger,
 }: {
   readonly text: string;
-  readonly children: React.ReactNode;
-  readonly submitText: string;
-  readonly onPress?: () => void;
+  readonly children:
+    | React.ReactNode
+    | ((closeModal: () => Promise<void>) => React.ReactNode);
+  readonly submitText?: string;
+  readonly onPress?: () => void | boolean;
   readonly disabled?: boolean;
+  readonly dismissable?: boolean;
   readonly onClose?: () => void;
   readonly onOpen?: () => void;
+  readonly renderTrigger?: (openModal: () => void) => React.ReactNode;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -61,22 +67,25 @@ export default function ModalComponent({
 
   const animateClose = (callback?: () => void) => {
     Keyboard.dismiss();
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: ANIM_DURATION,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: SCREEN_HEIGHT,
-        duration: ANIM_DURATION,
-        easing: Easing.in(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setModalVisible(false);
-      onClose?.();
-      callback?.();
+    return new Promise<void>((resolve) => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: ANIM_DURATION,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: SCREEN_HEIGHT,
+          duration: ANIM_DURATION,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setModalVisible(false);
+        onClose?.();
+        callback?.();
+        resolve();
+      });
     });
   };
 
@@ -105,7 +114,7 @@ export default function ModalComponent({
             >
               <Pressable
                 style={styles.overlayBackground}
-                onPress={() => animateClose()}
+                onPress={dismissable ? () => animateClose() : undefined}
               />
             </Animated.View>
             <Animated.View
@@ -124,41 +133,50 @@ export default function ModalComponent({
                 >
                   <Text style={styles.cancelText}>Cancel</Text>
                 </Pressable>
-                <Pressable
-                  disabled={disabled}
-                  onPress={() => {
-                    animateClose(() => {
-                      onPress?.();
-                    });
-                  }}
-                  accessibilityRole="button"
-                  accessibilityLabel={submitText}
-                  style={styles.headerRight}
-                >
-                  <Text
-                    style={[
-                      styles.doneText,
-                      disabled && styles.doneTextDisabled,
-                    ]}
+                {submitText ? (
+                  <Pressable
+                    disabled={disabled}
+                    onPress={() => {
+                      if (onPress?.() === false) return;
+                      animateClose();
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={submitText}
+                    style={styles.headerRight}
                   >
-                    {submitText}
-                  </Text>
-                </Pressable>
+                    <Text
+                      style={[
+                        styles.doneText,
+                        disabled && styles.doneTextDisabled,
+                      ]}
+                    >
+                      {submitText}
+                    </Text>
+                  </Pressable>
+                ) : null}
               </View>
-              <View style={styles.content}>{children}</View>
+              <View style={styles.content}>
+                {typeof children === "function"
+                  ? children(() => animateClose())
+                  : children}
+              </View>
             </Animated.View>
           </KeyboardAvoidingView>
         </ScrollView>
       </Modal>
-      <Pressable
-        style={styles.openButton}
-        onPress={() => setModalVisible(true)}
-        accessibilityRole="button"
-        accessibilityLabel={text}
-        accessibilityHint="Opens modal"
-      >
-        <Text style={styles.openButtonText}>{text}</Text>
-      </Pressable>
+      {renderTrigger ? (
+        renderTrigger(() => setModalVisible(true))
+      ) : (
+        <Pressable
+          style={styles.openButton}
+          onPress={() => setModalVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel={text}
+          accessibilityHint="Opens modal"
+        >
+          <Text style={styles.openButtonText}>{text}</Text>
+        </Pressable>
+      )}
     </View>
   );
 }

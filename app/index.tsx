@@ -57,7 +57,7 @@ export default function Home() {
           <BookBar
             title="Favorites"
             emptyMessage="No favorites yet..."
-            books={favoriteBooks.slice(0, 3)}
+            books={[...favoriteBooks].reverse().slice(0, 3)}
             onBookPress={handleBookPress}
           />
           <BookBar
