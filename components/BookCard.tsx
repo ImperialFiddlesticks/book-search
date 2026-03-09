@@ -141,7 +141,7 @@ export default function BookCard({
 const styles = StyleSheet.create({
   card: {
     marginBottom: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 0,
     backgroundColor: "transparent",
     borderRadius: 4,
     borderWidth: 0,

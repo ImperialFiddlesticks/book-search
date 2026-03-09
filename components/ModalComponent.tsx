@@ -1,5 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, StyleSheet, Text, Pressable, View, KeyboardAvoidingView, Platform, ScrollView, Keyboard, Animated, Dimensions, Easing } from "react-native";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Keyboard,
+  Animated,
+  Dimensions,
+  Easing,
+} from "react-native";
 
 const KEYBOARD_OVERLAP = 40;
 const CONTENT_PADDING_BOTTOM = KEYBOARD_OVERLAP + 30;
@@ -18,7 +31,9 @@ export default function ModalComponent({
   renderTrigger,
 }: {
   readonly text: string;
-  readonly children: React.ReactNode | ((closeModal: () => Promise<void>) => React.ReactNode);
+  readonly children:
+    | React.ReactNode
+    | ((closeModal: () => Promise<void>) => React.ReactNode);
   readonly submitText?: string;
   readonly onPress?: () => void | boolean;
   readonly disabled?: boolean;
@@ -77,7 +92,7 @@ export default function ModalComponent({
   return (
     <View>
       <Modal
-        animationType='none'
+        animationType="none"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => animateClose()}
@@ -112,8 +127,8 @@ export default function ModalComponent({
                 <Text style={styles.headerTitle}>{text}</Text>
                 <Pressable
                   onPress={() => animateClose()}
-                  accessibilityRole='button'
-                  accessibilityLabel='Cancel'
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancel"
                   style={styles.headerLeft}
                 >
                   <Text style={styles.cancelText}>Cancel</Text>
@@ -125,16 +140,25 @@ export default function ModalComponent({
                       if (onPress?.() === false) return;
                       animateClose();
                     }}
-                    accessibilityRole='button'
+                    accessibilityRole="button"
                     accessibilityLabel={submitText}
                     style={styles.headerRight}
                   >
-                    <Text style={[styles.doneText, disabled && styles.doneTextDisabled]}>{submitText}</Text>
+                    <Text
+                      style={[
+                        styles.doneText,
+                        disabled && styles.doneTextDisabled,
+                      ]}
+                    >
+                      {submitText}
+                    </Text>
                   </Pressable>
                 ) : null}
               </View>
               <View style={styles.content}>
-                {typeof children === "function" ? children(() => animateClose()) : children}
+                {typeof children === "function"
+                  ? children(() => animateClose())
+                  : children}
               </View>
             </Animated.View>
           </KeyboardAvoidingView>
@@ -146,9 +170,9 @@ export default function ModalComponent({
         <Pressable
           style={styles.openButton}
           onPress={() => setModalVisible(true)}
-          accessibilityRole='button'
+          accessibilityRole="button"
           accessibilityLabel={text}
-          accessibilityHint='Opens modal'
+          accessibilityHint="Opens modal"
         >
           <Text style={styles.openButtonText}>{text}</Text>
         </Pressable>
