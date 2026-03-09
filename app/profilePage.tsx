@@ -31,11 +31,12 @@ export default function ProfileScreen() {
   const visibleReadingList = readingList.slice(0, MAX_READING_LIST_ITEMS);
 
   return (
+    <View style={{ flex: 1 }}>
+      <Header title='Profile' />
     <ScrollView
       style={{ flex: 1 }}
       keyboardShouldPersistTaps='always'
     >
-      <Header title='Profile' />
 
       {/* Collections Section */}
       <View style={styles.titleRow}>
@@ -108,6 +109,7 @@ export default function ProfileScreen() {
         <Text style={styles.goToAllLinkText}>Go to Reading list <MaterialCommunityIcons name="chevron-right" size={16} color="#fa6b47" /></Text>
       </Pressable>
     </ScrollView>
+    </View>
   );
 }
 
