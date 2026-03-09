@@ -1,6 +1,11 @@
 import { useRef, useState } from "react";
 import CollectionCard from "../components/CollectionCard";
-import { View, ScrollView, TextInput, type TextInput as TextInputType } from "react-native";
+import {
+  View,
+  ScrollView,
+  TextInput,
+  type TextInput as TextInputType,
+} from "react-native";
 import { Button, Text } from "react-native-paper";
 import Header from "../components/Header";
 import ModalComponent from "../components/ModalComponent";
@@ -17,8 +22,11 @@ export default function FavoritesScreen() {
   console.log({ collections });
 
   return (
-    <ScrollView style={{ position: "relative" }} keyboardShouldPersistTaps="always">
-      <Header title='Favorites' />
+    <ScrollView
+      style={{ position: "relative" }}
+      keyboardShouldPersistTaps="always"
+    >
+      <Header title="Favorites" />
       {collections.map((c) => (
         <CollectionCard
           key={c.title}
@@ -26,12 +34,14 @@ export default function FavoritesScreen() {
             savedItems: c.books,
             title: c.title,
           }}
-          onPress={() => router.push(`/collection/${encodeURIComponent(c.title)}`)}
+          onPress={() =>
+            router.push(`/collection/${encodeURIComponent(c.title)}`)
+          }
         />
       ))}
 
       <ModalComponent
-        text='New Collection'
+        text="New Collection"
         submitText="Done"
         disabled={!inputText.trim()}
         onClose={() => setInputText("")}
@@ -48,10 +58,17 @@ export default function FavoritesScreen() {
           onChangeText={(text) => setInputText(text)}
           value={inputText}
           maxLength={40}
-          placeholder='Collection name'
+          placeholder="Collection name"
           placeholderTextColor="#999"
           selectionColor="#fa6b47"
-          style={{ fontSize: 16, height: 50, borderWidth: 1, borderColor: '#e0e0e0', paddingHorizontal: 10, marginVertical: 16 }}
+          style={{
+            fontSize: 16,
+            height: 50,
+            borderWidth: 1,
+            borderColor: "#e0e0e0",
+            paddingHorizontal: 10,
+            marginVertical: 16,
+          }}
         />
       </ModalComponent>
     </ScrollView>

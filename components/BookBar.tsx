@@ -47,7 +47,12 @@ export default function BookBar({
 }
 
 const styles = StyleSheet.create({
-  contentContainer: { paddingHorizontal: 16, gap: 8, alignItems: "center" },
+  contentContainer: {
+    paddingVertical: 6,
+    paddingHorizontal: 1,
+    gap: 8,
+    alignItems: "center",
+  },
 
   listWrapper: { paddingVertical: 10, height: 180, width: "100%" },
   listHeadline: { fontWeight: "600" },

@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import Booksearchbar from "../components/Booksearchbar";
 import { useCollectionsStore } from "@/store/collectionsStore";
@@ -34,6 +34,7 @@ export default function Home() {
     setSelectedBook(book);
     router.push("/details");
   };
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <>
@@ -42,9 +43,16 @@ export default function Home() {
         <ScrollView
           style={{ width: "100%" }}
           accessibilityLabel="Home screen content"
+          accessibilityHint="List of home screen content"
+          keyboardShouldPersistTaps="handled"
         >
-          <Booksearchbar />
-          <PreviousSearched />
+          <Booksearchbar
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              setTimeout(() => setIsFocused(false), 200);
+            }}
+          />
+          {isFocused && <PreviousSearched />}
 
           <BookBar
             title="Favorites"

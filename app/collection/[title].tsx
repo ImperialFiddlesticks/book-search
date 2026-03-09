@@ -8,7 +8,7 @@ import Header from "../../components/Header";
 export default function CollectionPage() {
   const { title } = useLocalSearchParams<{ title: string }>();
   const collection = useCollectionsStore((state) =>
-    state.collections.find((c) => c.title === title)
+    state.collections.find((c) => c.title === title),
   );
 
   const books = collection?.books ?? [];

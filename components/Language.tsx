@@ -56,13 +56,13 @@ export default function Language({
         onDismiss={closeMenu}
         contentStyle={{
           backgroundColor: theme.colors.secondary,
-          borderRadius: 2,
+          borderRadius: 4,
         }}
         anchor={
           <Button
             mode="outlined"
             onPress={openMenu}
-            style={{ borderRadius: 2 }}
+            style={{ borderRadius: 4 }}
             accessibilityLabel={`Language: ${getLanguageLabel()}`}
             accessibilityHint="Opens language filter options"
           >
