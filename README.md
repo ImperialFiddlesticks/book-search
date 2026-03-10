@@ -60,6 +60,8 @@ Arbetsflöde
 Projektet utvecklades i grupp med Git och GitHub för versionshantering samt Trello för projektplanering och uppgiftsfördelning.
 Arbetet delades upp komponentvis där varje gruppmedlem ansvarade för olika delar av appen. Pull requests användes för kodgranskning innan ändringar mergades till huvudgrenen.
 
+
+
 Tillgänglighet
 
 Tillgänglighet var en central del av projektet och en av de största utmaningarna. Nedan beskrivs de principer och tekniker som implementerades.
@@ -100,6 +102,7 @@ Dynamiska innehållsändringar annonseras automatiskt utan att användaren behö
 - Dekorativa element döljs – ikoner och bilder som redan beskrivs av en omgivande etikett döljs med accessibilityElementsHidden och importantForAccessibility="no-hide-descendants" för att undvika redundant information
 - accessibilityViewIsModal – sätts på modala dialoger så skärmläsaren inte kan navigera till innehåll bakom modalen
 - Listpositioner – böcker i horisontella listor annonseras med sin position, t.ex. "1 av 10", så användaren vet hur många böcker som finns
+- Text och element följer WCAG 2.2 kontrast checker, vilket gör det så att användaren kan lätt läsa texter och element utan att behöva anstränga ögonen. Detta är bra för alla potentionella användare men även individer som har synsvårigheter.
 
 Installation och körning
 

@@ -56,7 +56,7 @@ export default function AuthorDetails() {
 
   return (
     <>
-      <Header title="FOLIO" />
+      <Header />
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Card style={styles.card} elevation={0}>

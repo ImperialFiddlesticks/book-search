@@ -5,10 +5,8 @@ import { StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function Header({
-  title,
   showBackButton = true,
 }: {
-  readonly title: string;
   readonly showBackButton?: boolean;
 }) {
   const router = useRouter();
@@ -31,7 +29,7 @@ export default function Header({
       )}
       <Appbar.Content
         titleStyle={styles.headerTitle}
-        title={title}
+        title="FOLIO"
         onPress={() => router.push("/")}
         accessibilityRole="link"
         accessibilityLabel="FOLIO, go to Home screen"

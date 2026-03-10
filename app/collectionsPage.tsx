@@ -16,9 +16,9 @@ export default function CollectionsPage() {
   const router = useRouter();
 
   return (
+    <View style={{ flex: 1 }}>
+      <Header />
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Header title='Collections' />
-    <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps='always'>
       <View style={styles.titleRow}>
         <Text style={styles.pageTitle}>All collections</Text>
         <NewCollectionModal
@@ -29,6 +29,7 @@ export default function CollectionsPage() {
           )}
         />
       </View>
+    <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps='always'>
       <View style={styles.grid}>
         {collections.map((c) => (
           <View key={c.title} style={styles.gridItem}>
@@ -46,6 +47,7 @@ export default function CollectionsPage() {
       </View>
     </ScrollView>
     </SafeAreaView>
+    </View>
   );
 }
 
