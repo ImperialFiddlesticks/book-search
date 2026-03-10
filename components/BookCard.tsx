@@ -9,7 +9,7 @@ import {
   View,
   Animated,
 } from "react-native";
-import { Card } from "react-native-paper";
+import { Card, useTheme } from "react-native-paper";
 import Save from "./Save";
 import { useRouter } from "expo-router";
 import { useSelectedBookStore } from "@/store/useSelectedBookStore";
@@ -33,6 +33,7 @@ export default function BookCard({
   readonly selected?: boolean;
   readonly onSelect?: () => void;
 }) {
+  const theme = useTheme();
   const compact = showTitle || showAuthor;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const handlePressIn = () => {
@@ -186,20 +187,20 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontSize: 10,
-    color: "#888",
+    color: "#646464",
     textAlign: "center",
     fontFamily: "SourceSans3_400Regular",
   },
   info: { flex: 1 },
   year: {
     paddingHorizontal: 16,
-    color: "#888",
+    color: "#646464",
     fontSize: 12,
     fontFamily: "SourceSans3_400Regular",
   },
   authorName: {
     paddingHorizontal: 16,
-    color: "#858585",
+    color: "#000000cc",
     fontSize: 15,
     fontFamily: "SourceSans3_600SemiBold",
   },
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   compactAuthor: {
     fontFamily: "SourceSans3_400Regular",
     fontSize: 12,
-    color: "#858585",
+    color: "#000000cc",
     marginTop: 2,
   },
   selectOverlay: {
