@@ -1,6 +1,6 @@
 FOLIO – Boksökningsapp
 
-FOLIO är en mobilapplikation byggd med React Native och Expo som låter användare söka efter böcker genom text, röst eller att skanna streckkoder. Användaren kan även spara favoriter, skapa collections och hantera en läslista.
+FOLIO är en mobilapplikation byggd med React Native och Expo som låter användare söka efter böcker genom text, röst(exklusivt till iOS) eller att skanna streckkoder. Användaren kan även spara favoriter, skapa collections och hantera en läslista.
 
 Tekniker och bibliotek
 
