@@ -62,7 +62,12 @@ export default function BookCard({
   };
   if (compact) {
     return (
-      <Card elevation={0} style={styles.compactCard} onPress={handlePress} onLongPress={onLongPress}>
+      <Card
+        elevation={0}
+        style={styles.compactCard}
+        onPress={handlePress}
+        onLongPress={onLongPress}
+      >
         <View>
           {coverUrl ? (
             <Image source={{ uri: coverUrl }} style={styles.compactCover} />
@@ -153,7 +158,7 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 80,
     height: 120,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "hsla(0, 0%, 0%, 0.15)",
     borderRadius: 4,
     display: "flex",
     justifyContent: "center",

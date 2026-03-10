@@ -4,7 +4,13 @@ import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-export default function Header({ title }: { readonly title: string }) {
+export default function Header({
+  title,
+  showBackButton = true,
+}: {
+  readonly title: string;
+  readonly showBackButton?: boolean;
+}) {
   const router = useRouter();
   const goBack = () => router.back();
   const theme = useTheme();
@@ -12,17 +18,30 @@ export default function Header({ title }: { readonly title: string }) {
 
   return (
     <Appbar.Header style={[styles.header, { backgroundColor: "transparent" }]}>
-      <Appbar.BackAction
-        style={styles.iconButton}
-        iconColor={theme.colors.onSurface}
-        onPress={goBack}
-        accessibilityLabel="Go back"
-        accessibilityHint="Navigates to the previous screen"
+      {showBackButton ? (
+        <Appbar.BackAction
+          style={styles.iconButton}
+          iconColor={theme.colors.onSurface}
+          onPress={goBack}
+          accessibilityLabel="Go back"
+          accessibilityHint="Navigates to the previous screen"
+        />
+      ) : (
+        <Appbar.Action icon="" disabled />
+      )}
+      <Appbar.Content
+        titleStyle={styles.headerTitle}
+        title={title}
+        onPress={() => router.push("/")}
+        accessibilityRole="link"
+        accessibilityLabel="FOLIO, go to Home screen"
+        accessibilityHint="Navigates to the Home screen"
       />
-      <Appbar.Content titleStyle={styles.headerTitle} title={title} />
       <Appbar.Action
         style={styles.iconButton}
-        icon="star"
+        icon={() => (
+          <FontAwesome name="star" size={24} color={theme.colors.onSurface} />
+        )}
         onPress={navigateToFavorites}
         accessibilityLabel="Favorites Page"
         accessibilityHint="Navigates to the Favorites Page"
@@ -39,6 +58,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     textAlign: "center",
+    fontFamily: "LibreBaskerville_700Bold",
   },
 
   iconButton: {},

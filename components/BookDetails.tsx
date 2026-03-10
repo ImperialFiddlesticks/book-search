@@ -97,10 +97,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
           <Card elevation={0} style={styles.card}>
             <View style={styles.cardContent}>
               <View style={styles.saveButton}>
-                <Save
-                  isSaved={isSaved}
-                  onToggle={() => toggleFavorite(book)}
-                />
+                <Save isSaved={isSaved} onToggle={() => toggleFavorite(book)} />
               </View>
               <View style={styles.coverBox}>
                 {coverUrl ? (
@@ -276,7 +273,7 @@ const styles = StyleSheet.create({
     width: 160,
     height: 240,
     borderRadius: 10,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "hsla(0, 0%, 0%, 0.15)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

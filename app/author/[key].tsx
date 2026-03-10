@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     width: 160,
     height: 240,
     borderRadius: 4,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "hsla(0, 0%, 0%, 0.15)",
   },
   title: { fontSize: 25, fontFamily: "LibreBaskerville_700Bold" },
   lifespan: { fontFamily: "SourceSans3_600SemiBold", marginBottom: 10 },
