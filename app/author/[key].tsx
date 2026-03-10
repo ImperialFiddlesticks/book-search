@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 6,
     marginTop: 20,
-    color: "#858585",
+    color: "#000000cc",
     fontFamily: "SourceSans3_400Regular",
   },
   bio: {

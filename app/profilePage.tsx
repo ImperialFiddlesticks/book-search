@@ -1,5 +1,6 @@
 import CollectionCard from "../components/CollectionCard";
 import { StyleSheet, View, ScrollView, Pressable, useWindowDimensions } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native-paper";
 import Header from "../components/Header";
 import NewCollectionModal from "../components/NewCollectionModal";
@@ -31,7 +32,7 @@ export default function ProfileScreen() {
   const visibleReadingList = readingList.slice(0, MAX_READING_LIST_ITEMS);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
       <Header />
     <ScrollView
       style={{ flex: 1 }}
@@ -109,7 +110,7 @@ export default function ProfileScreen() {
         <Text style={styles.goToAllLinkText}>Go to Reading list <MaterialCommunityIcons name="chevron-right" size={16} color="#fa6b47" /></Text>
       </Pressable>
     </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -14,7 +14,7 @@ export const CombinedLightTheme = {
   colors: {
     ...PaperDefaultTheme?.colors,
     ...LightTheme?.colors,
-    primary: "rgba(0, 0, 0, 0.80)",
+    primary: "#000000cc",
     secondary: "#F8B197",
     tertiary: "hsla(0, 0%, 0%, 0.15)",
     background: "#FEFFF3",

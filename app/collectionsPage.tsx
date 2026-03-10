@@ -1,4 +1,5 @@
 import { StyleSheet, View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native-paper";
 import Header from "../components/Header";
 import NewCollectionModal from "../components/NewCollectionModal";
@@ -17,6 +18,7 @@ export default function CollectionsPage() {
   return (
     <View style={{ flex: 1 }}>
       <Header />
+    <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
     <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps='always'>
       <View style={styles.titleRow}>
         <Text style={styles.pageTitle}>All collections</Text>
@@ -44,7 +46,7 @@ export default function CollectionsPage() {
         ))}
       </View>
     </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

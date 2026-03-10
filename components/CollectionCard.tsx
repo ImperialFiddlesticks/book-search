@@ -42,6 +42,7 @@ export default function CollectionCard({
                           : undefined,
                       }}
                       style={styles.previewImage}
+                      alt={book.title ? `Cover of ${book.title}` : "Book cover"}
                       accessibilityElementsHidden={true}
                       importantForAccessibility="no-hide-descendants"
                     />

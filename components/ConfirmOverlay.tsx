@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     maxWidth: 250,
     fontSize: 14,
     textAlign: "center",
-    color: "#858585",
+    color: "#000000cc",
     marginBottom: 16,
     marginTop: 16,
     marginInline: "auto",

@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
 
   placeholderText: {
     fontSize: 10,
-    color: "#888",
+    color: "#646464",
     textAlign: "center",
     fontFamily: "SourceSans3_400Regular",
   },
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   authorSearchButton: { marginTop: 12 },
   authorName: {
     paddingHorizontal: 16,
-    color: "#858585",
+    color: "#000000cc",
     fontSize: 15,
     fontFamily: "LibreBaskerville_700Bold",
   },
@@ -304,21 +304,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 6,
     marginTop: 20,
-    color: "#858585",
+    color: "#000000cc",
     fontFamily: "SourceSans3_400Regular",
   },
   pages: {
     fontSize: 14,
     marginBottom: 6,
 
-    color: "#858585",
+    color: "#000000cc",
     fontFamily: "SourceSans3_400Regular",
   },
   isbn: {
     fontSize: 14,
     marginBottom: 15,
 
-    color: "#858585",
+    color: "#000000cc",
     fontFamily: "SourceSans3_400Regular",
   },
   worksButton: {
