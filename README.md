@@ -46,7 +46,7 @@ types/ # TypeScript-typdefinitioner
 Funktioner
 
 - Boksökning – sök efter böcker via titel, författare eller ämne
-- Röst-till-text-sökning – stöds på iOS och macOS
+- Röst-till-text-sökning – stöds på iOS
 - Streckkodsskanning – skanna en boks ISBN-kod med kameran
 - Favoriter och samlingar – spara böcker i egna samlingar
 - Läslista – håll koll på böcker du vill läsa
