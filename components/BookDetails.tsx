@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8b197",
   },
   chipText: {
-    color: "#ffffff",
+    color: "#000000cc",
     fontFamily: "SourceSans3_600SemiBold",
   },
   actionContainer: {
