@@ -1,7 +1,7 @@
-import { Button } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { useRouter } from "expo-router";
 
-export default function ScannerButton() {
+export default function ScannerIcon() {
   const router = useRouter();
 
   const handlePress = () => {
@@ -9,15 +9,14 @@ export default function ScannerButton() {
   };
 
   return (
-    <Button
+    <IconButton
       mode="outlined"
       onPress={handlePress}
       icon="barcode-scan"
-      style={{ marginTop: 10, borderRadius: 2 }}
+      size={38}
+      style={{ borderRadius: 2, marginRight: 0 }}
       accessibilityLabel="Scan book barcode"
       accessibilityHint="Opens barcode scanner"
-    >
-      Scan Book
-    </Button>
+    ></IconButton>
   );
 }

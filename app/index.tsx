@@ -10,6 +10,7 @@ import PreviousSearched from "../components/PreviousSearched";
 import { useStore } from "../store/previousSearched";
 import BookBar from "../components/BookBar";
 import { useReadingListStore } from "@/store/readingListStore";
+import ScannerButton from "@/components/ScannerButton";
 
 const EMPTY_BOOKS: Book[] = [];
 
@@ -53,11 +54,11 @@ export default function Home() {
             }}
           />
           {isFocused && <PreviousSearched />}
-
+          <ScannerButton />
           <BookBar
             title="Favorites"
             emptyMessage="No favorites yet..."
-            books={[...favoriteBooks].reverse().slice(0, 3)}
+            books={[...favoriteBooks].reverse().slice(0, 10)}
             onBookPress={handleBookPress}
           />
           <BookBar

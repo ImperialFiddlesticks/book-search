@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Searchbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
-import ScannerButton from "./ScannerButton";
 import { useStore } from "../store/previousSearched";
 
 interface BooksearchbarProps {
@@ -192,7 +191,6 @@ const Booksearchbar = ({ onFocus, onBlur }: BooksearchbarProps) => {
           recorderState.isRecording ? "Stop recording" : "Search by voice"
         }
       />
-      <ScannerButton />
     </View>
   );
 };
