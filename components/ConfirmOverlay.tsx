@@ -20,7 +20,7 @@ export default function ConfirmOverlay({
 }: ConfirmOverlayProps) {
   return (
     <Modal
-      animationType='fade'
+      animationType="fade"
       transparent={true}
       visible={visible}
       accessibilityViewIsModal={true}
@@ -33,14 +33,16 @@ export default function ConfirmOverlay({
 
           <Pressable
             style={styles.option}
-            accessibilityRole='button'
+            accessibilityRole="button"
+            accessibilityHint="cancel"
             onPress={onCancel}
           >
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Pressable
             style={styles.option}
-            accessibilityRole='button'
+            accessibilityRole="button"
+            accessibilityHint="confirm"
             onPress={onConfirm}
           >
             <Text style={styles.confirmText}>{confirmLabel}</Text>
