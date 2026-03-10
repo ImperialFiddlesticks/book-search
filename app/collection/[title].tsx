@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View, TextInput, type TextInput as TextInputType } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  TextInput,
+  type TextInput as TextInputType,
+} from "react-native";
 import { Appbar, Snackbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
 import { useReadingListStore } from "../../store/readingListStore";
@@ -12,7 +19,9 @@ import ConfirmOverlay from "../../components/ConfirmOverlay";
 import BottomOptionsBar from "../../components/BottomOptionsBar";
 
 function AutoOpen({ onMount }: { onMount: () => void }) {
-  useEffect(() => { onMount(); }, []);
+  useEffect(() => {
+    onMount();
+  }, []);
   return null;
 }
 
@@ -23,12 +32,19 @@ export default function CollectionPage() {
   );
 
   const collections = useCollectionsStore((state) => state.collections);
-  const { deleteCollection, renameCollection, moveBooks, removeBooksFromCollection, unsaveBooks } = useCollectionsStore();
+  const {
+    deleteCollection,
+    renameCollection,
+    moveBooks,
+    removeBooksFromCollection,
+    unsaveBooks,
+  } = useCollectionsStore();
   const { addBooks } = useReadingListStore();
   const router = useRouter();
 
-  const allFavBooks = useCollectionsStore((state) =>
-    state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+  const allFavBooks = useCollectionsStore(
+    (state) =>
+      state.collections.find((c) => c.title === "All favorites")?.books ?? [],
   );
   const books = (collection?.books ?? []).filter((b) =>
     allFavBooks.some((f) => f.key === b.key),
@@ -65,11 +81,15 @@ export default function CollectionPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title='Collection' />
+      <Header title="FOLIO" />
       {selectOptionsVisible && (
         <ModalComponent
-          text='Select options'
-          onClose={() => { setSelectOptionsVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          text="Select options"
+          onClose={() => {
+            setSelectOptionsVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
         >
           {() => {
@@ -78,18 +98,29 @@ export default function CollectionPage() {
               <>
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Unsave selected books"
+                  accessibilityState={{ disabled: !hasSelection }}
                   disabled={!hasSelection}
                   onPress={() => {
                     setSelectOptionsVisible(false);
                     setUnsaveConfirmVisible(true);
                   }}
                 >
-                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Unsave</Text>
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Unsave
+                  </Text>
                 </Pressable>
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Move selected books to another collection"
+                  accessibilityState={{ disabled: !hasSelection }}
                   disabled={!hasSelection}
                   onPress={() => {
                     setSelectOptionsVisible(false);
@@ -97,34 +128,63 @@ export default function CollectionPage() {
                     setMoveToVisible(true);
                   }}
                 >
-                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Move to...</Text>
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Move to...
+                  </Text>
                 </Pressable>
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Remove selected books from collection"
+                  accessibilityState={{ disabled: !hasSelection }}
                   disabled={!hasSelection}
                   onPress={() => {
                     setSelectOptionsVisible(false);
                     setRemoveConfirmVisible(true);
                   }}
                 >
-                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Remove from collection</Text>
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Remove from collection
+                  </Text>
                 </Pressable>
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Save selected books to reading list"
+                  accessibilityState={{ disabled: !hasSelection }}
                   disabled={!hasSelection}
                   onPress={() => {
-                    const selected = books.filter((b) => selectedBooks.has(b.key));
+                    const selected = books.filter((b) =>
+                      selectedBooks.has(b.key),
+                    );
                     addBooks(selected);
                     const count = selected.length;
-                    setSnackbarText(`${count} ${count === 1 ? "item" : "items"} added to Reading list`);
+                    setSnackbarText(
+                      `${count} ${count === 1 ? "item" : "items"} added to Reading list`,
+                    );
                     setSelectOptionsVisible(false);
                     setSelectMode(false);
                     setSelectedBooks(new Set());
                   }}
                 >
-                  <Text style={[styles.modalOptionText, !hasSelection && styles.modalDisabledText]}>Save to Reading list</Text>
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Save to Reading list
+                  </Text>
                 </Pressable>
               </>
             );
@@ -133,16 +193,20 @@ export default function CollectionPage() {
       )}
       {moveToVisible && (
         <ModalComponent
-          text='Move to'
-          submitText='Done'
+          text="Move to"
+          submitText="Done"
           disabled={!moveToTarget}
-          onClose={() => { setMoveToVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          onClose={() => {
+            setMoveToVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onPress={() => {
             if (moveToTarget) {
               const count = selectedBooks.size;
               moveBooks!(title, moveToTarget, selectedBooks);
               setSnackbarText(
-                `${count} ${count === 1 ? "item" : "items"} moved to ${moveToTarget}`
+                `${count} ${count === 1 ? "item" : "items"} moved to ${moveToTarget}`,
               );
             }
             setMoveToVisible(false);
@@ -159,12 +223,16 @@ export default function CollectionPage() {
                   <Pressable
                     key={c.title}
                     style={styles.modalOption}
-                    accessibilityRole='radio'
+                    accessibilityRole="radio"
+                    accessibilityLabel={c.title}
+                    accessibilityState={{ checked: moveToTarget === c.title }}
                     onPress={() => setMoveToTarget(c.title)}
                   >
                     <View style={styles.radioRow}>
                       <View style={styles.emptyCircle}>
-                        {moveToTarget === c.title && <View style={styles.filledInner} />}
+                        {moveToTarget === c.title && (
+                          <View style={styles.filledInner} />
+                        )}
                       </View>
                       <Text style={styles.modalOptionText}>{c.title}</Text>
                     </View>
@@ -172,7 +240,8 @@ export default function CollectionPage() {
                 ))}
               <Pressable
                 style={styles.modalOption}
-                accessibilityRole='button'
+                accessibilityRole="button"
+                accessibilityLabel="Create new collection"
                 onPress={() => {
                   setMoveToVisible(false);
                   setNewCollectionVisible(true);
@@ -187,43 +256,63 @@ export default function CollectionPage() {
       {newCollectionVisible && (
         <NewCollectionModal
           renderTrigger={(openModal) => <AutoOpen onMount={openModal} />}
-          onClose={() => { setNewCollectionVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          onClose={() => {
+            setNewCollectionVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onCreated={(name) => {
             const count = selectedBooks.size;
             moveBooks!(title, name, selectedBooks);
-            setSnackbarText(`${count} ${count === 1 ? "item" : "items"} moved to ${name}`);
+            setSnackbarText(
+              `${count} ${count === 1 ? "item" : "items"} moved to ${name}`,
+            );
             setNewCollectionVisible(false);
             setSelectMode(false);
             setSelectedBooks(new Set());
           }}
         />
       )}
-      {selectMode && !selectOptionsVisible && !moveToVisible && !addToCollectionMode && (
-        <BottomOptionsBar>
-          <Pressable
-            onPress={() => { setSelectMode(false); setSelectedBooks(new Set()); }}
-          >
-            <Text style={styles.selectBarCancel}>Cancel</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              if (allSelected) {
+      {selectMode &&
+        !selectOptionsVisible &&
+        !moveToVisible &&
+        !addToCollectionMode && (
+          <BottomOptionsBar>
+            <Pressable
+              onPress={() => {
+                setSelectMode(false);
                 setSelectedBooks(new Set());
-              } else {
-                setSelectedBooks(new Set(books.map((b) => b.key)));
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel selection"
+            >
+              <Text style={styles.selectBarCancel}>Cancel</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                if (allSelected) {
+                  setSelectedBooks(new Set());
+                } else {
+                  setSelectedBooks(new Set(books.map((b) => b.key)));
+                }
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={
+                allSelected ? "Deselect all books" : "Select all books"
               }
-            }}
-          >
-            <Text style={styles.selectBarAction}>{allSelected ? 'Deselect all' : 'Select all'}</Text>
-          </Pressable>
-          <Appbar.Action
-            icon='dots-vertical'
-            disabled={selectedBooks.size === 0}
-            onPress={() => setSelectOptionsVisible(true)}
-            accessibilityLabel='More select options'
-          />
-        </BottomOptionsBar>
-      )}
+            >
+              <Text style={styles.selectBarAction}>
+                {allSelected ? "Deselect all" : "Select all"}
+              </Text>
+            </Pressable>
+            <Appbar.Action
+              icon="dots-vertical"
+              disabled={selectedBooks.size === 0}
+              onPress={() => setSelectOptionsVisible(true)}
+              accessibilityLabel="More select options"
+            />
+          </BottomOptionsBar>
+        )}
       {addToCollectionMode && (
         <BottomOptionsBar>
           <Pressable
@@ -232,39 +321,65 @@ export default function CollectionPage() {
               setSelectMode(false);
               setSelectedBooks(new Set());
             }}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
           >
             <Text style={styles.selectBarCancel}>Cancel</Text>
           </Pressable>
           <Pressable
             disabled={selectedBooks.size === collectionBookKeys.size}
+            accessibilityRole="button"
+            accessibilityLabel="Add selected books to collection"
+            accessibilityState={{
+              disabled: selectedBooks.size === collectionBookKeys.size,
+            }}
             onPress={() => {
               const count = selectedBooks.size - collectionBookKeys.size;
               moveBooks("All favorites", title, selectedBooks);
-              setSnackbarText(`${count} ${count === 1 ? "item" : "items"} added to ${title}`);
+              setSnackbarText(
+                `${count} ${count === 1 ? "item" : "items"} added to ${title}`,
+              );
               setAddToCollectionMode(false);
               setSelectMode(false);
               setSelectedBooks(new Set());
             }}
           >
-            <Text style={[styles.selectBarAction, selectedBooks.size === collectionBookKeys.size && styles.modalDisabledText]}>
+            <Text
+              style={[
+                styles.selectBarAction,
+                selectedBooks.size === collectionBookKeys.size &&
+                  styles.modalDisabledText,
+              ]}
+            >
               Add to collection
             </Text>
           </Pressable>
         </BottomOptionsBar>
       )}
       <View style={styles.titleRow}>
-        <View style={styles.titleGroup}>
-          <Text style={styles.collectionTitle}>{title}</Text>
-          <Text style={styles.bookCount}>{books.length} {books.length === 1 ? "book" : "books"}</Text>
+        <View
+          style={styles.titleGroup}
+          accessibilityLabel={`${title}, ${books.length} ${books.length === 1 ? "book" : "books"}`}
+        >
+          <Text style={styles.collectionTitle} accessibilityRole="header">
+            {title}
+          </Text>
+          <Text
+            style={styles.bookCount}
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+          >
+            {books.length} {books.length === 1 ? "book" : "books"}
+          </Text>
         </View>
         <ModalComponent
-          text='Collection options'
-          submitText=''
+          text="Collection options"
+          submitText=""
           renderTrigger={(openModal) => (
             <Appbar.Action
-              icon='dots-vertical'
+              icon="dots-vertical"
               onPress={openModal}
-              accessibilityLabel='Collection options menu'
+              accessibilityLabel="Collection options menu"
             />
           )}
         >
@@ -273,7 +388,8 @@ export default function CollectionPage() {
               {title !== "All favorites" && (
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Rename collection"
                   onPress={async () => {
                     await closeModal();
                     setRenameText(title);
@@ -285,7 +401,8 @@ export default function CollectionPage() {
               )}
               <Pressable
                 style={styles.modalOption}
-                accessibilityRole='button'
+                accessibilityRole="button"
+                accessibilityLabel="Select books"
                 onPress={async () => {
                   await closeModal();
                   setSelectMode(true);
@@ -297,7 +414,8 @@ export default function CollectionPage() {
               {title !== "All favorites" && (
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Add books to collection"
                   onPress={async () => {
                     await closeModal();
                     setAddToCollectionMode(true);
@@ -311,7 +429,8 @@ export default function CollectionPage() {
               {title !== "All favorites" && (
                 <Pressable
                   style={styles.modalOption}
-                  accessibilityRole='button'
+                  accessibilityRole="button"
+                  accessibilityLabel="Delete collection"
                   onPress={async () => {
                     await closeModal();
                     setConfirmVisible(true);
@@ -326,9 +445,9 @@ export default function CollectionPage() {
 
         <ConfirmOverlay
           visible={confirmVisible}
-          title='Delete collection?'
-          message='When you delete this collection, the items will still be saved'
-          confirmLabel='Delete'
+          title="Delete collection?"
+          message="When you delete this collection, the items will still be saved"
+          confirmLabel="Delete"
           onCancel={() => setConfirmVisible(false)}
           onConfirm={() => {
             setConfirmVisible(false);
@@ -339,14 +458,20 @@ export default function CollectionPage() {
 
         <ConfirmOverlay
           visible={removeConfirmVisible}
-          title='Remove from collection?'
+          title="Remove from collection?"
           message='You will still be able to find these items in "All favorites"'
-          confirmLabel='Remove'
-          onCancel={() => { setRemoveConfirmVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          confirmLabel="Remove"
+          onCancel={() => {
+            setRemoveConfirmVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onConfirm={() => {
             const count = selectedBooks.size;
             removeBooksFromCollection(title, selectedBooks);
-            setSnackbarText(`${count} ${count === 1 ? "item" : "items"} removed from collection`);
+            setSnackbarText(
+              `${count} ${count === 1 ? "item" : "items"} removed from collection`,
+            );
             setRemoveConfirmVisible(false);
             setSelectMode(false);
             setSelectedBooks(new Set());
@@ -355,14 +480,20 @@ export default function CollectionPage() {
 
         <ConfirmOverlay
           visible={unsaveConfirmVisible}
-          title='Unsave selected items?'
-          message='These items will be removed from all collections'
-          confirmLabel='Unsave'
-          onCancel={() => { setUnsaveConfirmVisible(false); setSelectMode(false); setSelectedBooks(new Set()); }}
+          title="Unsave selected items?"
+          message="These items will be removed from all collections"
+          confirmLabel="Unsave"
+          onCancel={() => {
+            setUnsaveConfirmVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onConfirm={() => {
             const count = selectedBooks.size;
             unsaveBooks(selectedBooks);
-            setSnackbarText(`${count} ${count === 1 ? "item" : "items"} unsaved`);
+            setSnackbarText(
+              `${count} ${count === 1 ? "item" : "items"} unsaved`,
+            );
             setUnsaveConfirmVisible(false);
             setSelectMode(false);
             setSelectedBooks(new Set());
@@ -371,14 +502,23 @@ export default function CollectionPage() {
 
         {renameVisible && (
           <ModalComponent
-            text='Rename collection'
-            submitText='Done'
+            text="Rename collection"
+            submitText="Done"
             disabled={!renameText.trim()}
-            onClose={() => { setRenameVisible(false); setRenameError(""); }}
-            onOpen={() => setTimeout(() => renameInputRef.current?.focus(), 350)}
+            onClose={() => {
+              setRenameVisible(false);
+              setRenameError("");
+            }}
+            onOpen={() =>
+              setTimeout(() => renameInputRef.current?.focus(), 350)
+            }
             onPress={() => {
               const trimmed = renameText.trim();
-              if (collections.some((c) => c.title === trimmed && c.title !== title)) {
+              if (
+                collections.some(
+                  (c) => c.title === trimmed && c.title !== title,
+                )
+              ) {
                 setRenameError("A collection with this name already exists");
                 return false;
               }
@@ -393,13 +533,18 @@ export default function CollectionPage() {
             <View style={{ position: "relative", marginVertical: 16 }}>
               <TextInput
                 ref={renameInputRef}
-                onChangeText={(text) => { setRenameText(text); setRenameError(""); }}
+                onChangeText={(text) => {
+                  setRenameText(text);
+                  setRenameError("");
+                }}
                 value={renameText}
                 maxLength={35}
-                placeholder='Collection name'
-                placeholderTextColor='#999'
-                selectionColor='#fa6b47'
+                placeholder="Collection name"
+                placeholderTextColor="#999"
+                selectionColor="#fa6b47"
                 autoCorrect={false}
+                accessibilityLabel="Collection name input"
+                accessibilityHint="Enter a new name for this collection"
                 style={{
                   fontSize: 16,
                   height: 50,
@@ -411,21 +556,33 @@ export default function CollectionPage() {
               />
               {renameText ? (
                 <Pressable
-                  onPress={() => { setRenameText(""); setRenameError(""); renameInputRef.current?.focus(); }}
+                  onPress={() => {
+                    setRenameText("");
+                    setRenameError("");
+                    renameInputRef.current?.focus();
+                  }}
                   style={styles.clearButton}
                   hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear collection name"
                 >
                   <Text style={styles.clearIcon}>✕</Text>
                 </Pressable>
               ) : null}
             </View>
-            {renameError ? <Text style={styles.renameError}>{renameError}</Text> : null}
+            {renameError ? (
+              <Text style={styles.renameError} accessibilityRole="alert">
+                {renameError}
+              </Text>
+            ) : null}
           </ModalComponent>
         )}
       </View>
 
       {(addToCollectionMode ? allFavBooks : books).length === 0 ? (
-        <Text style={styles.empty}>No books in this collection yet.</Text>
+        <Text style={styles.empty} accessibilityRole="alert">
+          No books in this collection yet.
+        </Text>
       ) : (
         <FlatList
           data={addToCollectionMode ? allFavBooks : books}
@@ -433,18 +590,29 @@ export default function CollectionPage() {
           numColumns={3}
           contentContainerStyle={styles.grid}
           columnWrapperStyle={styles.row}
+          accessibilityLabel={`${title} collection, ${books.length} ${books.length === 1 ? "book" : "books"}`}
           renderItem={({ item }) => (
             <BookCard
               book={item}
               showTitle
               showAuthor
-              onLongPress={addToCollectionMode ? undefined : () => setSelectMode(true)}
+              onLongPress={
+                addToCollectionMode ? undefined : () => setSelectMode(true)
+              }
               hideSave={addToCollectionMode}
               selected={selectedBooks.has(item.key)}
-              onSelect={selectMode ? () => {
-                if (addToCollectionMode && collectionBookKeys.has(item.key)) return;
-                toggleSelect(item.key);
-              } : undefined}
+              onSelect={
+                selectMode
+                  ? () => {
+                      if (
+                        addToCollectionMode &&
+                        collectionBookKeys.has(item.key)
+                      )
+                        return;
+                      toggleSelect(item.key);
+                    }
+                  : undefined
+              }
             />
           )}
         />
@@ -456,7 +624,12 @@ export default function CollectionPage() {
         style={styles.snackbar}
         theme={{ colors: { inverseOnSurface: "#fff" } }}
       >
-        <Text style={{ textAlign: "center", color: "#fff", fontWeight: 600}}>{snackbarText}</Text>
+        <Text
+          style={{ textAlign: "center", color: "#fff", fontWeight: 600 }}
+          accessibilityLiveRegion="polite"
+        >
+          {snackbarText}
+        </Text>
       </Snackbar>
     </View>
   );
@@ -532,7 +705,6 @@ const styles = StyleSheet.create({
   modalDisabledText: {
     color: "#ccc",
   },
-
 
   renameError: {
     color: "red",
