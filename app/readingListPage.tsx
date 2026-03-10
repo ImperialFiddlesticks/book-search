@@ -7,6 +7,7 @@ import ModalComponent from "../components/ModalComponent";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import BottomOptionsBar from "../components/BottomOptionsBar";
 import { useReadingListStore } from "../store/readingListStore";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ReadingListPage() {
   const readingList = useReadingListStore((state) => state.readingList);
@@ -45,7 +46,7 @@ export default function ReadingListPage() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
       <Header title='Reading list' />
       <View style={styles.titleRow}>
         <View style={styles.titleGroup}>
@@ -157,7 +158,7 @@ export default function ReadingListPage() {
       >
         <Text style={{ textAlign: "center", color: "#fff", fontWeight: "600" }}>{snackbarText}</Text>
       </Snackbar>
-    </View>
+    </SafeAreaView>
   );
 }
 
