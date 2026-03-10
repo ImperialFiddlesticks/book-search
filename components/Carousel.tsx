@@ -1,5 +1,10 @@
 import React, { ReactNode, useState } from "react";
-import { ScrollView, View, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 
 const CARD_GAP = 8;
 const HORIZONTAL_PADDING = 16;
@@ -14,7 +19,10 @@ export default function Carousel({ children, itemWidth }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const snapInterval = itemWidth + CARD_GAP;
-  const itemsPerPage = Math.max(1, Math.round((screenWidth - HORIZONTAL_PADDING * 2) / snapInterval));
+  const itemsPerPage = Math.max(
+    1,
+    Math.round((screenWidth - HORIZONTAL_PADDING * 2) / snapInterval),
+  );
   const childCount = React.Children.count(children);
   const pageCount = Math.ceil(childCount / itemsPerPage);
 
@@ -28,7 +36,7 @@ export default function Carousel({ children, itemWidth }: CarouselProps) {
         contentContainerStyle={{ paddingHorizontal: HORIZONTAL_PADDING }}
         onScroll={(e) => {
           const page = Math.round(
-            e.nativeEvent.contentOffset.x / (snapInterval * itemsPerPage)
+            e.nativeEvent.contentOffset.x / (snapInterval * itemsPerPage),
           );
           setCurrentIndex(page);
         }}
@@ -66,6 +74,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
   },
   dotActive: {
-    backgroundColor: "#fa6b47",
+    backgroundColor: "#C8703A",
   },
 });

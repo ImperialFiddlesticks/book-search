@@ -1,5 +1,11 @@
 import CollectionCard from "../components/CollectionCard";
-import { StyleSheet, View, ScrollView, Pressable, useWindowDimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Pressable,
+  useWindowDimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native-paper";
 import Header from "../components/Header";
@@ -19,8 +25,9 @@ const MAX_READING_LIST_ITEMS = 10;
 
 export default function ProfileScreen() {
   const collections = useCollectionsStore((state) => state.collections);
-  const allFavBooks = useCollectionsStore((state) =>
-    state.collections.find((c) => c.title === "All favorites")?.books ?? [],
+  const allFavBooks = useCollectionsStore(
+    (state) =>
+      state.collections.find((c) => c.title === "All favorites")?.books ?? [],
   );
   const readingList = useReadingListStore((state) => state.readingList);
   const router = useRouter();
@@ -33,83 +40,104 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Header title='Profile' />
-    <ScrollView
-      style={{ flex: 1 }}
-      keyboardShouldPersistTaps='always'
-    >
+      <Header title="FOLIO" />
+      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+        {/* Collections Section */}
+        <View style={styles.titleRow}>
+          <Text style={styles.sectionTitle}>Collections</Text>
+          <NewCollectionModal
+            renderTrigger={(openModal) => (
+              <Pressable onPress={openModal}>
+                <Text style={styles.newCollectionBtn}>+ New</Text>
+              </Pressable>
+            )}
+          />
+        </View>
 
-      {/* Collections Section */}
-      <View style={styles.titleRow}>
-        <Text style={styles.sectionTitle}>Collections</Text>
-        <NewCollectionModal
-          renderTrigger={(openModal) => (
-            <Pressable onPress={openModal}>
-              <Text style={styles.newCollectionBtn}>+ New</Text>
+        <Carousel itemWidth={cardWidth}>
+          {visibleCollections.map((item) => (
+            <View
+              key={item.title}
+              style={{ width: cardWidth, marginRight: CARD_GAP }}
+            >
+              <CollectionCard
+                collection={{
+                  savedItems: item.books.filter((b: Book) =>
+                    allFavBooks.some((f) => f.key === b.key),
+                  ),
+                  title: item.title,
+                }}
+                onPress={() =>
+                  router.push(`/collection/${encodeURIComponent(item.title)}`)
+                }
+              />
+            </View>
+          ))}
+          <View
+            key="__go_to_collections__"
+            style={{ width: cardWidth, marginRight: CARD_GAP }}
+          >
+            <Pressable
+              style={styles.goToAllCard}
+              onPress={() => router.push("/collectionsPage")}
+            >
+              <Text style={styles.goToAllText}>Go to all collections</Text>
             </Pressable>
-          )}
-        />
-      </View>
+          </View>
+        </Carousel>
 
-      <Carousel itemWidth={cardWidth}>
-        {visibleCollections.map((item) => (
-          <View key={item.title} style={{ width: cardWidth, marginRight: CARD_GAP }}>
-            <CollectionCard
-              collection={{
-                savedItems: item.books.filter((b: Book) => allFavBooks.some((f) => f.key === b.key)),
-                title: item.title,
-              }}
-              onPress={() =>
-                router.push(`/collection/${encodeURIComponent(item.title)}`)
-              }
+        <Pressable
+          style={styles.goToAllLink}
+          onPress={() => router.push("/collectionsPage")}
+        >
+          <Text style={styles.goToAllLinkText}>
+            Go to all collections{" "}
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={16}
+              color="#C8703A"
             />
-          </View>
-        ))}
-        <View key="__go_to_collections__" style={{ width: cardWidth, marginRight: CARD_GAP }}>
-          <Pressable
-            style={styles.goToAllCard}
-            onPress={() => router.push("/collectionsPage")}
-          >
-            <Text style={styles.goToAllText}>Go to all collections</Text>
-          </Pressable>
+          </Text>
+        </Pressable>
+
+        {/* Reading List Section */}
+        <View style={styles.titleRow}>
+          <Text style={styles.sectionTitle}>Reading list</Text>
         </View>
-      </Carousel>
 
-      <Pressable
-        style={styles.goToAllLink}
-        onPress={() => router.push("/collectionsPage")}
-      >
-        <Text style={styles.goToAllLinkText}>Go to all collections <MaterialCommunityIcons name="chevron-right" size={16} color="#fa6b47" /></Text>
-      </Pressable>
-
-      {/* Reading List Section */}
-      <View style={styles.titleRow}>
-        <Text style={styles.sectionTitle}>Reading list</Text>
-      </View>
-
-      <Carousel itemWidth={120}>
-        {visibleReadingList.map((book) => (
-          <View key={book.key} style={{ width: 120, marginRight: CARD_GAP }}>
-            <BookCard book={book} showTitle showAuthor hideSave />
-          </View>
-        ))}
-        <View key="__go_to_reading_list__" style={{ width: 120, marginRight: CARD_GAP }}>
-          <Pressable
-            style={styles.rlGoToAllCard}
-            onPress={() => router.push("/readingListPage")}
+        <Carousel itemWidth={120}>
+          {visibleReadingList.map((book) => (
+            <View key={book.key} style={{ width: 120, marginRight: CARD_GAP }}>
+              <BookCard book={book} showTitle showAuthor hideSave />
+            </View>
+          ))}
+          <View
+            key="__go_to_reading_list__"
+            style={{ width: 120, marginRight: CARD_GAP }}
           >
-            <Text style={styles.goToAllText}>Go to Reading list</Text>
-          </Pressable>
-        </View>
-      </Carousel>
+            <Pressable
+              style={styles.rlGoToAllCard}
+              onPress={() => router.push("/readingListPage")}
+            >
+              <Text style={styles.goToAllText}>Go to Reading list</Text>
+            </Pressable>
+          </View>
+        </Carousel>
 
-      <Pressable
-        style={styles.goToAllLink}
-        onPress={() => router.push("/readingListPage")}
-      >
-        <Text style={styles.goToAllLinkText}>Go to Reading list <MaterialCommunityIcons name="chevron-right" size={16} color="#fa6b47" /></Text>
-      </Pressable>
-    </ScrollView>
+        <Pressable
+          style={styles.goToAllLink}
+          onPress={() => router.push("/readingListPage")}
+        >
+          <Text style={styles.goToAllLinkText}>
+            Go to Reading list{" "}
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={16}
+              color="#C8703A"
+            />
+          </Text>
+        </Pressable>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -127,7 +155,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   newCollectionBtn: {
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
     fontSize: 16,
   },
@@ -159,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   goToAllLinkText: {
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
     fontSize: 16,
   },

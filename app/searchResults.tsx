@@ -72,7 +72,7 @@ export default function SearchResults() {
           </Text>
           <ActivityIndicator
             size="large"
-            color="#f8b197"
+            color="#D4895A"
             accessibilityLabel="Loading Books, please wait"
             accessibilityRole="progressbar"
             accessibilityLiveRegion="polite"

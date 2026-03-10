@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     borderWidth: 2,
-    borderColor: "#f8b197",
+    borderColor: "#D4895A",
     backgroundColor: "transparent",
     margin: 5,
     justifyContent: "center",
@@ -262,6 +262,6 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#f8b197",
+    backgroundColor: "#D4895A",
   },
 });

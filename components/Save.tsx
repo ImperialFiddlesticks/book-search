@@ -17,7 +17,7 @@ export default function Save({ isSaved, onToggle }: SavedProps) {
       accessibilityState={{ checked: isSaved }}
     >
       {isSaved ? (
-        <FontAwesome name="star" size={24} color="#f8b197" />
+        <FontAwesome name="star" size={24} color="#D4895A" />
       ) : (
         <Feather name="star" size={24} color="grey" />
       )}
