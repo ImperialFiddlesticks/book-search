@@ -60,6 +60,7 @@ export default function Home() {
             emptyMessage="No favorites yet..."
             books={[...favoriteBooks].reverse().slice(0, 10)}
             onBookPress={handleBookPress}
+            onTitlePress={() => router.push("/favoritesPage")}
           />
           <BookBar
             title="Reading list"
@@ -67,6 +68,7 @@ export default function Home() {
             onBookPress={handleBookPress}
             books={readingList}
             onLongPress={(book) => toggleReadingList(book)}
+            onTitlePress={() => router.push("/profilePage")}
           />
         </ScrollView>
       </View>

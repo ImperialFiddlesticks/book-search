@@ -1,5 +1,11 @@
 import { Book } from "@/types/bookProps";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import BookCover from "./BookCover";
 
 interface SavedBooksProps {
@@ -8,6 +14,7 @@ interface SavedBooksProps {
   readonly onBookPress: (book: Book) => void;
   readonly onLongPress?: (book: Book) => void;
   readonly emptyMessage?: string;
+  readonly onTitlePress?: () => void;
 }
 
 export default function BookBar({
@@ -16,12 +23,26 @@ export default function BookBar({
   onBookPress,
   onLongPress,
   emptyMessage = "No books yet...",
+  onTitlePress,
 }: SavedBooksProps) {
   return (
     <View style={styles.listWrapper}>
-      <Text style={styles.listHeadline} accessibilityRole="header">
-        {title}
-      </Text>
+      {onTitlePress ? (
+        <TouchableOpacity
+          onPress={onTitlePress}
+          accessibilityRole="link"
+          accessibilityLabel={`Go to ${title}`}
+          style={{ alignSelf: "flex-start" }}
+        >
+          <Text style={styles.listHeadline} accessibilityRole="header">
+            {title}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <Text style={styles.listHeadline} accessibilityRole="header">
+          {title}
+        </Text>
+      )}
       <FlatList
         data={books}
         horizontal
@@ -54,7 +75,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  listWrapper: { paddingVertical: 10, height: 180, width: "100%" },
-  listHeadline: { fontWeight: "600" },
+  listWrapper: { paddingVertical: 20, height: 200, width: "100%" },
+  listHeadline: {
+    fontFamily: "LibreBaskerville_700Bold",
+    fontSize: 18,
+    marginBottom: 10,
+  },
   list: { flexGrow: 0 },
 });
