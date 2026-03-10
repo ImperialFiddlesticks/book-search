@@ -17,7 +17,7 @@ export default function CollectionsPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="Collections" />
+      <Header title="FOLIO" />
       <ScrollView
         style={{ flex: 1 }}
         keyboardShouldPersistTaps="always"

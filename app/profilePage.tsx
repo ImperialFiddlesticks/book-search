@@ -39,7 +39,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="Profile" />
+      <Header title="FOLIO" />
       <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         {/* Collections Section */}
         <View style={styles.titleRow}>
