@@ -14,7 +14,7 @@ export default function Header({
   const router = useRouter();
   const goBack = () => router.back();
   const theme = useTheme();
-  const navigateToFavorites = () => router.push("/favoritesPage");
+  const navigateToFavorites = () => router.push("/profilePage");
 
   return (
     <Appbar.Header style={[styles.header, { backgroundColor: "transparent" }]}>

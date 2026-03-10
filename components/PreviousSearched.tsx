@@ -13,7 +13,13 @@ export default function PreviousSearched() {
 
   return (
     <View style={styles.container}>
-      <List.Section title="Previous Searched" accessibilityRole="header">
+      <List.Section
+        accessibilityRole="list"
+        accessibilityLabel="List of previous search queries"
+      >
+        <List.Subheader style={{ paddingHorizontal: 4 }}>
+          Previous searched
+        </List.Subheader>
         {previousSearched.map((item, index) => (
           <List.Item
             key={index}
@@ -32,7 +38,11 @@ export default function PreviousSearched() {
                 accessibilityElementsHidden={true}
                 importantForAccessibility="no-hide-descendants"
               >
-                <List.Icon {...props} icon="history" />
+                <List.Icon
+                  {...props}
+                  icon="history"
+                  style={{ marginLeft: 4, marginRight: 4 }}
+                />
               </View>
             )}
           />
@@ -44,8 +54,7 @@ export default function PreviousSearched() {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    padding: 16,
+    paddingHorizontal: 0,
   },
   title: {
     fontSize: 24,

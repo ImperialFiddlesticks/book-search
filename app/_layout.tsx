@@ -46,7 +46,9 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="details" />
             <Stack.Screen name="searchResults" />
-            <Stack.Screen name="favoritesPage" />
+            <Stack.Screen name="profilePage" />
+            <Stack.Screen name="collectionsPage" />
+            <Stack.Screen name="readingListPage" />
             <Stack.Screen name="collection/[title]" />
             <Stack.Screen name="scanner" options={{ presentation: "modal" }} />
           </Stack>

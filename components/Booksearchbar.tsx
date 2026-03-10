@@ -11,13 +11,17 @@ import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Searchbar, useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
-import ScannerButton from "./ScannerButton";
 import { useStore } from "../store/previousSearched";
+
+interface BooksearchbarProps {
+  onFocus?: () => void;
+  onBlur?: () => void;
+}
 
 const APYHUB_TOKEN =
   "APY0SBhWWI0kixOpkR0bkTaqthd3QpAaIzd4EwBzMO7OFRvAMqYM6cMXQ4e0Q29X";
 
-const Booksearchbar = () => {
+const Booksearchbar = ({ onFocus, onBlur }: BooksearchbarProps) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const router = useRouter();
   const { addPreviousSearched } = useStore();
@@ -166,7 +170,9 @@ const Booksearchbar = () => {
         onChangeText={setSearchQuery}
         value={searchQuery}
         onSubmitEditing={handleSearch}
-        style={{ backgroundColor: theme.colors.surface, borderRadius: 2 }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        style={{ backgroundColor: theme.colors.surface, borderRadius: 4 }}
         traileringIcon={
           isIOS
             ? recorderState.isRecording
@@ -185,7 +191,6 @@ const Booksearchbar = () => {
           recorderState.isRecording ? "Stop recording" : "Search by voice"
         }
       />
-      <ScannerButton />
     </View>
   );
 };

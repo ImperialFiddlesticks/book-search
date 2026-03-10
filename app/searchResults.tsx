@@ -16,6 +16,8 @@ import Header from "../components/Header";
 import { Button } from "react-native-paper";
 import Sorting, { SortOption } from "@/components/Sorting";
 import Language, { LanguageOption } from "@/components/Language";
+import SubjectMenu from "@/components/SubjectsMenu";
+import ScannerIcon from "@/components/ScannerIcon";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -51,7 +53,12 @@ export default function SearchResults() {
       <>
         <Header title="FOLIO" />
         <SafeAreaView style={[styles.container]}>
-          <Booksearchbar />
+          <View style={styles.searchbar}>
+            <View style={{ flex: 1 }}>
+              <Booksearchbar />
+            </View>
+            <ScannerIcon />
+          </View>
           <SubjectChips
             selectedSubjects={selectedSubjects}
             onSelectSubject={(newSubjects) => {
@@ -80,7 +87,12 @@ export default function SearchResults() {
       <>
         <Header title="FOLIO" />
         <SafeAreaView style={[styles.container]}>
-          <Booksearchbar />
+          <View style={styles.searchbar}>
+            <View style={{ flex: 1 }}>
+              <Booksearchbar />
+            </View>
+            <ScannerIcon />
+          </View>
           <SubjectChips
             selectedSubjects={selectedSubjects}
             onSelectSubject={(newSubjects) => {
@@ -103,7 +115,12 @@ export default function SearchResults() {
     <>
       <Header title="FOLIO" />
       <SafeAreaView style={[styles.container]} edges={["bottom"]}>
-        <Booksearchbar />
+        <View style={styles.searchbar}>
+          <View style={{ flex: 1 }}>
+            <Booksearchbar />
+          </View>
+          <ScannerIcon />
+        </View>
         <SubjectChips
           selectedSubjects={selectedSubjects}
           onSelectSubject={(newSubjects) => {
@@ -203,5 +220,9 @@ const styles = StyleSheet.create({
   pageNumber: {
     fontFamily: "SourceSans3_400Regular",
     color: "black",
+  },
+  searchbar: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
