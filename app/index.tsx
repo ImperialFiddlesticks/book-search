@@ -60,7 +60,7 @@ export default function Home() {
             emptyMessage="No favorites yet..."
             books={[...favoriteBooks].reverse().slice(0, 10)}
             onBookPress={handleBookPress}
-            onTitlePress={() => router.push("/favoritesPage")}
+            onTitlePress={() => router.push("/collectionsPage")}
           />
           <BookBar
             title="Reading list"
