@@ -141,7 +141,7 @@ export default function ModalComponent({
                       animateClose();
                     }}
                     accessibilityRole="button"
-                    accessibilityLabel={submitText}
+                    accessibilityLabel="submit input value"
                     style={styles.headerRight}
                   >
                     <Text

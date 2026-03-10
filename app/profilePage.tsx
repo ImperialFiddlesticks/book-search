@@ -40,7 +40,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Header title="FOLIO" />
+      <Header />
       <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
         {/* Collections Section */}
         <View style={styles.titleRow}>

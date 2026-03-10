@@ -50,7 +50,6 @@ export default function BookCover({
         <Image
           source={{ uri: coverUrl }}
           style={styles.cover}
-          onLoadStart={() => setIsLoading(true)}
           onLoadEnd={() => setIsLoading(false)}
         />
       ) : (

@@ -8,6 +8,14 @@ import {
   TextInput,
   type TextInput as TextInputType,
 } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  TextInput,
+  type TextInput as TextInputType,
+} from "react-native";
 import { Appbar, Snackbar, Text } from "react-native-paper";
 import { useCollectionsStore } from "../../store/collectionsStore";
 import { useReadingListStore } from "../../store/readingListStore";
@@ -19,6 +27,9 @@ import ConfirmOverlay from "../../components/ConfirmOverlay";
 import BottomOptionsBar from "../../components/BottomOptionsBar";
 
 function AutoOpen({ onMount }: { onMount: () => void }) {
+  useEffect(() => {
+    onMount();
+  }, []);
   useEffect(() => {
     onMount();
   }, []);
@@ -39,9 +50,19 @@ export default function CollectionPage() {
     removeBooksFromCollection,
     unsaveBooks,
   } = useCollectionsStore();
+  const {
+    deleteCollection,
+    renameCollection,
+    moveBooks,
+    removeBooksFromCollection,
+    unsaveBooks,
+  } = useCollectionsStore();
   const { addBooks } = useReadingListStore();
   const router = useRouter();
 
+  const allFavBooks = useCollectionsStore(
+    (state) =>
+      state.collections.find((c) => c.title === "All favorites")?.books ?? [],
   const allFavBooks = useCollectionsStore(
     (state) =>
       state.collections.find((c) => c.title === "All favorites")?.books ?? [],
@@ -81,9 +102,15 @@ export default function CollectionPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="FOLIO" />
+      <Header />
       {selectOptionsVisible && (
         <ModalComponent
+          text="Select options"
+          onClose={() => {
+            setSelectOptionsVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           text="Select options"
           onClose={() => {
             setSelectOptionsVisible(false);
@@ -115,6 +142,14 @@ export default function CollectionPage() {
                   >
                     Unsave
                   </Text>
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Unsave
+                  </Text>
                 </Pressable>
                 <Pressable
                   style={styles.modalOption}
@@ -128,6 +163,14 @@ export default function CollectionPage() {
                     setMoveToVisible(true);
                   }}
                 >
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Move to...
+                  </Text>
                   <Text
                     style={[
                       styles.modalOptionText,
@@ -156,6 +199,14 @@ export default function CollectionPage() {
                   >
                     Remove from collection
                   </Text>
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Remove from collection
+                  </Text>
                 </Pressable>
                 <Pressable
                   style={styles.modalOption}
@@ -167,8 +218,14 @@ export default function CollectionPage() {
                     const selected = books.filter((b) =>
                       selectedBooks.has(b.key),
                     );
+                    const selected = books.filter((b) =>
+                      selectedBooks.has(b.key),
+                    );
                     addBooks(selected);
                     const count = selected.length;
+                    setSnackbarText(
+                      `${count} ${count === 1 ? "item" : "items"} added to Reading list`,
+                    );
                     setSnackbarText(
                       `${count} ${count === 1 ? "item" : "items"} added to Reading list`,
                     );
@@ -177,6 +234,14 @@ export default function CollectionPage() {
                     setSelectedBooks(new Set());
                   }}
                 >
+                  <Text
+                    style={[
+                      styles.modalOptionText,
+                      !hasSelection && styles.modalDisabledText,
+                    ]}
+                  >
+                    Save to Reading list
+                  </Text>
                   <Text
                     style={[
                       styles.modalOptionText,
@@ -195,7 +260,14 @@ export default function CollectionPage() {
         <ModalComponent
           text="Move to"
           submitText="Done"
+          text="Move to"
+          submitText="Done"
           disabled={!moveToTarget}
+          onClose={() => {
+            setMoveToVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onClose={() => {
             setMoveToVisible(false);
             setSelectMode(false);
@@ -206,6 +278,7 @@ export default function CollectionPage() {
               const count = selectedBooks.size;
               moveBooks!(title, moveToTarget, selectedBooks);
               setSnackbarText(
+                `${count} ${count === 1 ? "item" : "items"} moved to ${moveToTarget}`,
                 `${count} ${count === 1 ? "item" : "items"} moved to ${moveToTarget}`,
               );
             }
@@ -230,6 +303,9 @@ export default function CollectionPage() {
                   >
                     <View style={styles.radioRow}>
                       <View style={styles.emptyCircle}>
+                        {moveToTarget === c.title && (
+                          <View style={styles.filledInner} />
+                        )}
                         {moveToTarget === c.title && (
                           <View style={styles.filledInner} />
                         )}
@@ -261,9 +337,17 @@ export default function CollectionPage() {
             setSelectMode(false);
             setSelectedBooks(new Set());
           }}
+          onClose={() => {
+            setNewCollectionVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onCreated={(name) => {
             const count = selectedBooks.size;
             moveBooks!(title, name, selectedBooks);
+            setSnackbarText(
+              `${count} ${count === 1 ? "item" : "items"} moved to ${name}`,
+            );
             setSnackbarText(
               `${count} ${count === 1 ? "item" : "items"} moved to ${name}`,
             );
@@ -339,11 +423,21 @@ export default function CollectionPage() {
               setSnackbarText(
                 `${count} ${count === 1 ? "item" : "items"} added to ${title}`,
               );
+              setSnackbarText(
+                `${count} ${count === 1 ? "item" : "items"} added to ${title}`,
+              );
               setAddToCollectionMode(false);
               setSelectMode(false);
               setSelectedBooks(new Set());
             }}
           >
+            <Text
+              style={[
+                styles.selectBarAction,
+                selectedBooks.size === collectionBookKeys.size &&
+                  styles.modalDisabledText,
+              ]}
+            >
             <Text
               style={[
                 styles.selectBarAction,
@@ -375,8 +469,11 @@ export default function CollectionPage() {
         <ModalComponent
           text="Collection options"
           submitText=""
+          text="Collection options"
+          submitText=""
           renderTrigger={(openModal) => (
             <Appbar.Action
+              icon="dots-vertical"
               icon="dots-vertical"
               onPress={openModal}
               accessibilityLabel="Collection options menu"
@@ -448,6 +545,9 @@ export default function CollectionPage() {
           title="Delete collection?"
           message="When you delete this collection, the items will still be saved"
           confirmLabel="Delete"
+          title="Delete collection?"
+          message="When you delete this collection, the items will still be saved"
+          confirmLabel="Delete"
           onCancel={() => setConfirmVisible(false)}
           onConfirm={() => {
             setConfirmVisible(false);
@@ -459,7 +559,14 @@ export default function CollectionPage() {
         <ConfirmOverlay
           visible={removeConfirmVisible}
           title="Remove from collection?"
+          title="Remove from collection?"
           message='You will still be able to find these items in "All favorites"'
+          confirmLabel="Remove"
+          onCancel={() => {
+            setRemoveConfirmVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           confirmLabel="Remove"
           onCancel={() => {
             setRemoveConfirmVisible(false);
@@ -469,6 +576,9 @@ export default function CollectionPage() {
           onConfirm={() => {
             const count = selectedBooks.size;
             removeBooksFromCollection(title, selectedBooks);
+            setSnackbarText(
+              `${count} ${count === 1 ? "item" : "items"} removed from collection`,
+            );
             setSnackbarText(
               `${count} ${count === 1 ? "item" : "items"} removed from collection`,
             );
@@ -488,9 +598,20 @@ export default function CollectionPage() {
             setSelectMode(false);
             setSelectedBooks(new Set());
           }}
+          title="Unsave selected items?"
+          message="These items will be removed from all collections"
+          confirmLabel="Unsave"
+          onCancel={() => {
+            setUnsaveConfirmVisible(false);
+            setSelectMode(false);
+            setSelectedBooks(new Set());
+          }}
           onConfirm={() => {
             const count = selectedBooks.size;
             unsaveBooks(selectedBooks);
+            setSnackbarText(
+              `${count} ${count === 1 ? "item" : "items"} unsaved`,
+            );
             setSnackbarText(
               `${count} ${count === 1 ? "item" : "items"} unsaved`,
             );
@@ -504,7 +625,16 @@ export default function CollectionPage() {
           <ModalComponent
             text="Rename collection"
             submitText="Done"
+            text="Rename collection"
+            submitText="Done"
             disabled={!renameText.trim()}
+            onClose={() => {
+              setRenameVisible(false);
+              setRenameError("");
+            }}
+            onOpen={() =>
+              setTimeout(() => renameInputRef.current?.focus(), 350)
+            }
             onClose={() => {
               setRenameVisible(false);
               setRenameError("");
@@ -514,6 +644,11 @@ export default function CollectionPage() {
             }
             onPress={() => {
               const trimmed = renameText.trim();
+              if (
+                collections.some(
+                  (c) => c.title === trimmed && c.title !== title,
+                )
+              ) {
               if (
                 collections.some(
                   (c) => c.title === trimmed && c.title !== title,
@@ -537,6 +672,10 @@ export default function CollectionPage() {
                   setRenameText(text);
                   setRenameError("");
                 }}
+                onChangeText={(text) => {
+                  setRenameText(text);
+                  setRenameError("");
+                }}
                 value={renameText}
                 maxLength={35}
                 placeholder="Collection name"
@@ -556,6 +695,11 @@ export default function CollectionPage() {
               />
               {renameText ? (
                 <Pressable
+                  onPress={() => {
+                    setRenameText("");
+                    setRenameError("");
+                    renameInputRef.current?.focus();
+                  }}
                   onPress={() => {
                     setRenameText("");
                     setRenameError("");
@@ -599,8 +743,23 @@ export default function CollectionPage() {
               onLongPress={
                 addToCollectionMode ? undefined : () => setSelectMode(true)
               }
+              onLongPress={
+                addToCollectionMode ? undefined : () => setSelectMode(true)
+              }
               hideSave={addToCollectionMode}
               selected={selectedBooks.has(item.key)}
+              onSelect={
+                selectMode
+                  ? () => {
+                      if (
+                        addToCollectionMode &&
+                        collectionBookKeys.has(item.key)
+                      )
+                        return;
+                      toggleSelect(item.key);
+                    }
+                  : undefined
+              }
               onSelect={
                 selectMode
                   ? () => {
@@ -666,12 +825,12 @@ const styles = StyleSheet.create({
   bookCount: {
     fontFamily: "SourceSans3_400Regular",
     fontSize: 14,
-    color: "#858585",
+    color: "#000000cc",
   },
   empty: {
     textAlign: "center",
     marginTop: 40,
-    color: "#858585",
+    color: "#000000cc",
     fontFamily: "SourceSans3_400Regular",
     fontSize: 16,
   },

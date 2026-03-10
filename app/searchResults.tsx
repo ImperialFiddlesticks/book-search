@@ -51,7 +51,7 @@ export default function SearchResults() {
   if (isLoading) {
     return (
       <>
-        <Header title="FOLIO" />
+        <Header />
         <SafeAreaView style={[styles.container]}>
           <View style={styles.searchbar}>
             <View style={{ flex: 1 }}>
@@ -85,7 +85,7 @@ export default function SearchResults() {
   if (isError) {
     return (
       <>
-        <Header title="FOLIO" />
+        <Header />
         <SafeAreaView style={[styles.container]}>
           <View style={styles.searchbar}>
             <View style={{ flex: 1 }}>
@@ -113,7 +113,7 @@ export default function SearchResults() {
   }
   return (
     <>
-      <Header title="FOLIO" />
+      <Header />
       <SafeAreaView style={[styles.container]} edges={["bottom"]}>
         <View style={styles.searchbar}>
           <View style={{ flex: 1 }}>
