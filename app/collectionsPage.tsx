@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   newCollectionBtn: {
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
     fontSize: 16,
   },

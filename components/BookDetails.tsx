@@ -209,7 +209,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
                       )}
                       label="Add to Reading List"
                       onPress={handleReadingList}
-                      color={isOnReadingList ? "#fa6b47" : "#fff"}
+                      color={isOnReadingList ? "#a45422" : "#fff"}
                       accessibilityRole="togglebutton"
                       accessibilityState={{ checked: isOnReadingList }}
                     />
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   },
   worksButton: {
     marginTop: 10,
-    backgroundColor: "#fa6b47",
+    backgroundColor: "#C8703A",
     borderRadius: 4,
   },
   subjects: {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginBottom: 5,
     borderRadius: 4,
-    backgroundColor: "#f8b197",
+    backgroundColor: "#D4895A",
   },
   chipText: {
     color: "#ffffff",

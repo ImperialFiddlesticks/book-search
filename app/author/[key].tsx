@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   authorSearchButton: { marginTop: 12 },
   worksButton: {
     margin: 20,
-    backgroundColor: "#fa6b47",
+    backgroundColor: "#C8703A",
     borderRadius: 4,
   },
 });

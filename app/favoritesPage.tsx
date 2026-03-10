@@ -60,7 +60,7 @@ export default function FavoritesScreen() {
           maxLength={40}
           placeholder="Collection name"
           placeholderTextColor="#999"
-          selectionColor="#fa6b47"
+          selectionColor="#C8703A"
           style={{
             fontSize: 16,
             height: 50,

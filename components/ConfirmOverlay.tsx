@@ -20,7 +20,7 @@ export default function ConfirmOverlay({
 }: ConfirmOverlayProps) {
   return (
     <Modal
-      animationType='fade'
+      animationType="fade"
       transparent={true}
       visible={visible}
       accessibilityViewIsModal={true}
@@ -33,14 +33,14 @@ export default function ConfirmOverlay({
 
           <Pressable
             style={styles.option}
-            accessibilityRole='button'
+            accessibilityRole="button"
             onPress={onCancel}
           >
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Pressable
             style={styles.option}
-            accessibilityRole='button'
+            accessibilityRole="button"
             onPress={onConfirm}
           >
             <Text style={styles.confirmText}>{confirmLabel}</Text>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   cancelText: {
     fontSize: 16,
     textAlign: "center",
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
   },
   confirmText: {

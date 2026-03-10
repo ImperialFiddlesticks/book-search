@@ -226,10 +226,10 @@ const styles = StyleSheet.create({
   doneText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#fa6b47",
+    color: "#C8703A",
   },
   doneTextDisabled: {
-    color: "#f8b197",
+    color: "#D4895A",
   },
   content: {
     paddingHorizontal: 16,

@@ -1,5 +1,10 @@
 import { useRef, useState } from "react";
-import { Pressable, TextInput, View, type TextInput as TextInputType } from "react-native";
+import {
+  Pressable,
+  TextInput,
+  View,
+  type TextInput as TextInputType,
+} from "react-native";
 import { Text } from "react-native-paper";
 import { useCollectionsStore } from "../store/collectionsStore";
 import ModalComponent from "./ModalComponent";
@@ -21,10 +26,14 @@ export default function NewCollectionModal({
 
   return (
     <ModalComponent
-      text='New Collection'
-      submitText='Done'
+      text="New Collection"
+      submitText="Done"
       disabled={!inputText.trim()}
-      onClose={() => { setInputText(""); setError(""); onClose?.(); }}
+      onClose={() => {
+        setInputText("");
+        setError("");
+        onClose?.();
+      }}
       onOpen={() => setTimeout(() => inputRef.current?.focus(), 350)}
       onPress={() => {
         const trimmed = inputText.trim();
@@ -43,12 +52,15 @@ export default function NewCollectionModal({
       <View style={{ position: "relative", marginVertical: 16 }}>
         <TextInput
           ref={inputRef}
-          onChangeText={(text) => { setInputText(text); setError(""); }}
+          onChangeText={(text) => {
+            setInputText(text);
+            setError("");
+          }}
           value={inputText}
           maxLength={35}
-          placeholder='Collection name'
-          placeholderTextColor='#999'
-          selectionColor='#fa6b47'
+          placeholder="Collection name"
+          placeholderTextColor="#999"
+          selectionColor="#C8703A"
           autoCorrect={false}
           style={{
             fontSize: 16,
@@ -61,7 +73,11 @@ export default function NewCollectionModal({
         />
         {inputText ? (
           <Pressable
-            onPress={() => { setInputText(""); setError(""); inputRef.current?.focus(); }}
+            onPress={() => {
+              setInputText("");
+              setError("");
+              inputRef.current?.focus();
+            }}
             style={{
               position: "absolute",
               right: 0,
@@ -76,7 +92,11 @@ export default function NewCollectionModal({
           </Pressable>
         ) : null}
       </View>
-      {error ? <Text style={{ color: "red", fontSize: 13, marginTop: -8 }}>{error}</Text> : null}
+      {error ? (
+        <Text style={{ color: "red", fontSize: 13, marginTop: -8 }}>
+          {error}
+        </Text>
+      ) : null}
     </ModalComponent>
   );
 }

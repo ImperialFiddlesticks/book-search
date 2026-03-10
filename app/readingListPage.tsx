@@ -46,20 +46,22 @@ export default function ReadingListPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title='Reading list' />
+      <Header title="Reading list" />
       <View style={styles.titleRow}>
         <View style={styles.titleGroup}>
           <Text style={styles.pageTitle}>Reading list</Text>
-          <Text style={styles.bookCount}>{readingList.length} {readingList.length === 1 ? "book" : "books"}</Text>
+          <Text style={styles.bookCount}>
+            {readingList.length} {readingList.length === 1 ? "book" : "books"}
+          </Text>
         </View>
         <ModalComponent
-          text='Reading list options'
-          submitText=''
+          text="Reading list options"
+          submitText=""
           renderTrigger={(openModal) => (
             <Appbar.Action
-              icon='dots-vertical'
+              icon="dots-vertical"
               onPress={openModal}
-              accessibilityLabel='Reading list options menu'
+              accessibilityLabel="Reading list options menu"
             />
           )}
         >
@@ -67,7 +69,7 @@ export default function ReadingListPage() {
             <>
               <Pressable
                 style={styles.modalOption}
-                accessibilityRole='button'
+                accessibilityRole="button"
                 onPress={async () => {
                   await closeModal();
                   setSelectMode(true);
@@ -78,14 +80,21 @@ export default function ReadingListPage() {
               </Pressable>
               <Pressable
                 style={styles.modalOption}
-                accessibilityRole='button'
+                accessibilityRole="button"
                 disabled={readingList.length === 0}
                 onPress={async () => {
                   await closeModal();
                   setClearConfirmVisible(true);
                 }}
               >
-                <Text style={[styles.modalDeleteText, readingList.length === 0 && styles.modalDisabledText]}>Clear reading list</Text>
+                <Text
+                  style={[
+                    styles.modalDeleteText,
+                    readingList.length === 0 && styles.modalDisabledText,
+                  ]}
+                >
+                  Clear reading list
+                </Text>
               </Pressable>
             </>
           )}
@@ -93,9 +102,9 @@ export default function ReadingListPage() {
 
         <ConfirmOverlay
           visible={clearConfirmVisible}
-          title='Clear reading list?'
-          message='All books will be removed from your reading list'
-          confirmLabel='Clear'
+          title="Clear reading list?"
+          message="All books will be removed from your reading list"
+          confirmLabel="Clear"
           onCancel={() => setClearConfirmVisible(false)}
           onConfirm={clearAll}
         />
@@ -125,7 +134,12 @@ export default function ReadingListPage() {
 
       {selectMode && (
         <BottomOptionsBar>
-          <Pressable onPress={() => { setSelectMode(false); setSelectedBooks(new Set()); }}>
+          <Pressable
+            onPress={() => {
+              setSelectMode(false);
+              setSelectedBooks(new Set());
+            }}
+          >
             <Text style={styles.selectBarCancel}>Cancel</Text>
           </Pressable>
           <Pressable
@@ -136,14 +150,23 @@ export default function ReadingListPage() {
             }}
           >
             <Text style={styles.selectBarAction}>
-              {selectedBooks.size === readingList.length ? "Deselect all" : "Select all"}
+              {selectedBooks.size === readingList.length
+                ? "Deselect all"
+                : "Select all"}
             </Text>
           </Pressable>
           <Pressable
             disabled={selectedBooks.size === 0}
             onPress={removeSelected}
           >
-            <Text style={[styles.selectBarAction, selectedBooks.size === 0 && styles.modalDisabledText]}>Remove</Text>
+            <Text
+              style={[
+                styles.selectBarAction,
+                selectedBooks.size === 0 && styles.modalDisabledText,
+              ]}
+            >
+              Remove
+            </Text>
           </Pressable>
         </BottomOptionsBar>
       )}
@@ -155,7 +178,9 @@ export default function ReadingListPage() {
         style={styles.snackbar}
         theme={{ colors: { inverseOnSurface: "#fff" } }}
       >
-        <Text style={{ textAlign: "center", color: "#fff", fontWeight: "600" }}>{snackbarText}</Text>
+        <Text style={{ textAlign: "center", color: "#fff", fontWeight: "600" }}>
+          {snackbarText}
+        </Text>
       </Snackbar>
     </View>
   );
@@ -204,7 +229,7 @@ const styles = StyleSheet.create({
   modalOptionText: {
     fontSize: 16,
     textAlign: "center",
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
   },
   modalDeleteText: {
@@ -224,12 +249,12 @@ const styles = StyleSheet.create({
   },
   selectBarAction: {
     fontSize: 16,
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
     fontFamily: "SourceSans3_600SemiBold",
   },
   snackbar: {
-    backgroundColor: "#fa6b47",
+    backgroundColor: "#C8703A",
     borderRadius: 4,
   },
 });

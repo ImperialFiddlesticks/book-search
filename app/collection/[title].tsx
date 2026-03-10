@@ -541,7 +541,7 @@ export default function CollectionPage() {
                 maxLength={35}
                 placeholder="Collection name"
                 placeholderTextColor="#999"
-                selectionColor="#fa6b47"
+                selectionColor="#C8703A"
                 autoCorrect={false}
                 accessibilityLabel="Collection name input"
                 accessibilityHint="Enter a new name for this collection"
@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
   },
   selectBarAction: {
     fontSize: 16,
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: "600",
     fontFamily: "SourceSans3_600SemiBold",
   },
@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
   modalOptionText: {
     fontSize: 16,
     textAlign: "center",
-    color: "#fa6b47",
+    color: "#C8703A",
     fontWeight: 600,
   },
 
@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
   },
 
   snackbar: {
-    backgroundColor: "#fa6b47",
+    backgroundColor: "#C8703A",
     borderRadius: 4,
   },
 
@@ -739,7 +739,7 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     borderWidth: 2,
-    borderColor: "#f8b197",
+    borderColor: "#D4895A",
     backgroundColor: "transparent",
     margin: 5,
     justifyContent: "center",
@@ -749,6 +749,6 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#f8b197",
+    backgroundColor: "#D4895A",
   },
 });
