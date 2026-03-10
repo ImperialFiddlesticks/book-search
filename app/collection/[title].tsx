@@ -81,7 +81,7 @@ export default function CollectionPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title="Collection" />
+      <Header />
       {selectOptionsVisible && (
         <ModalComponent
           text="Select options"

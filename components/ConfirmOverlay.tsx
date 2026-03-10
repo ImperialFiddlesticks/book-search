@@ -34,6 +34,7 @@ export default function ConfirmOverlay({
           <Pressable
             style={styles.option}
             accessibilityRole="button"
+            accessibilityHint="cancel"
             onPress={onCancel}
           >
             <Text style={styles.cancelText}>Cancel</Text>
@@ -41,6 +42,7 @@ export default function ConfirmOverlay({
           <Pressable
             style={styles.option}
             accessibilityRole="button"
+            accessibilityHint="confirm"
             onPress={onConfirm}
           >
             <Text style={styles.confirmText}>{confirmLabel}</Text>

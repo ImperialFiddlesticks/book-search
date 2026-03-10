@@ -91,7 +91,7 @@ export default function BookDetails({ book }: { readonly book: Book }) {
   };
   return (
     <>
-      <Header title="FOLIO" />
+      <Header />
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Card elevation={0} style={styles.card}>

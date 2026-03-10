@@ -16,8 +16,9 @@ export default function CollectionsPage() {
   const router = useRouter();
 
   return (
+    <View style={{ flex: 1 }}>
+      <Header />
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
-      <Header title='Collections' />
     <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps='always'>
       <View style={styles.titleRow}>
         <Text style={styles.pageTitle}>All collections</Text>

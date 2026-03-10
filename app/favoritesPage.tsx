@@ -26,7 +26,7 @@ export default function FavoritesScreen() {
       style={{ position: "relative" }}
       keyboardShouldPersistTaps="always"
     >
-      <Header title="Favorites" />
+      <Header />
       {collections.map((c) => (
         <CollectionCard
           key={c.title}
