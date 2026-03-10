@@ -39,7 +39,7 @@ export default function Home() {
 
   return (
     <>
-      <Header title="FOLIO" showBackButton={false} />
+      <Header showBackButton={false} />
       <View style={styles.container}>
         <ScrollView
           style={{ width: "100%" }}
@@ -68,7 +68,7 @@ export default function Home() {
             onBookPress={handleBookPress}
             books={readingList}
             onLongPress={(book) => toggleReadingList(book)}
-            onTitlePress={() => router.push("/profilePage")}
+            onTitlePress={() => router.push("/readingListPage")}
           />
         </ScrollView>
       </View>

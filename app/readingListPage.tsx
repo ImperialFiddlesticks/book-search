@@ -46,7 +46,7 @@ export default function ReadingListPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title='Reading list' />
+      <Header />
       <View style={styles.titleRow}>
         <View style={styles.titleGroup}>
           <Text style={styles.pageTitle}>Reading list</Text>

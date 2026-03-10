@@ -32,7 +32,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title='Profile' />
+      <Header />
     <ScrollView
       style={{ flex: 1 }}
       keyboardShouldPersistTaps='always'
