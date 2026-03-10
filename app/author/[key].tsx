@@ -5,10 +5,7 @@ import { View, StyleSheet, Image, ScrollView } from "react-native";
 import Header from "@/components/Header";
 import { Card, Text, Button, ActivityIndicator } from "react-native-paper";
 import { useSearchStore } from "@/store/searchStore";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AuthorDetails() {
   const { key } = useLocalSearchParams();
