@@ -54,21 +54,14 @@ export default function ReadingListPage() {
           <Text style={styles.bookCount}>
             {readingList.length} {readingList.length === 1 ? "book" : "books"}
           </Text>
-          <Text style={styles.bookCount}>
-            {readingList.length} {readingList.length === 1 ? "book" : "books"}
-          </Text>
         </View>
         <ModalComponent
-          text="Reading list options"
-          submitText=""
           text="Reading list options"
           submitText=""
           renderTrigger={(openModal) => (
             <Appbar.Action
               icon="dots-vertical"
-              icon="dots-vertical"
               onPress={openModal}
-              accessibilityLabel="Reading list options menu"
               accessibilityLabel="Reading list options menu"
             />
           )}
@@ -77,7 +70,6 @@ export default function ReadingListPage() {
             <>
               <Pressable
                 style={styles.modalOption}
-                accessibilityRole="button"
                 accessibilityRole="button"
                 onPress={async () => {
                   await closeModal();
@@ -89,7 +81,6 @@ export default function ReadingListPage() {
               </Pressable>
               <Pressable
                 style={styles.modalOption}
-                accessibilityRole="button"
                 accessibilityRole="button"
                 disabled={readingList.length === 0}
                 onPress={async () => {
@@ -105,14 +96,6 @@ export default function ReadingListPage() {
                 >
                   Clear reading list
                 </Text>
-                <Text
-                  style={[
-                    styles.modalDeleteText,
-                    readingList.length === 0 && styles.modalDisabledText,
-                  ]}
-                >
-                  Clear reading list
-                </Text>
               </Pressable>
             </>
           )}
@@ -120,9 +103,6 @@ export default function ReadingListPage() {
 
         <ConfirmOverlay
           visible={clearConfirmVisible}
-          title="Clear reading list?"
-          message="All books will be removed from your reading list"
-          confirmLabel="Clear"
           title="Clear reading list?"
           message="All books will be removed from your reading list"
           confirmLabel="Clear"

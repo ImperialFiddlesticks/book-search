@@ -21,7 +21,6 @@ export default function ConfirmOverlay({
   return (
     <Modal
       animationType="fade"
-      animationType="fade"
       transparent={true}
       visible={visible}
       accessibilityViewIsModal={true}
