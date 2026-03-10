@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
-import { PaperProvider, ThemeProvider } from "react-native-paper";
+import { PaperProvider, ThemeProvider} from "react-native-paper";
 import { useFonts } from "expo-font";
 import {
   LibreBaskerville_400Regular,
@@ -52,6 +52,7 @@ export default function RootLayout() {
             <Stack.Screen name="collection/[title]" />
             <Stack.Screen name="scanner" options={{ presentation: "modal" }} />
           </Stack>
+
         </ThemeProvider>
       </PaperProvider>
     </QueryClientProvider>
