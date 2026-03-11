@@ -1,8 +1,8 @@
-FOLIO – Boksökningsapp
+# FOLIO – Boksökningsapp
 
 FOLIO är en mobilapplikation byggd med React Native och Expo som låter användare söka efter böcker genom text, röst(exklusivt till iOS) eller att skanna streckkoder. Användaren kan även spara favoriter, skapa collections och hantera en läslista.
 
-Tekniker och bibliotek
+## Tekniker och bibliotek
 
 - React Native – ramverk för mobilutveckling
 - Expo – utvecklingsplattform och verktygskedja
@@ -14,9 +14,11 @@ Tekniker och bibliotek
 - Open Library API – externt API för bokdata
 - ApiHub Speech to Text API - externt API för röst-till-text konvertering
 
-Projektstruktur
+## Projektstruktur
 
 Appen är organiserad enligt Expo Routers filbaserade routing, där varje fil i app/-mappen motsvarar en skärm.
+
+```text
 app/
 index.tsx # Startsida
 details.tsx # Bokdetaljer
@@ -42,8 +44,9 @@ PreviousSearched.tsx
 store/ # Zustand-stores för global state
 hooks/ # Custom hooks för API-anrop
 types/ # TypeScript-typdefinitioner
+```
 
-Funktioner
+## Funktioner
 
 - Boksökning – sök efter böcker via titel, författare eller ämne
 - Röst-till-text-sökning – stöds på iOS
@@ -55,18 +58,17 @@ Funktioner
 - Författarsidor – se information och verk av en specifik författare
 - Boksidor - se information om specifika böcker med länkar för att köpa, låna eller dela med vänner.
 
-Arbetsflöde
+## Arbetsflöde
 
 Projektet utvecklades i grupp med Git och GitHub för versionshantering samt Trello för projektplanering och uppgiftsfördelning.
 Arbetet delades upp komponentvis där varje gruppmedlem ansvarade för olika delar av appen. Pull requests användes för kodgranskning innan ändringar mergades till huvudgrenen.
 
-
-
-Tillgänglighet
+## Tillgänglighet
 
 Tillgänglighet var en central del av projektet och en av de största utmaningarna. Nedan beskrivs de principer och tekniker som implementerades.
 
-accessibilityRole
+### `accessibilityRole`
+
 Alla interaktiva element har tilldelats rätt semantisk roll:
 
 - "header" på sidtitlar och sektionsrubriker så skärmläsare kan navigera efter rubriker
@@ -75,7 +77,8 @@ Alla interaktiva element har tilldelats rätt semantisk roll:
 - "alert" på felmeddelanden och tomma tillstånd så de annonseras direkt
 - "progressbar" på laddningsindikatorer
 
-accessibilityLabel och accessibilityHint
+### `accessibilityLabel` och `accessibilityHint`
+
 Beskrivande etiketter har lagts till på alla interaktiva element:
 
 - Bokomslag får dynamiska etiketter som inkluderar titel och författare: "The Hobbit av J.R.R. Tolkien, 1 av 10"
@@ -83,20 +86,22 @@ Beskrivande etiketter har lagts till på alla interaktiva element:
 - accessibilityHint används för att förklara vad som händer när man trycker, t.ex. "Öppnar bokdetaljer"
 - Rollnamnet utelämnas från etiketten eftersom skärmläsaren annonserar det automatiskt
 
-accessibilityState
+### `accessibilityState`
+
 Tillstånd kommuniceras till skärmläsare för interaktiva element:
 
 - Favorit- och läslisteknapparna använder { checked: true/false } för att indikera om de är aktiva
 - Sorteringsmenyns öppna/stängda tillstånd kommuniceras med { expanded: true/false }
 - Ämnesfiltrens valda tillstånd kommuniceras med { checked: true/false }
 
-accessibilityLiveRegion
+### `accessibilityLiveRegion`
+
 Dynamiska innehållsändringar annonseras automatiskt utan att användaren behöver navigera dit:
 
 - "polite" på laddningsindikatorer – annonseras när skärmläsaren är ledig
 - "assertive" på felmeddelanden – avbryter och annonseras omedelbart
 
-Övriga tillgänglighetsval
+### Övriga tillgänglighetsval
 
 - Paginering istället för infinite scroll – ett medvetet designval eftersom paginering är mer förutsägbart och lättnavigerat för skärmläsaranvändare. Med infinite scroll är det svårt att veta var man befinner sig i listan.
 - Dekorativa element döljs – ikoner och bilder som redan beskrivs av en omgivande etikett döljs med accessibilityElementsHidden och importantForAccessibility="no-hide-descendants" för att undvika redundant information
@@ -104,10 +109,16 @@ Dynamiska innehållsändringar annonseras automatiskt utan att användaren behö
 - Listpositioner – böcker i horisontella listor annonseras med sin position, t.ex. "1 av 10", så användaren vet hur många böcker som finns
 - Text och element följer WCAG 2.2 kontrast checker, vilket gör det så att användaren kan lätt läsa texter och element utan att behöva anstränga ögonen. Detta är bra för alla potentionella användare men även individer som har synsvårigheter.
 
-Installation och körning
+## Installation och körning
 
 Installera beroenden
+
+```bash
 npm install
+```
 
 Starta utvecklingsservern
+
+```bash
 npx expo start
+```
