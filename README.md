@@ -1,33 +1,33 @@
-# FOLIO – Boksökningsapp
+# FOLIO – A Book Search App
 
-FOLIO är en mobilapplikation byggd med React Native och Expo som låter användare söka efter böcker genom text, röst(exklusivt till iOS) eller att skanna streckkoder. Användaren kan även spara favoriter, skapa collections och hantera en läslista.
+FOLIO is a mobile application built with React Native and Expo that allows the user to search for books through text, voice recordings (exclusively on iOS) or by scanning barcodes. The user can also save favorites, create collections of books, and keep a reading list.
 
-## Tekniker och bibliotek
+## Techniques and Libraries
 
-- React Native – ramverk för mobilutveckling
-- Expo – utvecklingsplattform och verktygskedja
-- TypeScript – statisk typning
-- Expo Router – filbaserad navigering
+- React Native – framework for mobile development
+- Expo – development platform
+- TypeScript – static typing
+- Expo Router – filebased navigation
 - Zustand – global state management
-- React Query (TanStack Query) – datahämtning och caching
-- React Native Paper – UI-komponentbibliotek
-- Open Library API – externt API för bokdata
-- ApiHub Speech to Text API - externt API för röst-till-text konvertering
+- React Query (TanStack Query) – data fetching and caching
+- React Native Paper – UI Component Library
+- Open Library API – external API for book data
+- ApiHub Speech to Text API - external API for speech-to-text conversion
 
-## Projektstruktur
+## Project Structure
 
-Appen är organiserad enligt Expo Routers filbaserade routing, där varje fil i app/-mappen motsvarar en skärm.
+The app is organized according to Expo Router's file based routing system, where every file in the app/-folder is a screen.
 
 ```text
 app/
-index.tsx # Startsida
-details.tsx # Bokdetaljer
-searchResults.tsx # Sökresultat
-favoritesPage.tsx # Favoriter och samlingar
-scanner.tsx # Streckkodsskanner
-author/[key].tsx # Författardetaljer
+index.tsx # Home Page
+details.tsx # Book Details
+searchResults.tsx # Search Results
+profilePage.tsx # Profile page with Favorites and Collections
+scanner.tsx # Barcode Scanner
+author/[key].tsx # Author Details
 
-components/ # Återanvändbara UI-komponenter
+components/ # Reusable UI Components
 BookCard.tsx
 BookCover.tsx
 BookBar.tsx
@@ -41,83 +41,83 @@ Sorting.tsx
 Language.tsx
 PreviousSearched.tsx
 
-store/ # Zustand-stores för global state
-hooks/ # Custom hooks för API-anrop
-types/ # TypeScript-typdefinitioner
+store/ # Zustand-stores for global state
+hooks/ # Custom hooks for API calls
+types/ # TypeScript type definitions
 ```
 
-## Funktioner
+## Functions
 
-- Boksökning – sök efter böcker via titel, författare eller ämne
-- Röst-till-text-sökning – stöds på iOS
-- Streckkodsskanning – skanna en boks ISBN-kod med kameran
-- Favoriter och samlingar – spara böcker i egna samlingar
-- Läslista – håll koll på böcker du vill läsa
-- Filtrering och sortering – filtrera på ämne och språk, sortera på relevans, betyg eller utgivningsår
-- Paginering – sökresultat visas med sidnavigering
-- Författarsidor – se information och verk av en specifik författare
-- Boksidor - se information om specifika böcker med länkar för att köpa, låna eller dela med vänner.
+- Book Search – search for books by title, author or genre
+- Voice-to-text Search – supported on iOS
+- Barcode Scanner – scan a book's ISBN barcode with the camera
+- Favorites and Collections – save books and sort them into your own collections
+- Reading List – keep track of the books you want to read
+- Filtering and sorting – filter books by genre and language, sort by relevance, rating or year of publication
+- Paginering – search results are displayed with pagination
+- Author Pages – see information and works by a specific author
+- Book Pages - see information about specific books with links to buy, loan or share with friends.
 
-## Arbetsflöde
+## Workflow
 
-Projektet utvecklades i grupp med Git och GitHub för versionshantering samt Trello för projektplanering och uppgiftsfördelning.
-Arbetet delades upp komponentvis där varje gruppmedlem ansvarade för olika delar av appen. Pull requests användes för kodgranskning innan ändringar mergades till huvudgrenen.
+The project was developed as a group using Git and GitHub for version control and Trello for project planning and task distribution.
+The work was divided component-wise where each group member was responsible for different parts of the app. Pull requests were used for code review before changes were merged into the main branch.
 
-## Tillgänglighet
+## Accessibility
 
-Tillgänglighet var en central del av projektet och en av de största utmaningarna. Nedan beskrivs de principer och tekniker som implementerades.
+Accessibility was a central part of the project and one of the biggest challenges. Below we list the principles and techniques that were implemented.
 
 ### `accessibilityRole`
 
-Alla interaktiva element har tilldelats rätt semantisk roll:
+All interactive elements have been given the correct semantic role:
 
-- "header" på sidtitlar och sektionsrubriker så skärmläsare kan navigera efter rubriker
-- "link" på element som navigerar till en annan skärm (t.ex. författarnamn, listtitlar)
-- "togglebutton" på knappar med ett av/på-tillstånd (t.ex. favorit- och läslisteknappen)
-- "alert" på felmeddelanden och tomma tillstånd så de annonseras direkt
-- "progressbar" på laddningsindikatorer
+- "header" on page titles and section headings so screen readers can navigate by headings
+- "link" on elements that navigate to another screen (e.g. author names, list titles)
+- "togglebutton" on buttons with an on/off state (e.g. the favorite and reading list button)
+- "alert" on error messages and empty states so they are announced immediately
+- "progressbar" on loading indicators
 
-### `accessibilityLabel` och `accessibilityHint`
+### `accessibilityLabel` and `accessibilityHint`
 
-Beskrivande etiketter har lagts till på alla interaktiva element:
+Descriptive labels have been added to all interactive elements:
 
-- Bokomslag får dynamiska etiketter som inkluderar titel och författare: "The Hobbit av J.R.R. Tolkien, 1 av 10"
-- Knappar utan synlig text (ikonknappar) har tydliga etiketter
-- accessibilityHint används för att förklara vad som händer när man trycker, t.ex. "Öppnar bokdetaljer"
-- Rollnamnet utelämnas från etiketten eftersom skärmläsaren annonserar det automatiskt
+- Book covers get dynamic labels that include title and author: "The Hobbit by J.R.R. Tolkien, 1 of 10"
+- Buttons without visible text (icon buttons) have clear labels
+- accessibilityHint is used to explain what happens when you tap, e.g. "Opens book details"
+- The role name is omitted from the label since the screen reader announces it automatically
 
 ### `accessibilityState`
 
-Tillstånd kommuniceras till skärmläsare för interaktiva element:
+State is communicated to screen readers for interactive elements:
 
-- Favorit- och läslisteknapparna använder { checked: true/false } för att indikera om de är aktiva
-- Sorteringsmenyns öppna/stängda tillstånd kommuniceras med { expanded: true/false }
-- Ämnesfiltrens valda tillstånd kommuniceras med { checked: true/false }
+- The favorite and reading list buttons use { checked: true/false } to indicate whether they are active
+- The sort menu's open/closed state is communicated with { expanded: true/false }
+- The subject filters' selected state is communicated with { checked: true/false }
 
 ### `accessibilityLiveRegion`
 
-Dynamiska innehållsändringar annonseras automatiskt utan att användaren behöver navigera dit:
+Dynamic content changes are announced automatically without the user needing to navigate there:
 
-- "polite" på laddningsindikatorer – annonseras när skärmläsaren är ledig
-- "assertive" på felmeddelanden – avbryter och annonseras omedelbart
+- "polite" on loading indicators – announced when the screen reader is idle
+- "assertive" on error messages – interrupts and is announced immediately
 
-### Övriga tillgänglighetsval
+### Other accessibility features
 
-- Paginering istället för infinite scroll – ett medvetet designval eftersom paginering är mer förutsägbart och lättnavigerat för skärmläsaranvändare. Med infinite scroll är det svårt att veta var man befinner sig i listan.
-- Dekorativa element döljs – ikoner och bilder som redan beskrivs av en omgivande etikett döljs med accessibilityElementsHidden och importantForAccessibility="no-hide-descendants" för att undvika redundant information
-- accessibilityViewIsModal – sätts på modala dialoger så skärmläsaren inte kan navigera till innehåll bakom modalen
-- Listpositioner – böcker i horisontella listor annonseras med sin position, t.ex. "1 av 10", så användaren vet hur många böcker som finns
-- Text och element följer WCAG 2.2 kontrast checker, vilket gör det så att användaren kan lätt läsa texter och element utan att behöva anstränga ögonen. Detta är bra för alla potentionella användare men även individer som har synsvårigheter.
+- Pagination instead of infinite scroll – a deliberate design choice since pagination is more predictable and easier to navigate for screen reader users. With infinite scroll it is difficult to know where you are in the list.
+- Decorative elements are hidden – icons and images that are already described by a surrounding label are hidden with accessibilityElementsHidden and importantForAccessibility="no-hide-descendants" to avoid redundant information
+- accessibilityViewIsModal – set on modal dialogs so the screen reader cannot navigate to content behind the modal
+- List positions – books in horizontal lists are announced with their position, e.g. "1 of 10", so the user knows how many books there are
+- Text and elements follow the WCAG 2.2 contrast checker, making it easy for the user to read texts and elements without straining their eyes. This is beneficial for all potential users but also for individuals with visual impairments.
 
-## Installation och körning
+## Installation and Setup
 
-Installera beroenden
+Install dependencies
 
 ```bash
 npm install
 ```
 
-Starta utvecklingsservern
+Start the development server
 
 ```bash
 npx expo start
